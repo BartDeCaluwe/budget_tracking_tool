@@ -1,4 +1,4 @@
-# Golden
+# BudgetTrackingTool
 
 To start your Phoenix server:
 

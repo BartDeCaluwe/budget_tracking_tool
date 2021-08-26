@@ -1,0 +1,30 @@
+<%= f = form_for @changeset, "#",
+  id: "budget-form",
+  phx_target: @myself,
+  phx_change: "validate",
+  phx_submit: "save" %>
+
+  <%= label f, :amount, class: "sr-only" %>
+  <%= number_input f, :amount, id: @id, class: "text-right", phx_debounce: 1000 %>
+  <%= error_tag f, :amount %>
+
+  <div class="hidden">
+    <%= label f, :book_id %>
+    <%= number_input f, :book_id %>
+    <%= error_tag f, :book_id %>
+  </div>
+
+  <div class="hidden">
+    <%= label f, :category_id %>
+    <%= number_input f, :category_id %>
+    <%= error_tag f, :category_id %>
+  </div>
+
+  <div class="hidden">
+    <%= label f, :date %>
+    <%= date_select f, :date %>
+    <%= error_tag f, :date %>
+  </div>
+
+  <%= submit "Save", phx_disable_with: "Saving...", class: "hidden" %>
+</form>

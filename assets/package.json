@@ -3,6 +3,7 @@
     "deploy": "NODE_ENV=production postcss css/app.css -o ../priv/static/assets/app.css"
   },
   "devDependencies": {
+    "@tailwindcss/forms": "0.3.3",
     "autoprefixer": "^10.3.1",
     "postcss": "^8.3.6",
     "postcss-cli": "^8.3.1",
@@ -10,6 +11,7 @@
     "tailwindcss": "^2.2.7"
   },
   "dependencies": {
-    "alpinejs": "^3.2.3"
+    "alpinejs": "^3.2.3",
+    "flatpickr": "4.6.9"
   }
 }

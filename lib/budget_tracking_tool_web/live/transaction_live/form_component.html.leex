@@ -1,0 +1,139 @@
+<%= f = form_for @changeset, "#",
+  id: "transaction-form",
+  phx_target: @myself,
+  phx_change: "validate",
+  phx_submit: "save" %>
+
+  <div class="grid grid-cols-12 gap-y-6 gap-x-4">
+
+    <div class="col-span-12 md:col-span-6 <%= if @stacked, do: "lg:col-span-12", else: "lg:col-span-2" %>" phx-feedback-for="transaction[amount]">
+      <%= label f, :amount, class: "sr-only" %>
+      <div class="mt-1">
+        <%= text_input f, :amount, type: "number", placeholder: "0" %>
+        <%= error_tag f, :amount %>
+      </div>
+    </div>
+    <div class="col-span-12 md:col-span-6 <%= if @stacked, do: "lg:col-span-12", else: "lg:col-span-3" %>" phx-feedback-for="transaction[description]" >
+      <%= label f, :description, class: "sr-only" %>
+      <div class="mt-1">
+        <%= text_input f, :description, type: "text", placeholder: "description" %>
+        <%= error_tag f, :description %>
+      </div>
+    </div>
+
+    <div class="col-span-12 md:col-span-6 <%= if @stacked, do: "lg:col-span-12", else: "lg:col-span-2" %>" phx-feedback-for="transaction[category_id]">
+      <%= label f, :category_id, class: "sr-only" %>
+      <div class="hidden">
+        <%= number_input f, :category_id %>
+      </div>
+      <div class="mt-1">
+        <div
+          x-data="{open: false}"
+          @click.outside="open = false"
+        >
+          <div
+            class="mt-1 relative"
+            >
+            <button
+              @click="open = true"
+              @focus="open = true"
+              type="button" class="relative w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label">
+              <div class="flex items-center">
+                <%= live_component BudgetTrackingToolWeb.CategoryLive.LabelComponent,
+                  category: @selected_category
+                %>
+              </div>
+              <span class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                <!-- Heroicon name: solid/selector -->
+                <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path fill-rule="evenodd" d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+              </span>
+            </button>
+
+            <ul
+              x-cloak
+              x-show="open"
+              x-transition:enter=""
+              x-transition:enter-start=""
+              x-transition:enter-end=""
+              x-transition:leave="transition ease-in duration-100"
+              x-transition:leave-start="opacity-100"
+              x-transition:leave-end="opacity-0"
+              class="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm"
+              role="tablist"
+              aria-labelledby="listbox-label"
+              aria-activedescendant="listbox-option-3"
+              >
+              <%= for {category, index} <- Enum.with_index(@categories) do %>
+                <li
+                  x-data="{highlight: false}"
+                  @click="open = !open"
+                  @mouseover="highlight = true"
+                  @mouseover.away="highlight = false"
+                  @focus="highlight = true"
+                  @blur="highlight = false"
+                  phx-click="select-category"
+                  phx-value-category_id="<%= category.id %>"
+                  phx-target="<%= @myself %>"
+                  class="hover:text-white hover:bg-indigo-600 focus:text-white focus:bg-indigo-600 focus:outline-none text-gray-900 cursor-default select-none relative py-2 pl-3 pr-9"
+                  id="<%= "listbox-option-#{index}" %>"
+                  tabindex="<%= if index > 0, do: -1, else: 0 %>"
+                  role="tab">
+                  <div class="flex items-center">
+                    <%= live_component BudgetTrackingToolWeb.CategoryLive.LabelComponent,
+                      category: category,
+                      selected: @selected_category.id == category.id
+                    %>
+                  </div>
+
+                  <span class="absolute inset-y-0 right-0 flex items-center pr-4" :class="highlight ? 'text-white' : 'text-indigo-600 '">
+                    <!-- Heroicon name: solid/check -->
+                    <%= if @selected_category.id == category.id do %>
+                      <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                      </svg>
+                    <% end %>
+                  </span>
+                </li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+        <%= error_tag f, :category_id %>
+      </div>
+    </div>
+
+    <div class="col-span-12 md:col-span-6 <%= if @stacked, do: "lg:col-span-12", else: "lg:col-span-4" %>">
+      <%= label f, :date, class: "sr-only" %>
+      <%= FormHelpers.datepicker f, :date %>
+      <%= error_tag f, :date %>
+    </div>
+
+    <div class="hidden">
+      <%= label f, :book_id, class: "sr-only" %>
+      <%= text_input f, :book_id %>
+      <%= error_tag f, :book_id %>
+    </div>
+
+    <div class="col-span-12 <%= if @stacked, do: "lg:col-span-12", else: "lg:col-span-1" %>">
+      <div class="mt-1 sm:flex sm:flex-row-reverse">
+        <%= submit type: "submit", class: "mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm" do %>
+          <span class="hide-while-submitting">Save</span>
+          <span class="show-while-submitting absolute">
+            <svg class="animate-spin h-5 w-5" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path d="M12,2a1,1,0,0,0-1,1V5a1,1,0,0,0,2,0V3A1,1,0,0,0,12,2Z"></path>
+              <path d="M21,11H19a1,1,0,0,0,0,2h2a1,1,0,0,0,0-2Z"></path>
+              <path d="M6,12a1,1,0,0,0-1-1H3a1,1,0,0,0,0,2H5A1,1,0,0,0,6,12Z"></path>
+              <path d="M6.22,5A1,1,0,0,0,4.83,6.47L6.27,7.86A1,1,0,0,0,7,8.14a1,1,0,0,0,.72-.31,1,1,0,0,0,0-1.41Z"></path>
+              <path d="M17,8.14a1,1,0,0,0,.69-.28l1.44-1.39A1,1,0,0,0,17.78,5L16.34,6.42a1,1,0,0,0,0,1.41A1,1,0,0,0,17,8.14Z"></path>
+              <path d="M12,18a1,1,0,0,0-1,1v2a1,1,0,0,0,2,0V19A1,1,0,0,0,12,18Z"></path>
+              <path d="M17.73,16.14a1,1,0,0,0-1.39,1.44L17.78,19a1,1,0,0,0,.69.28,1,1,0,0,0,.72-.3,1,1,0,0,0,0-1.42Z"></path>
+              <path d="M6.27,16.14,4.83,17.53a1,1,0,0,0,0,1.42,1,1,0,0,0,.72.3A1,1,0,0,0,6.22,19l1.44-1.39a1,1,0,0,0-1.39-1.44Z"></path>
+            </svg>
+          </span>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</form>

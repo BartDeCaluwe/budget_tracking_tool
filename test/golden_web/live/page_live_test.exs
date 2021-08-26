@@ -1,5 +1,5 @@
-defmodule GoldenWeb.PageLiveTest do
-  use GoldenWeb.ConnCase
+defmodule BudgetTrackingToolWeb.PageLiveTest do
+  use BudgetTrackingToolWeb.ConnCase
 
   import Phoenix.LiveViewTest
 

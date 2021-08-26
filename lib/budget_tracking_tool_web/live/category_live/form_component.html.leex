@@ -1,0 +1,39 @@
+<%= f = form_for @changeset, "#",
+  id: "category-form",
+  phx_target: @myself,
+  phx_change: "validate",
+  phx_submit: "save" %>
+
+  <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+    <div class="sm:col-span-6" phx-feedback-for="category[label]" >
+      <%= label f, :label %>
+      <div class="mt-1">
+        <%= text_input f, :label, type: "text" %>
+        <%= error_tag f, :label %>
+      </div>
+    </div>
+    <div class="sm:col-span-6" phx-feedback-for="category[is_income]" >
+      <div class="mt-1">
+        <div class="relative flex items-start">
+          <div class="flex items-center h-5">
+            <%= checkbox f, :is_income, class: "focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"%>
+          </div>
+          <div class="ml-3 text-sm">
+            <%= label f, :is_income %>
+          </div>
+        </div>
+        <%= error_tag f, :is_income %>
+      </div>
+    </div>
+    <div class="sm:col-span-6 <%= if Phoenix.HTML.Form.input_value(f, :is_income), do: "text-gray-500 cursor-not-allowed" %>" phx-feedback-for="category[overspent_behavior]" >
+      <%= label f, :overspent_behavior %>
+      <div class="mt-1">
+        <%= select f, :overspent_behavior, @overspent_behavior_options, disabled: Phoenix.HTML.Form.input_value(f, :is_income) %>
+        <%= error_tag f, :label %>
+      </div>
+    </div>
+  </div>
+  <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+    <%= submit "Save", phx_disable_with: "Saving...", type: "submit", class: "mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm" %>
+  </div>
+</form>

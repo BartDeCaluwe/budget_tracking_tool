@@ -27,19 +27,43 @@ import { Socket } from "phoenix"
 import { LiveSocket } from "phoenix_live_view"
 import topbar from "../vendor/topbar"
 import Alpine from "alpinejs";
+import flatpickr from "flatpickr";
 
 window.Alpine = Alpine;
 Alpine.start();
 
+let Hooks = {}
+
+Hooks.Flatpickr = {
+  mounted() {
+    flatpickr(this.el, {
+      altInput: true,
+      altFormat: "d M Y",
+      wrap: true,
+    });
+  }
+}
+
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 let liveSocket = new LiveSocket("/live", Socket, {
   params: { _csrf_token: csrfToken },
-  hooks: hooks,
+  hooks: Hooks,
   dom: {
     onBeforeElUpdated(from, to) {
       if (from._x_dataStack) {
         window.Alpine.clone(from, to);
       }
+      if (from.classList.contains("flatpickr") && from._flatpickr !== undefined) {
+        from._flatpickr.destroy()
+
+        const fp = flatpickr(to, {
+          altInput: true,
+          altFormat: "d M Y",
+          wrap: true,
+        });
+
+        fp.setDate(to.children[0].value, false)
+       }
     },
   },
 });

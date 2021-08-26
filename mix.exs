@@ -1,9 +1,9 @@
-defmodule Golden.MixProject do
+defmodule BudgetTrackingTool.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :golden,
+      app: :budget_tracking_tool,
       version: "0.1.0",
       elixir: "~> 1.12",
       elixirc_paths: elixirc_paths(Mix.env()),
@@ -19,7 +19,7 @@ defmodule Golden.MixProject do
   # Type `mix help compile.app` for more information.
   def application do
     [
-      mod: {Golden.Application, []},
+      mod: {BudgetTrackingTool.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end
@@ -42,13 +42,15 @@ defmodule Golden.MixProject do
       {:phoenix_live_view, "~> 0.15.7"},
       {:floki, ">= 0.30.0", only: :test},
       {:phoenix_live_dashboard, "~> 0.4"},
+      {:phoenix_live_session, "~> 0.1"},
       {:esbuild, "~> 0.2", runtime: Mix.env() == :dev},
       {:swoosh, "~> 1.3"},
       {:telemetry_metrics, "~> 0.4"},
       {:telemetry_poller, "~> 0.4"},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
-      {:plug_cowboy, "~> 2.0"}
+      {:plug_cowboy, "~> 2.0"},
+      {:timex, "~> 3.7"}
     ]
   end
 

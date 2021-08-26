@@ -1,4 +1,4 @@
-defmodule GoldenWeb.ChannelCase do
+defmodule BudgetTrackingToolWeb.ChannelCase do
   @moduledoc """
   This module defines the test case to be used by
   channel tests.
@@ -11,7 +11,7 @@ defmodule GoldenWeb.ChannelCase do
   we enable the SQL sandbox, so changes done to the database
   are reverted at the end of every test. If you are using
   PostgreSQL, you can even run database tests asynchronously
-  by setting `use GoldenWeb.ChannelCase, async: true`, although
+  by setting `use BudgetTrackingToolWeb.ChannelCase, async: true`, although
   this option is not recommended for other databases.
   """
 
@@ -21,15 +21,15 @@ defmodule GoldenWeb.ChannelCase do
     quote do
       # Import conveniences for testing with channels
       import Phoenix.ChannelTest
-      import GoldenWeb.ChannelCase
+      import BudgetTrackingToolWeb.ChannelCase
 
       # The default endpoint for testing
-      @endpoint GoldenWeb.Endpoint
+      @endpoint BudgetTrackingToolWeb.Endpoint
     end
   end
 
   setup tags do
-    pid = Ecto.Adapters.SQL.Sandbox.start_owner!(Golden.Repo, shared: not tags[:async])
+    pid = Ecto.Adapters.SQL.Sandbox.start_owner!(BudgetTrackingTool.Repo, shared: not tags[:async])
     on_exit(fn -> Ecto.Adapters.SQL.Sandbox.stop_owner(pid) end)
     :ok
   end

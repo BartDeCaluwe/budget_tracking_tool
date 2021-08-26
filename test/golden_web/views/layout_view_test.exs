@@ -1,5 +1,5 @@
-defmodule GoldenWeb.LayoutViewTest do
-  use GoldenWeb.ConnCase, async: true
+defmodule BudgetTrackingToolWeb.LayoutViewTest do
+  use BudgetTrackingToolWeb.ConnCase, async: true
 
   # When testing helpers, you may want to import Phoenix.HTML and
   # use functions such as safe_to_string() to convert the helper

@@ -7,15 +7,15 @@
 # General application configuration
 import Config
 
-config :golden,
-  ecto_repos: [Golden.Repo]
+config :budget_tracking_tool,
+  ecto_repos: [BudgetTrackingTool.Repo]
 
 # Configures the endpoint
-config :golden, GoldenWeb.Endpoint,
+config :budget_tracking_tool, BudgetTrackingToolWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "sFkmSK7ovhixpAysXWfpjMpTaHClixXOFTzYf51JweaL72JRbHwhoNe2zxqhqPnu",
-  render_errors: [view: GoldenWeb.ErrorView, accepts: ~w(html json), layout: false],
-  pubsub_server: Golden.PubSub,
+  render_errors: [view: BudgetTrackingToolWeb.ErrorView, accepts: ~w(html json), layout: false],
+  pubsub_server: BudgetTrackingTool.PubSub,
   live_view: [signing_salt: "Z6rjBWej"]
 
 # Configure esbuild (the version is required)
@@ -34,7 +34,7 @@ config :esbuild,
 #
 # For production it's recommended to configure a different adapter
 # at the `config/runtime.exs`.
-config :golden, Golden.Mailer, adapter: Swoosh.Adapters.Local
+config :budget_tracking_tool, BudgetTrackingTool.Mailer, adapter: Swoosh.Adapters.Local
 
 # Swoosh API client is needed for adapters other than SMTP.
 config :swoosh, :api_client, false

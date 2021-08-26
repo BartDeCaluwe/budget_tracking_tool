@@ -1,0 +1,36 @@
+<h1>Listing Budgets</h1>
+
+<%= if @live_action in [:new, :edit] do %>
+   <%= live_modal BudgetTrackingToolWeb.BudgetLive.FormComponent,
+    id: @budget.id || :new,
+    title: @page_title,
+    action: @live_action,
+    budget: @budget,
+    return_to: Routes.budget_index_path(@socket, :index) %>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Amount</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="budgets">
+    <%= for budget <- @budgets do %>
+      <tr id="budget-<%= budget.id %>">
+        <td><%= budget.amount %></td>
+        <td><%= budget.date %></td>
+
+        <td>
+          <span><%= live_redirect "Show", to: Routes.budget_show_path(@socket, :show, budget) %></span>
+          <span><%= live_patch "Edit", to: Routes.budget_index_path(@socket, :edit, budget) %></span>
+          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: budget.id, data: [confirm: "Are you sure?"] %></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<span><%= live_patch "New Budget", to: Routes.budget_index_path(@socket, :new) %></span>

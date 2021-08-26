@@ -1,0 +1,26 @@
+<h1>Show Budget</h1>
+
+<%= if @live_action in [:edit] do %>
+   <%= live_modal BudgetTrackingToolWeb.BudgetLive.FormComponent,
+    id: @budget.id,
+    title: @page_title,
+    action: @live_action,
+    budget: @budget,
+    return_to: Routes.budget_show_path(@socket, :show, @budget) %>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>Amount:</strong>
+    <%= @budget.amount %>
+  </li>
+  <li>
+    <strong>Date:</strong>
+    <%= @budget.date %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.budget_show_path(@socket, :edit, @budget), class: "button" %></span>
+<span><%= live_redirect "Back", to: Routes.budget_index_path(@socket, :index) %></span>

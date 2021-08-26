@@ -1,10 +1,10 @@
 import Config
 # Configure your database
-config :golden, Golden.Repo,
+config :budget_tracking_tool, BudgetTrackingTool.Repo,
   username: "postgres",
   password: "postgres",
-  database: "golden_dev",
-  hostname: "localhost",
+  database: "budget_tracking_tool_dev",
+  hostname: "db",
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 
@@ -14,7 +14,7 @@ config :golden, Golden.Repo,
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we use it
 # with esbuild to bundle .js and .css sources.
-config :golden, GoldenWeb.Endpoint,
+config :budget_tracking_tool, BudgetTrackingToolWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
   http: [ip: {127, 0, 0, 1}, port: 4000],
@@ -59,13 +59,13 @@ config :golden, GoldenWeb.Endpoint,
 # different ports.
 
 # Watch static and templates for browser reloading.
-config :golden, GoldenWeb.Endpoint,
+config :budget_tracking_tool, BudgetTrackingToolWeb.Endpoint,
   live_reload: [
     patterns: [
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
-      ~r"lib/golden_web/(live|views)/.*(ex)$",
-      ~r"lib/golden_web/templates/.*(eex)$"
+      ~r"lib/budget_tracking_tool_web/(live|views)/.*(ex)$",
+      ~r"lib/budget_tracking_tool_web/templates/.*(eex)$"
     ]
   ]
 

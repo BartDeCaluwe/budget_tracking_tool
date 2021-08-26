@@ -1,4 +1,4 @@
-defmodule Golden.DataCase do
+defmodule BudgetTrackingTool.DataCase do
   @moduledoc """
   This module defines the setup for tests requiring
   access to the application's data layer.
@@ -10,7 +10,7 @@ defmodule Golden.DataCase do
   we enable the SQL sandbox, so changes done to the database
   are reverted at the end of every test. If you are using
   PostgreSQL, you can even run database tests asynchronously
-  by setting `use Golden.DataCase, async: true`, although
+  by setting `use BudgetTrackingTool.DataCase, async: true`, although
   this option is not recommended for other databases.
   """
 
@@ -18,17 +18,17 @@ defmodule Golden.DataCase do
 
   using do
     quote do
-      alias Golden.Repo
+      alias BudgetTrackingTool.Repo
 
       import Ecto
       import Ecto.Changeset
       import Ecto.Query
-      import Golden.DataCase
+      import BudgetTrackingTool.DataCase
     end
   end
 
   setup tags do
-    pid = Ecto.Adapters.SQL.Sandbox.start_owner!(Golden.Repo, shared: not tags[:async])
+    pid = Ecto.Adapters.SQL.Sandbox.start_owner!(BudgetTrackingTool.Repo, shared: not tags[:async])
     on_exit(fn -> Ecto.Adapters.SQL.Sandbox.stop_owner(pid) end)
     :ok
   end
