@@ -12,6 +12,8 @@ defmodule BudgetLineComponent do
           book_id: book_id
         } = assigns
       ) do
+    available_in_category = available_in_category(category, budget, transactions, book_id)
+
     ~L"""
       <tr id="category-<%= category.id %>" x-data="{ open: false }">
         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -34,8 +36,8 @@ defmodule BudgetLineComponent do
         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right">
           <%= spent_in_category(transactions) %>
         </td>
-        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-          <%= available_in_category(category, budget, transactions, book_id) %>
+        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium <%= if available_in_category < 0, do: "text-red-500" %>">
+          <%= available_in_category %>
         </td>
       </tr>
     """
