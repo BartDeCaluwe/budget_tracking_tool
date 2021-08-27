@@ -57,6 +57,8 @@ defmodule BudgetTrackingToolWeb do
     quote do
       use Phoenix.LiveComponent
 
+      alias BudgetTrackingToolWeb.FormHelpers
+
       unquote(view_helpers())
     end
   end

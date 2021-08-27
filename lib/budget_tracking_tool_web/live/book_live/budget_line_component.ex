@@ -8,7 +8,8 @@ defmodule BudgetLineComponent do
         %{
           category: category,
           transactions: transactions,
-          budget: budget, book_id: book_id
+          budget: budget,
+          book_id: book_id
         } = assigns
       ) do
     ~L"""

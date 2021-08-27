@@ -65,7 +65,7 @@
         <% else %>
           <div class="flex items-center">
             <%= ViewHelpers.route(@conn, Routes.user_registration_path(@conn, :new), "Register") %>
-            <%= ViewHelpers.route(@conn, Routes.user_session_path(@conn, :new), "Register") %>
+            <%= ViewHelpers.route(@conn, Routes.user_session_path(@conn, :new), "Login") %>
           </div>
         <% end %>
         <div class="-mr-2 flex items-center sm:hidden">
