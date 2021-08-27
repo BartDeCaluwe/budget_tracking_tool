@@ -9,8 +9,6 @@ defmodule BudgetTrackingTool.Accounts.User do
     field :hashed_password, :string
     field :confirmed_at, :naive_datetime
 
-    many_to_many :orgs, BudgetTrackingTool.Accounts.Org, join_through: "user_org"
-
     timestamps()
   end
 

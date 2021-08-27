@@ -10,12 +10,11 @@ defmodule BudgetTrackingToolWeb.BookLive.Show do
 
   @impl true
   def mount(_params, session, socket) do
-    # BudgetTrackingTool.Repo.put_org_id(socket.org_id)
     {:ok,
      socket
-      |> PhoenixLiveSession.maybe_subscribe(session)
-      |> put_session_assigns(session)
-      |> assign(:show_header, false)}
+     |> PhoenixLiveSession.maybe_subscribe(session)
+     |> put_session_assigns(session)
+     |> assign(:show_header, false)}
   end
 
   @impl true
@@ -52,17 +51,21 @@ defmodule BudgetTrackingToolWeb.BookLive.Show do
   def handle_event("select-book", %{"book_id" => book_id}, socket) do
     PhoenixLiveSession.put_session(socket, "selected_book_id", book_id)
 
-    {:noreply, push_patch(
-      socket
-      |> assign(:selected_book_id, book_id),
-      to: Routes.book_show_path(socket, :show, date: format_date_param(socket.assigns.selected_month)))}
+    {:noreply,
+     push_patch(
+       socket
+       |> assign(:selected_book_id, book_id),
+       to: Routes.book_show_path(socket, :show, date: format_date_param(socket.assigns.selected_month))
+     )}
   end
 
   def handle_info({:live_session_updated, session}, socket) do
-    {:noreply, push_patch(
-      socket
-      |> put_session_assigns(session),
-      to: Routes.book_show_path(socket, :show, date: format_date_param(socket.assigns.selected_month)))}
+    {:noreply,
+     push_patch(
+       socket
+       |> put_session_assigns(session),
+       to: Routes.book_show_path(socket, :show, date: format_date_param(socket.assigns.selected_month))
+     )}
   end
 
   def calculate_balance_for_month(date, book_id) do
@@ -164,6 +167,6 @@ defmodule BudgetTrackingToolWeb.BookLive.Show do
 
   defp put_session_assigns(socket, session) do
     socket
-    |> assign(:selected_book_id, Map.get(session, "selected_book_id", Books.get_book!.id))
+    |> assign(:selected_book_id, Map.get(session, "selected_book_id", Books.get_book!().id))
   end
 end
