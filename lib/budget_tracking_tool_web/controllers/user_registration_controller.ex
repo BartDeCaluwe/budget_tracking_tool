@@ -22,7 +22,7 @@ defmodule BudgetTrackingToolWeb.UserRegistrationController do
           )
 
         {:ok, _book} = Books.create_default_book(user)
-        {:ok, _category} = Categories.create_default_categories(user)
+        Categories.create_default_categories(user)
 
         conn
         |> put_flash(:info, "User created successfully.")
