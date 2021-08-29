@@ -7,6 +7,7 @@ defmodule BudgetTrackingTool.Transactions.Transaction do
     field :date, :date
     field :description, :string
 
+    belongs_to :org, BudgetTrackingTool.Accounts.Org
     belongs_to :category, BudgetTrackingTool.Categories.Category
     belongs_to :book, BudgetTrackingTool.Books.Book
 
@@ -16,8 +17,8 @@ defmodule BudgetTrackingTool.Transactions.Transaction do
   @doc false
   def changeset(transaction, attrs) do
     transaction
-    |> cast(attrs, [:description, :amount, :date, :category_id, :book_id])
-    |> validate_required([:description, :amount, :date, :category_id, :book_id])
+    |> cast(attrs, [:description, :amount, :date, :category_id, :book_id, :org_id])
+    |> validate_required([:description, :amount, :date, :category_id, :book_id, :org_id])
   end
 
   def change(changeset, field, value) do

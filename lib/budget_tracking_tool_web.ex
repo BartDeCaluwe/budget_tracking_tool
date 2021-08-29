@@ -95,6 +95,12 @@ defmodule BudgetTrackingToolWeb do
       import BudgetTrackingToolWeb.ErrorHelpers
       import BudgetTrackingToolWeb.Gettext
       alias BudgetTrackingToolWeb.Router.Helpers, as: Routes
+
+      def put_org_id_from_session(session) do
+        user = BudgetTrackingTool.Accounts.get_user_by_session_token(Map.get(session, "user_token"))
+        user_orgs = BudgetTrackingTool.Accounts.list_user_orgs(user)
+        BudgetTrackingTool.Repo.put_org_id(Enum.at(user_orgs, 0))
+      end
     end
   end
 

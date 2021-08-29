@@ -5,7 +5,7 @@ defmodule BudgetTrackingTool.Accounts do
 
   import Ecto.Query, warn: false
   alias BudgetTrackingTool.Repo
-  alias BudgetTrackingTool.Accounts.{User, UserToken, UserNotifier}
+  alias BudgetTrackingTool.Accounts.{User, UserToken, UserNotifier, UserOrg}
 
   ## Database getters
 
@@ -39,7 +39,10 @@ defmodule BudgetTrackingTool.Accounts do
   """
   def get_user_by_email_and_password(email, password)
       when is_binary(email) and is_binary(password) do
-    user = Repo.get_by(User, email: email)
+    user =
+      User
+      |> Repo.get_by([email: email], skip_org_id: true)
+
     if User.valid_password?(user, password), do: user
   end
 
@@ -242,14 +245,14 @@ defmodule BudgetTrackingTool.Accounts do
   """
   def get_user_by_session_token(token) do
     {:ok, query} = UserToken.verify_session_token_query(token)
-    Repo.one(query)
+    Repo.one(query, skip_org_id: true)
   end
 
   @doc """
   Deletes the signed token with the given context.
   """
   def delete_session_token(token) do
-    Repo.delete_all(UserToken.token_and_context_query(token, "session"))
+    Repo.delete_all(UserToken.token_and_context_query(token, "session"), skip_org_id: true)
     :ok
   end
 
@@ -382,5 +385,14 @@ defmodule BudgetTrackingTool.Accounts do
       {:ok, %{user: user}} -> {:ok, user}
       {:error, :user, changeset, _} -> {:error, changeset}
     end
+  end
+
+  def list_user_orgs(user) do
+    query =
+      from u in UserOrg,
+        where: u.user_id == ^user.id,
+        select: u.org_id
+
+    Repo.all(query, skip_org_id: true)
   end
 end

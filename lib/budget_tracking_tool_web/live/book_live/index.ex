@@ -5,7 +5,9 @@ defmodule BudgetTrackingToolWeb.BookLive.Index do
   alias BudgetTrackingTool.Books.Book
 
   @impl true
-  def mount(_params, _session, socket) do
+  def mount(_params, session, socket) do
+    put_org_id_from_session(session)
+
     {:ok, assign(socket, :books, list_books())}
   end
 

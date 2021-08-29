@@ -12,6 +12,7 @@ defmodule BudgetTrackingTool.Categories.Category do
       values: @overspent_behaviors,
       default: @overspent_behaviors[:deduct]
 
+    belongs_to :org, BudgetTrackingTool.Accounts.Org
     has_many :transactions, BudgetTrackingTool.Transactions.Transaction
     has_many :budgets, BudgetTrackingTool.Budgets.Budget
 
@@ -21,7 +22,11 @@ defmodule BudgetTrackingTool.Categories.Category do
   @doc false
   def changeset(category, attrs) do
     category
-    |> cast(attrs, [:label, :is_income, :overspent_behavior])
-    |> validate_required([:label, :is_income, :overspent_behavior])
+    |> cast(attrs, [:label, :is_income, :overspent_behavior, :org_id])
+    |> validate_required([:label, :is_income, :overspent_behavior, :org_id])
+  end
+
+  def overspent_behaviors do
+    @overspent_behaviors
   end
 end

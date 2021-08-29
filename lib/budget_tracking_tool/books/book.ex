@@ -5,6 +5,7 @@ defmodule BudgetTrackingTool.Books.Book do
   schema "books" do
     field :name, :string
 
+    belongs_to :org, BudgetTrackingTool.Accounts.Org
     has_many :budgets, BudgetTrackingTool.Budgets.Budget
 
     timestamps()
@@ -13,7 +14,7 @@ defmodule BudgetTrackingTool.Books.Book do
   @doc false
   def changeset(book, attrs) do
     book
-    |> cast(attrs, [:name])
-    |> validate_required([:name])
+    |> cast(attrs, [:name, :org_id])
+    |> validate_required([:name, :org_id])
   end
 end

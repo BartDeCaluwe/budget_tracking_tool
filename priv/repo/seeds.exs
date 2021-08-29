@@ -15,62 +15,107 @@ alias BudgetTrackingTool.Categories.Category
 alias BudgetTrackingTool.Books
 alias BudgetTrackingTool.Books.Book
 alias BudgetTrackingTool.Budgets.Budget
-alias BudgetTrackingTool.Accounts.User
-alias BudgetTrackingTool.Accounts.Org
+alias BudgetTrackingTool.Accounts.{User, Org, UserOrg}
 
 today = Date.utc_today()
 
-Repo.delete_all(User)
-Repo.delete_all(Org)
-Repo.delete_all(Budget)
-Repo.delete_all(Transaction)
-Repo.delete_all(Book)
-Repo.delete_all(Category)
+Repo.delete_all(User, skip_org_id: true)
+Repo.delete_all(Budget, skip_org_id: true)
+Repo.delete_all(Transaction, skip_org_id: true)
+Repo.delete_all(Book, skip_org_id: true)
+Repo.delete_all(Category, skip_org_id: true)
+
+user =
+  Repo.insert!(
+    User.registration_changeset(%User{}, %{
+      email: "de.caluwe.bart@gmail.com",
+      password: "qwerqwer12341234"
+    }),
+    skip_org_id: true
+  )
+
+org =
+  Repo.insert!(
+    Org.changeset(%Org{}, %{
+      name: "Drollemannen"
+    }),
+    skip_org_id: true
+  )
+
+Repo.insert!(UserOrg.changeset(%UserOrg{}, %{user_id: user.id, org_id: org.id}), skip_org_id: true)
 
 housekeeping =
-  Repo.insert!(%Book{
-    name: "Housekeeping"
-  })
+  Repo.insert!(
+    %Book{
+      name: "Housekeeping",
+      org: org
+    },
+    skip_org_id: true
+  )
 
 office =
-  Repo.insert!(%Book{
-    name: "Office"
-  })
+  Repo.insert!(
+    %Book{
+      name: "Office",
+      org: org
+    },
+    skip_org_id: true
+  )
 
 groceries =
-  Repo.insert!(%Category{
-    label: "Groceries",
-    is_income: false,
-    overspent_behavior: :carry_over
-  })
+  Repo.insert!(
+    %Category{
+      label: "Groceries",
+      is_income: false,
+      overspent_behavior: :carry_over,
+      org: org
+    },
+    skip_org_id: true
+  )
 
 rent =
-  Repo.insert!(%Category{
-    label: "Rent",
-    is_income: false,
-    overspent_behavior: :deduct
-  })
+  Repo.insert!(
+    %Category{
+      label: "Rent",
+      is_income: false,
+      overspent_behavior: :deduct,
+      org: org
+    },
+    skip_org_id: true
+  )
 
 eating_out =
-  Repo.insert!(%Category{
-    label: "Eating out",
-    is_income: false,
-    overspent_behavior: :deduct
-  })
+  Repo.insert!(
+    %Category{
+      label: "Eating out",
+      is_income: false,
+      overspent_behavior: :deduct,
+      org: org
+    },
+    skip_org_id: true
+  )
 
 loon =
-  Repo.insert!(%Category{
-    label: "Loon",
-    is_income: true,
-    overspent_behavior: :deduct
-  })
+  Repo.insert!(
+    %Category{
+      label: "Loon",
+      is_income: true,
+      overspent_behavior: :deduct,
+      org: org
+    },
+    skip_org_id: true
+  )
 
-Repo.insert!(%Budget{
-  amount: 200,
-  date: today,
-  category: eating_out,
-  book: housekeeping
-})
+Repo.insert!(
+  %Budget{
+    amount: 200,
+    date: today,
+    category: eating_out,
+    book: housekeeping,
+    org: org
+  },
+  skip_org_id: true
+)
 
 transactions = [
   %Transaction{
@@ -78,23 +123,26 @@ transactions = [
     amount: 1700,
     date: today,
     category: loon,
-    book: housekeeping
+    book: housekeeping,
+    org: org
   },
   %Transaction{
     description: "Takumi",
     amount: 122,
     date: today,
     category: eating_out,
-    book: housekeeping
+    book: housekeeping,
+    org: org
   },
   %Transaction{
     description: "Pingo Doce",
     amount: 50,
     date: today,
     category: groceries,
-    book: housekeeping
+    book: housekeeping,
+    org: org
   }
 ]
 
 transactions
-|> Enum.each(fn t -> Repo.insert!(t) end)
+|> Enum.each(fn t -> Repo.insert!(t, skip_org_id: true) end)

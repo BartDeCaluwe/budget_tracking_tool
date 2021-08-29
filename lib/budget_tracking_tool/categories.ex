@@ -8,6 +8,9 @@ defmodule BudgetTrackingTool.Categories do
 
   alias BudgetTrackingTool.Categories.Category
 
+  @default_expense_categories ~w(Rent Groceries)
+  @default_income_categories ~w(Paycheck)
+
   @doc """
   Returns the list of categories.
 
@@ -106,5 +109,28 @@ defmodule BudgetTrackingTool.Categories do
   """
   def change_category(%Category{} = category, attrs \\ %{}) do
     Category.changeset(category, attrs)
+  end
+
+  def create_default_categories(user) do
+    %{id: id} = List.first(user.orgs)
+    overspent_behavior = Enum.at(Category.overspent_behaviors(), 1)
+    create_default_expense_categories(id, overspent_behavior)
+    create_default_income_categories(id, overspent_behavior)
+  end
+
+  defp create_default_expense_categories(org_id, overspent_behavior) do
+    Enum.each(@default_expense_categories, fn label ->
+      %Category{}
+      |> Category.changeset(%{label: label, is_income: false, overspent_behavior: overspent_behavior, org_id: org_id})
+      |> Repo.insert()
+    end)
+  end
+
+  defp create_default_income_categories(org_id, overspent_behavior) do
+    Enum.each(@default_income_categories, fn label ->
+      %Category{}
+      |> Category.changeset(%{label: label, is_income: true, overspent_behavior: overspent_behavior, org_id: org_id})
+      |> Repo.insert()
+    end)
   end
 end

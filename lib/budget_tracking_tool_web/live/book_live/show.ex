@@ -10,6 +10,8 @@ defmodule BudgetTrackingToolWeb.BookLive.Show do
 
   @impl true
   def mount(_params, session, socket) do
+    put_org_id_from_session(session)
+
     {:ok,
      socket
      |> PhoenixLiveSession.maybe_subscribe(session)
@@ -59,6 +61,7 @@ defmodule BudgetTrackingToolWeb.BookLive.Show do
      )}
   end
 
+  @impl true
   def handle_info({:live_session_updated, session}, socket) do
     {:noreply,
      push_patch(
