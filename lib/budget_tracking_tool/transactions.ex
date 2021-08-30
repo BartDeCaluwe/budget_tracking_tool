@@ -141,13 +141,9 @@ defmodule BudgetTrackingTool.Transactions do
 
   def calculate_income_for_month(month, year, book_id) do
     end_of_month = Dates.end_of_month(month, year)
-
     total_income = total_income_up_to(end_of_month, book_id)
-
     total_budgetted = Budgets.calculate_budgetted_for_month(month, year, book_id)
-
     total_overspent = total_overspent(calculate_leftover_budget_for_month(month, year, book_id))
-
     total_income - total_budgetted - total_overspent
   end
 
