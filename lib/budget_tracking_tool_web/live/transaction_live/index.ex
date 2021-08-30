@@ -6,7 +6,9 @@ defmodule BudgetTrackingToolWeb.TransactionLive.Index do
   alias BudgetTrackingTool.Categories
 
   @impl true
-  def mount(_params, _session, socket) do
+  def mount(_params, session, socket) do
+    put_org_id_from_session(session)
+
     {:ok,
      socket
      |> assign(:transactions, list_transactions())
