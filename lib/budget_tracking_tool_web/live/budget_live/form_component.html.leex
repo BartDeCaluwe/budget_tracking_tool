@@ -21,6 +21,12 @@
   </div>
 
   <div class="hidden">
+    <%= label f, :org_id %>
+    <%= number_input f, :org_id %>
+    <%= error_tag f, :org_id %>
+  </div>
+
+  <div class="hidden">
     <%= label f, :date %>
     <%= date_select f, :date %>
     <%= error_tag f, :date %>

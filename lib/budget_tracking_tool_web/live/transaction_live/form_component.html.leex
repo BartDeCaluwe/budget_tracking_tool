@@ -68,7 +68,7 @@
               <%= for {category, index} <- Enum.with_index(@categories) do %>
                 <li
                   x-data="{highlight: false}"
-                  @click="open = !open"
+                  @click="open = false"
                   @mouseover="highlight = true"
                   @mouseover.away="highlight = false"
                   @focus="highlight = true"
@@ -114,6 +114,12 @@
       <%= label f, :book_id, class: "sr-only" %>
       <%= text_input f, :book_id %>
       <%= error_tag f, :book_id %>
+    </div>
+
+    <div class="hidden">
+      <%= label f, :org_id, class: "sr-only" %>
+      <%= text_input f, :org_id %>
+      <%= error_tag f, :org_id %>
     </div>
 
     <div class="col-span-12 <%= if @stacked, do: "lg:col-span-12", else: "lg:col-span-1" %>">
