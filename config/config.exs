@@ -34,7 +34,9 @@ config :esbuild,
 #
 # For production it's recommended to configure a different adapter
 # at the `config/runtime.exs`.
-config :budget_tracking_tool, BudgetTrackingTool.Mailer, adapter: Swoosh.Adapters.Local
+config :budget_tracking_tool, BudgetTrackingTool.Mailer,
+  adapter: Swoosh.Adapters.Sendgrid,
+  api_key: "api-key"
 
 # Swoosh API client is needed for adapters other than SMTP.
 config :swoosh, :api_client, false

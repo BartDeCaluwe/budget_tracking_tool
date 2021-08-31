@@ -8,7 +8,7 @@ config :budget_tracking_tool, BudgetTrackingTool.Repo,
   username: "postgres",
   password: "postgres",
   database: "budget_tracking_tool_test#{System.get_env("MIX_TEST_PARTITION")}",
-  hostname: "localhost",
+  hostname: "db",
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: 10
 
