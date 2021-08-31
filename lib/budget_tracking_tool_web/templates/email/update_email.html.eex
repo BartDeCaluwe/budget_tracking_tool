@@ -1,0 +1,10 @@
+<div>
+<%= render "_salutation.html", addressee: @user.email %>
+<p>
+    You can change your email by visiting the URL below:
+
+    <%= @url %>
+
+    If you didn't request this change, please ignore this.
+</p>
+</div>

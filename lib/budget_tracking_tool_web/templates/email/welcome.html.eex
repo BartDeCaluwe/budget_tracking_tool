@@ -1,0 +1,10 @@
+<div>
+<%= render "_salutation.html", addressee: @user.email %>
+<p>
+    You can confirm your account by visiting the URL below:
+
+    <%= @url %>
+
+    If you didn't create an account with us, please ignore this.
+</p>
+</div>
