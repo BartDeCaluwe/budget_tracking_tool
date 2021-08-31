@@ -14,8 +14,8 @@ config :budget_tracking_tool, BudgetTrackingTool.Repo,
 
 # Configure the database for GitHub Actions
 if System.get_env("GITHUB_ACTIONS") do
-  config :app, App.Repo,
-    hostname: "db",
+  config :app, BudgetTrackingTool.Repo,
+    hostname: "localhost",
     username: "postgres",
     password: "postgres"
 end
