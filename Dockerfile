@@ -42,7 +42,7 @@ COPY lib lib
 
 # build assets
 RUN npm run --prefix ./assets deploy
-RUN mix assets.deploy
+RUN mix esbuild default --minify
 RUN mix phx.digest
 
 # copy source here if not using TailwindCSS
