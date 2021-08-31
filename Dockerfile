@@ -20,6 +20,11 @@ RUN mix local.hex --force && \
 ENV MIX_ENV=prod
 ENV SECRET_KEY_BASE=nokey
 
+# there seems to be no straight forward way to make docker aware of Github
+# secrets. So this is hardcoded for now...
+# see: https://github.com/docker/compose/issues/1837
+ENV FLY_APP_NAME=delicate-shadow-5118
+
 # Copy over the mix.exs and mix.lock files to load the dependencies. If those
 # files don't change, then we don't keep re-fetching and rebuilding the deps.
 COPY mix.exs mix.lock ./
