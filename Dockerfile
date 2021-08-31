@@ -19,11 +19,8 @@ RUN mix local.hex --force && \
 # set build ENV as prod
 ENV MIX_ENV=prod
 ENV SECRET_KEY_BASE=nokey
-
-# there seems to be no straight forward way to make docker aware of Github
-# secrets. So this is hardcoded for now...
-# see: https://github.com/docker/compose/issues/1837
-# ENV FLY_APP_NAME=delicate-shadow-5118
+ENV FLY_APP_NAME=noappname
+ENV DATABASE_URL=ecto://USER:PASS@HOST/DATABASE
 
 # Copy over the mix.exs and mix.lock files to load the dependencies. If those
 # files don't change, then we don't keep re-fetching and rebuilding the deps.
@@ -47,7 +44,7 @@ COPY lib lib
 
 # build assets
 RUN npm run --prefix ./assets deploy
-# RUN mix esbuild default --minify
+RUN mix esbuild default --minify
 RUN mix phx.digest
 
 # copy source here if not using TailwindCSS
