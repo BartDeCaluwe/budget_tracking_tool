@@ -16,8 +16,6 @@ defmodule BudgetTrackingToolWeb.CategoryLive.LabelComponent do
   end
 
   def render(%{category: category} = assigns) do
-    IO.inspect(category.is_income)
-
     ~L"""
       <div class="flex items-center">
         <span class="<%= indicator_badge_color(category.is_income) %> flex-shrink-0 inline-block h-2 w-2 rounded-full" aria-hidden="true"></span>
