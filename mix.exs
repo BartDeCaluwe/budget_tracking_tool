@@ -44,6 +44,7 @@ defmodule BudgetTrackingTool.MixProject do
       {:floki, ">= 0.30.0", only: :test},
       {:phoenix_live_dashboard, "~> 0.4"},
       {:phoenix_live_session, "~> 0.1"},
+      {:phoenix_swoosh, "~> 0.3"},
       {:esbuild, "~> 0.2", runtime: Mix.env() == :dev},
       {:swoosh, "~> 1.3"},
       {:telemetry_metrics, "~> 0.4"},
