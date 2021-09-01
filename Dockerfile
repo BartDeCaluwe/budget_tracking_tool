@@ -21,6 +21,7 @@ ENV MIX_ENV=prod
 ENV SECRET_KEY_BASE=nokey
 ENV FLY_APP_NAME=noappname
 ENV DATABASE_URL=ecto://USER:PASS@HOST/DATABASE
+ENV SENDGRID_API_KEY=nokey
 
 # Copy over the mix.exs and mix.lock files to load the dependencies. If those
 # files don't change, then we don't keep re-fetching and rebuilding the deps.
