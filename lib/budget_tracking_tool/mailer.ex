@@ -1,7 +1,7 @@
 defmodule BudgetTrackingTool.Mailer do
   use Swoosh.Mailer, otp_app: :budget_tracking_tool
 
-  @noreply_address "noreply@budgettrackingtool.com"
+  @default_sender "info@bdcit.be"
 
-  def get_noreply_address, do: @noreply_address
+  def get_default_sender, do: @default_sender
 end
