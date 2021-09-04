@@ -39,7 +39,7 @@ config :budget_tracking_tool, BudgetTrackingTool.Mailer,
   api_key: "api-key"
 
 # Swoosh API client is needed for adapters other than SMTP.
-config :swoosh, :api_client, false
+# config :swoosh, :api_client, false
 
 # Configures Elixir's Logger
 config :logger, :console,
