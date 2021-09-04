@@ -10,6 +10,7 @@ defmodule BudgetTrackingTool.Accounts.UserNotifier do
     new()
     |> to(user.email)
     |> from(Mailer.get_noreply_address())
+    |> subject("Confirm your email")
     |> render_body("welcome.html", %{user: user, url: url})
     |> Mailer.deliver!()
   end
@@ -21,6 +22,7 @@ defmodule BudgetTrackingTool.Accounts.UserNotifier do
     new()
     |> to(user.email)
     |> from(Mailer.get_noreply_address())
+    |> subject("Reset password request")
     |> render_body("reset_password.html", %{user: user, url: url})
     |> Mailer.deliver!()
   end
@@ -32,6 +34,7 @@ defmodule BudgetTrackingTool.Accounts.UserNotifier do
     new()
     |> to(user.email)
     |> from(Mailer.get_noreply_address())
+    |> subject("Email update request")
     |> render_body("update_email.html", %{user: user, url: url})
     |> Mailer.deliver!()
   end
