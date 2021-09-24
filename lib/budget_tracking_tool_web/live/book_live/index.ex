@@ -3,12 +3,16 @@ defmodule BudgetTrackingToolWeb.BookLive.Index do
 
   alias BudgetTrackingTool.Books
   alias BudgetTrackingTool.Books.Book
+  alias BudgetTrackingTool.Transactions
 
   @impl true
   def mount(_params, session, socket) do
     put_org_id_from_session(session)
 
-    {:ok, assign(socket, :books, list_books())}
+    {:ok,
+     socket
+     |> PhoenixLiveSession.maybe_subscribe(session)
+     |> assign(:books, list_books())}
   end
 
   @impl true
@@ -42,7 +46,33 @@ defmodule BudgetTrackingToolWeb.BookLive.Index do
     {:noreply, assign(socket, :books, list_books())}
   end
 
+  def handle_event("select-book", %{"book_id" => book_id}, socket) do
+    today = Date.utc_today()
+    PhoenixLiveSession.put_session(socket, "selected_book_id", book_id)
+
+    {:noreply,
+     redirect(
+       socket
+       |> assign(:selected_book_id, book_id),
+       to: Routes.book_show_path(socket, :show, date: format_date_param(today))
+     )}
+  end
+
+  defp format_date_param(date) do
+    date |> Timex.format!("{YYYY}-{0M}-{0D}")
+  end
+
   defp list_books do
     Books.list_books()
+  end
+
+  defp available_balance_for_current_month(book_id) do
+    today = Date.utc_today()
+    Transactions.calculate_balance_for_month(today.month(), today.year(), book_id)
+  end
+
+  defp put_session_assigns(socket, session) do
+    socket
+    |> assign(:selected_book_id, Map.get(session, "selected_book_id", Books.get_book!().id))
   end
 end

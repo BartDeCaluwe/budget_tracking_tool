@@ -38,7 +38,7 @@
                   <%= book.name %>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right">
-                  <span class="font-medium text-gray-900"><%= 0 %></span>
+                  <span class="font-medium text-gray-900"><%= available_balance_for_current_month(book.id) %></span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                   <div class="relative flex justify-end items-center">
@@ -61,18 +61,19 @@
                       x-show="open"
                       class="mx-3 origin-top-right absolute right-7 top-0 w-48 mt-1 rounded-md shadow-lg z-10 bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-200 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="project-options-menu-0-button" tabindex="-1">
                       <div class="py-1" role="none">
-                        <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
-                        <%= live_redirect to: Routes.book_show_path(@socket, :show, book),
-                          class: "text-gray-700 group flex items-center px-4 py-2 text-sm",
-                          role: "menuitem",
-                          tabindex: "-1",
-                          id: "project-options-menu-0-item-0" do %>
-                            <svg class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                              <path d="M21.87 11.5c-.64-1.11-4.16-6.68-10.14-6.5-5.53.14-8.73 5-9.6 6.5a1 1 0 0 0 0 1c.63 1.09 4 6.5 9.89 6.5h.25c5.53-.14 8.74-5 9.6-6.5a1 1 0 0 0 0-1zM12.22 17c-4.31.1-7.12-3.59-8-5 1-1.61 3.61-4.9 7.61-5 4.29-.11 7.11 3.59 8 5-1.03 1.61-3.61 4.9-7.61 5z"/><path d="M12 8.5a3.5 3.5 0 1 0 3.5 3.5A3.5 3.5 0 0 0 12 8.5zm0 5a1.5 1.5 0 1 1 1.5-1.5 1.5 1.5 0 0 1-1.5 1.5z"/>
-                            </svg>
-                            <span>Show</span>
-                        <% end %>
-                        <%= live_patch to: Routes.book_show_path(@socket, :edit, book),
+                        <div
+                            class="hover:cursor-pointer text-gray-700 group flex items-center px-4 py-2 text-sm"
+                            role="menuitem"
+                            tabindex="-1"
+                            id="project-options-menu-0-item-0"
+                            phx-click="select-book"
+                            phx-value-book_id="<%= book.id %>">
+                              <svg class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M21.87 11.5c-.64-1.11-4.16-6.68-10.14-6.5-5.53.14-8.73 5-9.6 6.5a1 1 0 0 0 0 1c.63 1.09 4 6.5 9.89 6.5h.25c5.53-.14 8.74-5 9.6-6.5a1 1 0 0 0 0-1zM12.22 17c-4.31.1-7.12-3.59-8-5 1-1.61 3.61-4.9 7.61-5 4.29-.11 7.11 3.59 8 5-1.03 1.61-3.61 4.9-7.61 5z"/><path d="M12 8.5a3.5 3.5 0 1 0 3.5 3.5A3.5 3.5 0 0 0 12 8.5zm0 5a1.5 1.5 0 1 1 1.5-1.5 1.5 1.5 0 0 1-1.5 1.5z"/>
+                              </svg>
+                              <span>Select</span>
+                        </div>
+                        <%= live_patch to: Routes.book_index_path(@socket, :edit, book),
                           class: "text-gray-700 group flex items-center px-4 py-2 text-sm",
                           role: "menuitem",
                           tabindex: "-1",
@@ -82,14 +83,6 @@
                             </svg>
                             <span>Edit</span>
                         <% end %>
-                        <a href="#" class="text-gray-700 group flex items-center px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="project-options-menu-0-item-2">
-                          <!-- Heroicon name: solid/duplicate -->
-                          <svg class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                            <path d="M7 9a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2H9a2 2 0 01-2-2V9z" />
-                            <path d="M5 3a2 2 0 00-2 2v6a2 2 0 002 2V5h8a2 2 0 00-2-2H5z" />
-                          </svg>
-                          Duplicate
-                        </a>
                       </div>
                       <div class="py-1" role="none">
                         <%= link to: "#", phx_click: "delete", phx_value_id: book.id, data: [confirm: "Are you sure?"],
