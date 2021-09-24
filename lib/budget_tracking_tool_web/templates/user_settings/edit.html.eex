@@ -50,7 +50,7 @@
           <% end %>
           <%= hidden_input f, :action, name: "action", value: "update_password" %>
         <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
-          <%= label f, :password, "New passowrd" %>
+          <%= label f, :password, "New password" %>
           <div class="mt-1 sm:mt-0 sm:col-span-2">
             <div class="max-w-lg flex">
               <div class="max-w-lg w-full flex rounded-md shadow-sm">
