@@ -17,14 +17,11 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between h-16">
         <div class="flex">
-          <div class="flex-shrink-0 flex items-center">
-            <img class="block lg:hidden h-8 w-auto" src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg" alt="Workflow">
-            <img class="hidden lg:block h-8 w-auto" src="https://tailwindui.com/img/logos/workflow-logo-indigo-600-mark-gray-800-text.svg" alt="Workflow">
-          </div>
-          <div class="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
+          <div class="hidden sm:-my-px sm:flex sm:space-x-8">
             <%= ViewHelpers.route(@conn, "/", "Dashboard") %>
             <%= ViewHelpers.route(@conn, Routes.transaction_index_path(@conn, :index), "Transactions") %>
             <%= ViewHelpers.route(@conn, Routes.category_index_path(@conn, :index), "Categrories") %>
+            <%= ViewHelpers.route(@conn, Routes.book_index_path(@conn, :index), "Books") %>
           </div>
         </div>
         <%= if @current_user do %>
@@ -86,6 +83,7 @@
         <%= ViewHelpers.mobile_route(@conn, "/", "Dashboard") %>
         <%= ViewHelpers.mobile_route(@conn, Routes.transaction_index_path(@conn, :index), "Transactions") %>
         <%= ViewHelpers.mobile_route(@conn, Routes.category_index_path(@conn, :index), "Categories") %>
+        <%= ViewHelpers.mobile_route(@conn, Routes.book_index_path(@conn, :index), "Books") %>
       </div>
       <div class="pt-4 pb-3 border-t border-gray-200">
         <div class="flex items-center px-4">
