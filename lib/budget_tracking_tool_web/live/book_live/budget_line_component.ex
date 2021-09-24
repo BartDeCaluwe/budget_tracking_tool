@@ -14,14 +14,15 @@ defmodule BudgetLineComponent do
       ) do
     available_in_category = available_in_category(category, budget, transactions, book_id)
 
-    ~L"""
-      <tr id="category-<%= category.id %>" x-data="{ open: false }">
+    ~H"""
+      <tr id={"category#{category.id}"} x-data="{ open: false }">
         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
           <%= category.label %>
         </td>
-        <td @click="open = true; $nextTick(() => { setTimeout(() => { document.getElementById('category-<%= category.id %>-budget-input').select(); }, 10);});")"
+        <td
+            @click={"open = true; $nextTick(() => { setTimeout(() => { document.getElementById('category-#{category.id}-budget-input').select(); }, 10);});"}
             @click.outside="open = false"
-            id="category-<%= category.id %>-budget"
+            id={"category-#{category.id}-budget"}
             class="h-[55px] whitespace-nowrap text-sm text-gray-500 text-right">
           <div x-show="open">
             <%= live_component BudgetTrackingToolWeb.BudgetLive.FormComponent,
@@ -36,7 +37,7 @@ defmodule BudgetLineComponent do
         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right">
           <%= spent_in_category(transactions) %>
         </td>
-        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium <%= if available_in_category < 0, do: "text-red-500" %>">
+        <td class={"px-6 py-4 whitespace-nowrap text-right text-sm font-medium #{get_available_text_color(available_in_category)}"}>
           <%= available_in_category %>
         </td>
       </tr>
@@ -85,5 +86,11 @@ defmodule BudgetLineComponent do
 
   defp get_action(_) do
     :edit
+  end
+
+  defp get_available_text_color(available) do
+    if available < 0 do
+      "text-red-500"
+    end
   end
 end
