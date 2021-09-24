@@ -188,16 +188,17 @@ defmodule BudgetTrackingTool.Transactions do
 
   def calculate_balance_for_month(month, year, book_id) do
     end_of_month = Dates.end_of_month(month, year)
+    book = Books.get_book!(book_id)
 
     Repo.all(
       from t in Transaction,
         where:
-          t.book_id == ^book_id and
+          t.book_id == ^book.id and
             t.date <= ^end_of_month,
         select: t
     )
     |> Repo.preload([:category])
-    |> Enum.reduce(0, fn t, acc ->
+    |> Enum.reduce(book.starting_balance, fn t, acc ->
       if t.category.is_income, do: acc + t.amount, else: acc - t.amount
     end)
   end

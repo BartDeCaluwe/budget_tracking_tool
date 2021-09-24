@@ -5,7 +5,11 @@ defmodule BudgetTrackingToolWeb.BookLive.FormComponent do
 
   @impl true
   def update(%{book: book} = assigns, socket) do
-    changeset = Books.change_book(book)
+    changeset =
+      Books.change_book(book, %{
+        starting_balance: 0.0,
+        org_id: BudgetTrackingTool.Repo.get_org_id()
+      })
 
     {:ok,
      socket
@@ -49,6 +53,7 @@ defmodule BudgetTrackingToolWeb.BookLive.FormComponent do
          |> push_redirect(to: socket.assigns.return_to)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
+        IO.inspect(changeset)
         {:noreply, assign(socket, changeset: changeset)}
     end
   end

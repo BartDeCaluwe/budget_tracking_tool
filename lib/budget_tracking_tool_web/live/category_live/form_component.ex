@@ -6,7 +6,11 @@ defmodule BudgetTrackingToolWeb.CategoryLive.FormComponent do
 
   @impl true
   def update(%{category: category} = assigns, socket) do
-    changeset = Categories.change_category(category)
+    changeset =
+      Categories.change_category(category, %{
+        org_id: BudgetTrackingTool.Repo.get_org_id()
+      })
+
     overspent_behavior_options = Ecto.Enum.values(Category, :overspent_behavior)
 
     {:ok,

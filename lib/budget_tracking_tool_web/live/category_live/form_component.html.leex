@@ -25,6 +25,11 @@
         <%= error_tag f, :is_income %>
       </div>
     </div>
+    <div class="hidden">
+      <%= label f, :org_id, class: "sr-only" %>
+      <%= text_input f, :org_id %>
+      <%= error_tag f, :org_id %>
+    </div>
     <div class="sm:col-span-6 <%= if Phoenix.HTML.Form.input_value(f, :is_income), do: "text-gray-500 cursor-not-allowed" %>" phx-feedback-for="category[overspent_behavior]" >
       <%= label f, :overspent_behavior %>
       <div class="mt-1">
