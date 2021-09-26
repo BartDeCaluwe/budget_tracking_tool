@@ -91,14 +91,9 @@ defmodule BudgetTrackingTool.Transactions do
 
   """
   def update_transaction(%Transaction{} = transaction, attrs) do
-    changeset = transaction |> Transaction.changeset(attrs)
-
-    book_update = Books.update_book_query(transaction, changeset, transaction.category)
-
-    Ecto.Multi.new()
-    |> Ecto.Multi.update(:transaction, changeset, [])
-    |> Ecto.Multi.update_all(:book, book_update, [])
-    |> Repo.transaction()
+    transaction
+    |> Transaction.changeset(attrs)
+    |> Repo.update()
   end
 
   @doc """
@@ -114,12 +109,7 @@ defmodule BudgetTrackingTool.Transactions do
 
   """
   def delete_transaction(%Transaction{} = transaction) do
-    book_update = Books.remove_transaction_from_book_query(transaction)
-
-    Ecto.Multi.new()
-    |> Ecto.Multi.delete(:transaction, transaction, [])
-    |> Ecto.Multi.update_all(:book, book_update, [])
-    |> Repo.transaction()
+    Repo.delete(transaction)
   end
 
   @doc """
