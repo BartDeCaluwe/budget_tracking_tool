@@ -46,7 +46,7 @@ defmodule BudgetTrackingToolWeb.BookLive.Show do
        date: date,
        book_id: id,
        org_id: BudgetTrackingTool.Repo.get_org_id(),
-       category_id: Enum.at(list_categories(), 0).id
+       category: Enum.at(list_categories(), 0)
      })}
   end
 

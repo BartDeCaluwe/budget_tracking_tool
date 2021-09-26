@@ -11,7 +11,7 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FormComponent do
      socket
      |> assign(assigns)
      |> assign(:changeset, changeset)
-     |> assign(:selected_category, Enum.at(assigns.categories, 0))}
+     |> assign(:selected_category, transaction.category || Enum.at(assigns.categories, 0))}
   end
 
   @impl true
