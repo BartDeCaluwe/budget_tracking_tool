@@ -20,4 +20,10 @@ defmodule BudgetTrackingToolWeb.LiveHelpers do
     modal_opts = [id: :modal, return_to: path, component: component, opts: opts]
     live_component(BudgetTrackingToolWeb.ModalComponent, modal_opts)
   end
+
+  def live_slide_over(component, opts) do
+    path = Keyword.fetch!(opts, :return_to)
+    slide_over_opts = [id: :slide_over, return_to: path, component: component, opts: opts]
+    live_component(BudgetTrackingToolWeb.Components.SlideOverComponent, slide_over_opts)
+  end
 end
