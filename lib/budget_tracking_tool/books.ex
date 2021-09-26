@@ -76,56 +76,6 @@ defmodule BudgetTrackingTool.Books do
     |> Repo.update()
   end
 
-  def update_book_query(
-        %{changes: %{book_id: book_id, amount: amount}},
-        %{is_income: true}
-      ) do
-    from b in Book,
-      where: [id: ^book_id],
-      update: [set: [balance: b.balance + ^amount]]
-  end
-
-  def update_book_query(
-        %{changes: %{book_id: book_id, amount: amount}},
-        %Category{is_income: false}
-      ) do
-    from b in Book,
-      where: [id: ^book_id],
-      update: [set: [balance: b.balance - ^amount]]
-  end
-
-  def update_book_query(
-        %Transaction{} = transaction,
-        %{changes: %{amount: amount}},
-        %Category{is_income: true}
-      ) do
-    from b in Book,
-      where: [id: ^transaction.book.id],
-      update: [set: [balance: b.balance + ^amount - ^transaction.amount]]
-  end
-
-  def update_book_query(
-        %Transaction{} = transaction,
-        %{changes: %{amount: amount}},
-        %Category{is_income: false}
-      ) do
-    from b in Book,
-      where: [id: ^transaction.book.id],
-      update: [set: [balance: b.balance + ^transaction.amount - ^amount]]
-  end
-
-  def remove_transaction_from_book_query(%Transaction{category: %{is_income: false}} = transaction) do
-    from b in Book,
-      where: [id: ^transaction.book.id],
-      update: [set: [balance: b.balance + ^transaction.amount]]
-  end
-
-  def remove_transaction_from_book_query(%Transaction{category: %{is_income: true}} = transaction) do
-    from b in Book,
-      where: [id: ^transaction.book.id],
-      update: [set: [balance: b.balance - ^transaction.amount]]
-  end
-
   @doc """
   Deletes a book.
 
