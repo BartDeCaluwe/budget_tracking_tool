@@ -19,7 +19,6 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FormComponent do
     changeset =
       socket.assigns.transaction
       |> Transactions.change_transaction(transaction_params)
-      |> IO.inspect()
       |> Map.put(:action, :validate)
 
     {:noreply,
