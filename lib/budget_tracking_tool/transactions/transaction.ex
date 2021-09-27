@@ -3,7 +3,7 @@ defmodule BudgetTrackingTool.Transactions.Transaction do
   import Ecto.Changeset
 
   schema "transactions" do
-    field :amount, :integer
+    field :amount, :float
     field :date, :date
     field :description, :string
 
