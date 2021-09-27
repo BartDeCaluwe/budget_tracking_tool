@@ -7,8 +7,6 @@ defmodule BudgetTrackingTool.Books do
   alias BudgetTrackingTool.Repo
 
   alias BudgetTrackingTool.Books.Book
-  alias BudgetTrackingTool.Transactions.Transaction
-  alias BudgetTrackingTool.Categories.Category
 
   @doc """
   Returns the list of books.
