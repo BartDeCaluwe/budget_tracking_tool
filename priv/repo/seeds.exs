@@ -108,7 +108,7 @@ loon =
 
 Repo.insert!(
   %Budget{
-    amount: 200,
+    amount: 200.0,
     date: today,
     category: eating_out,
     book: housekeeping,
@@ -120,7 +120,7 @@ Repo.insert!(
 transactions = [
   %Transaction{
     description: "Loon",
-    amount: 1700,
+    amount: 1700.0,
     date: today,
     category: loon,
     book: housekeeping,
@@ -128,7 +128,7 @@ transactions = [
   },
   %Transaction{
     description: "Takumi",
-    amount: 122,
+    amount: 122.0,
     date: today,
     category: eating_out,
     book: housekeeping,
@@ -136,7 +136,7 @@ transactions = [
   },
   %Transaction{
     description: "Pingo Doce",
-    amount: 50,
+    amount: 50.0,
     date: today,
     category: groceries,
     book: housekeeping,
