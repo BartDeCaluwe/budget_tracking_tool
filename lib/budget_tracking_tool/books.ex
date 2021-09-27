@@ -20,7 +20,9 @@ defmodule BudgetTrackingTool.Books do
 
   """
   def list_books do
-    Repo.all(Book)
+    Book
+    |> order_by(:name)
+    |> Repo.all()
   end
 
   @doc """

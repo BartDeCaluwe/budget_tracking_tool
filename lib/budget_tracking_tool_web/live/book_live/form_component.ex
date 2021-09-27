@@ -7,7 +7,6 @@ defmodule BudgetTrackingToolWeb.BookLive.FormComponent do
   def update(%{book: book} = assigns, socket) do
     changeset =
       Books.change_book(book, %{
-        starting_balance: 0.0,
         org_id: BudgetTrackingTool.Repo.get_org_id()
       })
 

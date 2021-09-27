@@ -48,6 +48,7 @@ housekeeping =
   Repo.insert!(
     %Book{
       name: "Housekeeping",
+      starting_balance: Money.new(100),
       org: org
     },
     skip_org_id: true
@@ -57,6 +58,7 @@ office =
   Repo.insert!(
     %Book{
       name: "Office",
+      starting_balance: Money.new(100),
       org: org
     },
     skip_org_id: true
