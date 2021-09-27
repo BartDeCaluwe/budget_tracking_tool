@@ -1,5 +1,5 @@
 <%= if @live_action in [:new, :edit] do %>
-   <%= live_modal BudgetTrackingToolWeb.TransactionLive.FormComponent,
+   <%= live_slide_over BudgetTrackingToolWeb.TransactionLive.FormComponent,
     id: @transaction.id || :new,
     title: @page_title,
     action: @live_action,
