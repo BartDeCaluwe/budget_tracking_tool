@@ -46,11 +46,13 @@
               </span>
             </li>
           <% end %>
-            <li class="hover:text-white hover:bg-indigo-600 text-purple-900 cursor-default select-none relative py-2 pl-3 pr-9">
-              <div class="flex items-center">
-                New book
-              </div>
-            </li>
+            <%= live_redirect to: Routes.book_index_path(@socket, :new) do %>
+              <li class="hover:cursor-pointer hover:text-white hover:bg-indigo-600 text-purple-900 cursor-default select-none relative py-2 pl-3 pr-9">
+                <div class="flex items-center">
+                  New book
+                </div>
+              </li>
+            <% end %>
         </ul>
       </div>
     </div>
