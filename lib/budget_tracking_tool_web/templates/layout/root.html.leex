@@ -18,10 +18,12 @@
       <div class="flex justify-between h-16">
         <div class="flex">
           <div class="hidden sm:-my-px sm:flex sm:space-x-8">
-            <%= ViewHelpers.route(@conn, "/", "Dashboard") %>
-            <%= ViewHelpers.route(@conn, Routes.transaction_index_path(@conn, :index), "Transactions") %>
-            <%= ViewHelpers.route(@conn, Routes.category_index_path(@conn, :index), "Categories") %>
-            <%= ViewHelpers.route(@conn, Routes.book_index_path(@conn, :index), "Books") %>
+            <%= if @current_user do %>
+              <%= ViewHelpers.route(@conn, "/", "Dashboard") %>
+              <%= ViewHelpers.route(@conn, Routes.transaction_index_path(@conn, :index), "Transactions") %>
+              <%= ViewHelpers.route(@conn, Routes.category_index_path(@conn, :index), "Categories") %>
+              <%= ViewHelpers.route(@conn, Routes.book_index_path(@conn, :index), "Books") %>
+            <% end %>
           </div>
         </div>
         <%= if @current_user do %>
@@ -57,7 +59,7 @@
             </div>
           </div>
         <% else %>
-          <div class="flex items-center">
+          <div class="flex items-center space-x-4">
             <%= ViewHelpers.route(@conn, Routes.user_registration_path(@conn, :new), "Register") %>
             <%= ViewHelpers.route(@conn, Routes.user_session_path(@conn, :new), "Login") %>
           </div>
@@ -80,10 +82,12 @@
     <!-- Mobile menu, show/hide based on menu state. -->
     <div x-cloak x-show="mobileMenuOpen" class="sm:hidden" id="mobile-menu">
       <div class="pt-2 pb-3 space-y-1">
-        <%= ViewHelpers.mobile_route(@conn, "/", "Dashboard") %>
-        <%= ViewHelpers.mobile_route(@conn, Routes.transaction_index_path(@conn, :index), "Transactions") %>
-        <%= ViewHelpers.mobile_route(@conn, Routes.category_index_path(@conn, :index), "Categories") %>
-        <%= ViewHelpers.mobile_route(@conn, Routes.book_index_path(@conn, :index), "Books") %>
+        <%= if @current_user do %>
+          <%= ViewHelpers.mobile_route(@conn, "/", "Dashboard") %>
+          <%= ViewHelpers.mobile_route(@conn, Routes.transaction_index_path(@conn, :index), "Transactions") %>
+          <%= ViewHelpers.mobile_route(@conn, Routes.category_index_path(@conn, :index), "Categories") %>
+          <%= ViewHelpers.mobile_route(@conn, Routes.book_index_path(@conn, :index), "Books") %>
+        <% end %>
       </div>
       <div class="pt-4 pb-3 border-t border-gray-200">
         <div class="flex items-center px-4">

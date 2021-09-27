@@ -27,13 +27,14 @@ defmodule BudgetTrackingToolWeb.ViewHelpers do
   end
 
   def route(conn, path, label) do
-    link label, to: path, class: get_route_classes(is_active_route(conn, path))
+    link(label, to: path, class: get_route_classes(is_active_route(conn, path)))
   end
 
   def mobile_route(conn, path, label) do
-    link label,
+    link(label,
       to: path,
       class: get_mobile_route_classes(is_active_route(conn, path))
+    )
   end
 
   defp is_active_route(conn, path) do
@@ -44,6 +45,10 @@ defmodule BudgetTrackingToolWeb.ViewHelpers do
   defp get_route_classes(true), do: "border-indigo-500 text-gray-900 #{@default_route_classes}"
   defp get_route_classes(false), do: "border-transparent text-gray-500 #{@default_route_classes}"
 
-  defp get_mobile_route_classes(true), do: "bg-indigo-50 border-indigo-500 text-indigo-700 #{@default_mobile_route_classes}"
-  defp get_mobile_route_classes(false), do: "border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800 #{@default_mobile_route_classes}"
+  defp get_mobile_route_classes(true),
+    do: "bg-indigo-50 border-indigo-500 text-indigo-700 #{@default_mobile_route_classes}"
+
+  defp get_mobile_route_classes(false),
+    do:
+      "border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800 #{@default_mobile_route_classes}"
 end
