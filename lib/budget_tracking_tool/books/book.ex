@@ -4,7 +4,7 @@ defmodule BudgetTrackingTool.Books.Book do
 
   schema "books" do
     field :name, :string
-    field :starting_balance, :float
+    field :starting_balance, Money.Ecto.Amount.Type
 
     belongs_to :org, BudgetTrackingTool.Accounts.Org
     has_many :budgets, BudgetTrackingTool.Budgets.Budget

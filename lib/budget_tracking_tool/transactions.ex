@@ -148,7 +148,7 @@ defmodule BudgetTrackingTool.Transactions do
             t.date <= ^date,
         select: t
     )
-    |> Enum.reduce(0, fn t, acc -> acc + t.amount end)
+    |> Enum.reduce(0, fn t, acc -> acc + t.amount.amount end)
   end
 
   def calculate_leftover_budget_for_month(month, year, book_id) do
@@ -173,7 +173,7 @@ defmodule BudgetTrackingTool.Transactions do
             t.date < ^date,
         select: t
     )
-    |> Enum.reduce(0, fn t, acc -> acc + t.amount end)
+    |> Enum.reduce(0, fn t, acc -> acc + t.amount.amount end)
   end
 
   def calculate_balance_for_month(month, year, book_id) do
@@ -188,8 +188,8 @@ defmodule BudgetTrackingTool.Transactions do
         select: t
     )
     |> Repo.preload([:category])
-    |> Enum.reduce(book.starting_balance, fn t, acc ->
-      if t.category.is_income, do: acc + t.amount, else: acc - t.amount
+    |> Enum.reduce(book.starting_balance.amount, fn t, acc ->
+      if t.category.is_income, do: acc + t.amount.amount, else: acc - t.amount.amount
     end)
   end
 
@@ -207,7 +207,7 @@ defmodule BudgetTrackingTool.Transactions do
             t.date <= ^end_of_month,
         select: t
     )
-    |> Enum.reduce(0, fn t, acc -> acc + t.amount end)
+    |> Enum.reduce(0, fn t, acc -> acc + t.amount.amount end)
   end
 
   defp total_overspent(amount) when amount >= 0, do: 0

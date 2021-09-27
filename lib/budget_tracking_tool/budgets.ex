@@ -138,7 +138,7 @@ defmodule BudgetTrackingTool.Budgets do
               b.date <= ^end_of_month,
           select: b
       )
-      |> Enum.reduce(0, fn b, acc -> acc + b.amount end)
+      |> Enum.reduce(0, fn b, acc -> acc + b.amount.amount end)
 
     total_expenses =
       Transactions.calculate_expenses_for_month(
@@ -164,7 +164,7 @@ defmodule BudgetTrackingTool.Budgets do
             b.date < ^beginning_of_month,
         select: b
     )
-    |> Enum.reduce(0, fn b, acc -> acc + b.amount end)
+    |> Enum.reduce(0, fn b, acc -> acc + b.amount.amount end)
   end
 
   def calculate_budgetted_for_month(month, year, book_id) do
@@ -180,6 +180,6 @@ defmodule BudgetTrackingTool.Budgets do
             b.date <= ^date,
         select: b
     )
-    |> Enum.reduce(0, fn b, acc -> acc + b.amount end)
+    |> Enum.reduce(0, fn b, acc -> acc + b.amount.amount end)
   end
 end

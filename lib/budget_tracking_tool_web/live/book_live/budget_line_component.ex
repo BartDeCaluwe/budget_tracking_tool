@@ -35,10 +35,10 @@ defmodule BudgetLineComponent do
           <div x-show="!open" class="px-6 py-4"><%= budget.amount %></div>
         </td>
         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right">
-          <%= spent_in_category(transactions) %>
+          <%= Money.new(spent_in_category(transactions)) %>
         </td>
         <td class={"px-6 py-4 whitespace-nowrap text-right text-sm font-medium #{get_available_text_color(available_in_category)}"}>
-          <%= available_in_category %>
+          <%= Money.new(available_in_category) %>
         </td>
       </tr>
     """
@@ -50,7 +50,7 @@ defmodule BudgetLineComponent do
         transactions,
         _book_id
       ) do
-    budget.amount - spent_in_category(transactions)
+    budget.amount.amount - spent_in_category(transactions)
   end
 
   def available_in_category(
@@ -76,7 +76,7 @@ defmodule BudgetLineComponent do
 
   defp total_amount(transactions) do
     transactions
-    |> Enum.map(& &1.amount)
+    |> Enum.map(& &1.amount.amount)
     |> Enum.reduce(fn t, acc -> acc + t end)
   end
 

@@ -25,10 +25,10 @@ defmodule BudgetTrackingToolWeb.BookLive.Show do
     %{"date" => date} = Map.merge(@default_params, params)
 
     date = Date.from_iso8601!(date)
-
     book = Books.get_book!(id)
     transactions = list_transactions(date, id)
     balance = calculate_balance_for_month(date, id)
+    default_category = Enum.at(list_categories(), 0)
 
     {:noreply,
      socket
@@ -46,7 +46,8 @@ defmodule BudgetTrackingToolWeb.BookLive.Show do
        date: date,
        book_id: id,
        org_id: BudgetTrackingTool.Repo.get_org_id(),
-       category: Enum.at(list_categories(), 0)
+       category_id: default_category.id,
+       category: default_category
      })}
   end
 
@@ -113,7 +114,7 @@ defmodule BudgetTrackingToolWeb.BookLive.Show do
 
   def total_budgetted(budgets) do
     budgets
-    |> Enum.map(& &1.amount)
+    |> Enum.map(& &1.amount.amount)
     |> Enum.reduce(0, fn t, acc -> acc + t end)
   end
 
@@ -139,7 +140,7 @@ defmodule BudgetTrackingToolWeb.BookLive.Show do
         date: date,
         book_id: book_id,
         category_id: category_id,
-        amount: 0,
+        amount: Money.new(0),
         org_id: BudgetTrackingTool.Repo.get_org_id()
       },
       fn b -> b.category_id == category_id end
@@ -150,7 +151,7 @@ defmodule BudgetTrackingToolWeb.BookLive.Show do
 
   defp total_amount(transactions) do
     transactions
-    |> Enum.map(& &1.amount)
+    |> Enum.map(& &1.amount.amount)
     |> Enum.reduce(0, fn t, acc -> acc + t end)
   end
 

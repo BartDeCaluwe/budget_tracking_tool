@@ -3,7 +3,7 @@ defmodule BudgetTrackingTool.Repo.Migrations.AddStartingBalanceToBook do
 
   def change do
     alter table(:books) do
-      add :starting_balance, :float, default: 0
+      add :starting_balance, :integer, default: 0
     end
   end
 end

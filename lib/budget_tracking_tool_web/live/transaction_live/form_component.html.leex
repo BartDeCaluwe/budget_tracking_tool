@@ -9,7 +9,7 @@
     <div class="col-span-12 md:col-span-6 <%= if @stacked, do: "lg:col-span-12", else: "lg:col-span-2" %>" phx-feedback-for="transaction[amount]">
       <%= label f, :amount, class: "sr-only" %>
       <div class="mt-1">
-        <%= text_input f, :amount, type: "number", placeholder: "0" %>
+        <%= text_input f, :amount, type: "text", placeholder: to_string(Money.new(0)) %>
         <%= error_tag f, :amount %>
       </div>
     </div>

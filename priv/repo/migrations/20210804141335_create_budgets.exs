@@ -3,7 +3,7 @@ defmodule BudgetTrackingTool.Repo.Migrations.CreateBudgets do
 
   def change do
     create table(:budgets) do
-      add :amount, :float
+      add :amount, :integer
       add :date, :date
       add :org_id, references(:orgs), null: false
       add :category_id, references(:categories, with: [org_id: :org_id])

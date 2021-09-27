@@ -23,6 +23,7 @@ defmodule BudgetTrackingTool.Categories do
   def list_categories do
     Category
     |> order_by(:is_income)
+    |> order_by(:label)
     |> Repo.all()
   end
 
