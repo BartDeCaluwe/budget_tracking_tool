@@ -5,6 +5,7 @@ defmodule BudgetTrackingToolWeb.BookLive.Show do
   alias BudgetTrackingTool.{Budgets, Books, Categories, Transactions}
   alias BudgetTrackingTool.Budgets.Budget
   alias BudgetTrackingTool.Transactions.Transaction
+  alias BudgetTrackingTool.Books.Book
 
   @default_params %{"date" => Date.utc_today() |> Date.to_string()}
 
@@ -172,7 +173,15 @@ defmodule BudgetTrackingToolWeb.BookLive.Show do
   end
 
   defp put_session_assigns(socket, session) do
-    socket
-    |> assign(:selected_book_id, Map.get(session, "selected_book_id", Books.get_book!().id))
+    case Books.get_book() do
+      %Book{} = book ->
+        socket
+        |> assign(:selected_book_id, Map.get(session, "selected_book_id", book.id))
+
+      nil ->
+        socket
+        |> put_flash(:info, "You need to create at least one book before you can start.")
+        |> push_redirect(to: Routes.book_index_path(socket, :new))
+    end
   end
 end
