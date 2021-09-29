@@ -16,7 +16,7 @@
     <div class="sm:col-span-6" phx-feedback-for="book[starting_balance]" >
       <%= label f, :starting_balance %>
       <div class="mt-1">
-        <%= text_input f, :starting_balance, type: "text", placeholder: "starting balance" %>
+        <%= text_input f, :starting_balance, type: "text", placeholder: to_string(Money.new(0)) %>
         <%= error_tag f, :starting_balance %>
       </div>
     </div>
