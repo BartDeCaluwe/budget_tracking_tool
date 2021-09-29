@@ -354,7 +354,7 @@ defmodule BudgetTrackingTool.Accounts do
   def get_user_by_reset_password_token(token) do
     with {:ok, query} <-
            UserToken.verify_email_token_query(token, "reset_password"),
-         %User{} = user <- Repo.one(query) do
+         %User{} = user <- Repo.one(query, skip_org_id: true) do
       user
     else
       _ -> nil
