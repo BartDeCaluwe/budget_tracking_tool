@@ -16,6 +16,6 @@ defmodule BudgetTrackingTool.Books.Book do
   def changeset(book, attrs) do
     book
     |> cast(attrs, [:name, :starting_balance, :org_id])
-    |> validate_required([:name, :starting_balance, :org_id])
+    |> validate_required([:name, :org_id])
   end
 end
