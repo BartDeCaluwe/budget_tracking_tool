@@ -39,6 +39,7 @@ defmodule BudgetTrackingTool.Books do
   """
   def get_book!(id), do: Repo.get!(Book, id)
   def get_book!, do: Book |> first |> Repo.one()
+  def get_book, do: Book |> first |> Repo.one()
 
   @doc """
   Creates a book.
