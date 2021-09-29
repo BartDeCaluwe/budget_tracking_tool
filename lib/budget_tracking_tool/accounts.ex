@@ -375,10 +375,11 @@ defmodule BudgetTrackingTool.Accounts do
   """
   def reset_user_password(user, attrs) do
     Ecto.Multi.new()
-    |> Ecto.Multi.update(:user, User.password_changeset(user, attrs))
+    |> Ecto.Multi.update(:user, User.password_changeset(user, attrs), skip_org_id: true)
     |> Ecto.Multi.delete_all(
       :tokens,
-      UserToken.user_and_contexts_query(user, :all)
+      UserToken.user_and_contexts_query(user, :all),
+      skip_org_id: true
     )
     |> Repo.transaction()
     |> case do
