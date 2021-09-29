@@ -174,9 +174,9 @@ defmodule BudgetTrackingToolWeb.BookLive.Show do
 
   defp put_session_assigns(socket, session) do
     case Books.get_book() do
-      %Book{} = book ->
+      %Book{id: id} ->
         socket
-        |> assign(:selected_book_id, Map.get(session, "selected_book_id", book.id))
+        |> assign(:selected_book_id, Map.get(session, "selected_book_id", id))
 
       nil ->
         socket
