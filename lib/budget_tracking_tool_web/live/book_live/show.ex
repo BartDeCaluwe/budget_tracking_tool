@@ -6,6 +6,7 @@ defmodule BudgetTrackingToolWeb.BookLive.Show do
   alias BudgetTrackingTool.Budgets.Budget
   alias BudgetTrackingTool.Transactions.Transaction
   alias BudgetTrackingTool.Books.Book
+  alias BudgetTrackingTool.Categories.Category
 
   @default_params %{"date" => Date.utc_today() |> Date.to_string()}
 
@@ -29,7 +30,6 @@ defmodule BudgetTrackingToolWeb.BookLive.Show do
     book = Books.get_book!(id)
     transactions = list_transactions(date, id)
     balance = calculate_balance_for_month(date, id)
-    default_category = Enum.at(list_categories(), 0)
 
     {:noreply,
      socket
@@ -42,14 +42,7 @@ defmodule BudgetTrackingToolWeb.BookLive.Show do
      |> assign(:balance, balance)
      |> assign(:budgets, list_budgets(date, id))
      |> assign(:transactions, transactions)
-     |> assign(:transaction, %Transaction{
-       amount: nil,
-       date: date,
-       book_id: id,
-       org_id: BudgetTrackingTool.Repo.get_org_id(),
-       category_id: default_category.id,
-       category: default_category
-     })}
+     |> put_default_transaction_assigns(date, id)}
   end
 
   @impl true
@@ -182,6 +175,26 @@ defmodule BudgetTrackingToolWeb.BookLive.Show do
         socket
         |> put_flash(:info, "You need to create at least one book before you can start.")
         |> push_redirect(to: Routes.book_index_path(socket, :new))
+    end
+  end
+
+  defp put_default_transaction_assigns(socket, date, id) do
+    case Enum.at(list_categories(), 0) do
+      %Category{} = category ->
+        socket
+        |> assign(:transaction, %Transaction{
+          amount: nil,
+          date: date,
+          book_id: id,
+          org_id: BudgetTrackingTool.Repo.get_org_id(),
+          category_id: category.id,
+          category: category
+        })
+
+      nil ->
+        socket
+        |> put_flash(:info, "You need to create at least one category before you can start.")
+        |> push_redirect(to: Routes.category_index_path(socket, :new))
     end
   end
 end
