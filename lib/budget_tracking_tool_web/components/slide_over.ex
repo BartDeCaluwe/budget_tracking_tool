@@ -3,7 +3,16 @@ defmodule BudgetTrackingToolWeb.Components.SlideOverComponent do
 
   @impl true
   def render(assigns) do
-    assigns = assign(assigns, :opts, assigns.opts ++ [slide_over: true])
+    assigns =
+      assign(
+        assigns,
+        :opts,
+        assigns.opts ++
+          [
+            slide_over: true,
+            form_id: "slide-over-form"
+          ]
+      )
 
     ~H"""
     <div id={@id}
@@ -60,7 +69,7 @@ defmodule BudgetTrackingToolWeb.Components.SlideOverComponent do
                   <button phx-click="close" phx-target={@myself} type="button" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     Cancel
                   </button>
-                  <button @click="$dispatch('slide-over-form-submit')" type="submit" class="ml-4 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                  <button form="slide-over-form" type="submit" class="ml-4 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     Save
                   </button>
                 </div>

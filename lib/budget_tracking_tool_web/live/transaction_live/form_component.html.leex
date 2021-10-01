@@ -1,5 +1,5 @@
 <%= f = form_for @changeset, "#",
-  id: "transaction-form",
+  id: assigns[:form_id] || "transaction-form",
   phx_target: @myself,
   phx_change: "validate",
   phx_submit: "save" %>
@@ -123,7 +123,7 @@
     </div>
 
     <div class="col-span-12 <%= if assigns[:slide_over], do: "invisible" %> <%= if @stacked, do: "lg:col-span-12", else: "lg:col-span-1" %>">
-      <div class="mt-1 sm:flex sm:flex-row-reverse <%= if assigns[:slide_over], do: "invisible" %>" @slide-over-form-submit.window="document.getElementById('transaction-form-submit-button').click()">
+      <div class="mt-1 sm:flex sm:flex-row-reverse <%= if assigns[:slide_over], do: "invisible" %>">
         <%= submit "Save", phx_disable_with: "Saving...", type: "submit", id: "transaction-form-submit-button", class: "mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm" %>
       </div>
     </div>
