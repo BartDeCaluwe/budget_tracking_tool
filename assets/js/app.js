@@ -20,17 +20,17 @@
 //
 
 // Include phoenix_html to handle method=PUT/DELETE in forms and buttons.
-import "phoenix_html"
+import 'phoenix_html'
 
 // Establish Phoenix Socket and LiveView configuration.
-import { Socket } from "phoenix"
-import { LiveSocket } from "phoenix_live_view"
-import topbar from "../vendor/topbar"
-import Alpine from "alpinejs";
-import flatpickr from "flatpickr";
+import { Socket } from 'phoenix'
+import { LiveSocket } from 'phoenix_live_view'
+import topbar from '../vendor/topbar'
+import Alpine from 'alpinejs'
+import flatpickr from 'flatpickr'
 
-window.Alpine = Alpine;
-Alpine.start();
+window.Alpine = Alpine
+Alpine.start()
 
 let Hooks = {}
 
@@ -38,40 +38,45 @@ Hooks.Flatpickr = {
   mounted() {
     flatpickr(this.el, {
       altInput: true,
-      altFormat: "d M Y",
+      altFormat: 'd M Y',
       wrap: true,
-    });
-  }
+    })
+  },
 }
 
-let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
-let liveSocket = new LiveSocket("/live", Socket, {
+let csrfToken = document
+  .querySelector("meta[name='csrf-token']")
+  .getAttribute('content')
+let liveSocket = new LiveSocket('/live', Socket, {
   params: { _csrf_token: csrfToken },
   hooks: Hooks,
   dom: {
     onBeforeElUpdated(from, to) {
       if (from._x_dataStack) {
-        window.Alpine.clone(from, to);
+        window.Alpine.clone(from, to)
       }
-      if (from.classList.contains("flatpickr") && from._flatpickr !== undefined) {
-        from._flatpickr.destroy()
+      if (
+        from.classList.contains('flatpickr') &&
+        from._flatpickr !== undefined
+      ) {
+        from._flatpickr.setDate(to.children[0].value, false)
 
         const fp = flatpickr(to, {
           altInput: true,
-          altFormat: "d M Y",
+          altFormat: 'd M Y',
           wrap: true,
-        });
+        })
 
         fp.setDate(to.children[0].value, false)
-       }
+      }
     },
   },
-});
+})
 
 // Show progress bar on live navigation and form submits
-topbar.config({ barColors: { 0: "#29d" }, shadowColor: "rgba(0, 0, 0, .3)" })
-window.addEventListener("phx:page-loading-start", info => topbar.show())
-window.addEventListener("phx:page-loading-stop", info => topbar.hide())
+topbar.config({ barColors: { 0: '#29d' }, shadowColor: 'rgba(0, 0, 0, .3)' })
+window.addEventListener('phx:page-loading-start', (info) => topbar.show())
+window.addEventListener('phx:page-loading-stop', (info) => topbar.hide())
 
 // connect if there are any LiveViews on the page
 liveSocket.connect()
