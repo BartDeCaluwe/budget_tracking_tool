@@ -61,17 +61,17 @@
         <h1 class="text-lg"><%= format_date(@selected_month) %></h1>
       </div>
       <div class="space-x-4 flex items-center">
-        <%= live_patch to: Routes.book_show_path(@socket, :show, @book.id, date: previous_month(@selected_month)), class: "inline-flex items-center p-1 border border-transparent rounded-full shadow-sm text-purple-500 bg-purple-100 hover:bg-purple-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" do  %>
+        <%= live_patch to: "/?date=#{previous_month(@selected_month)}", class: "inline-flex items-center p-1 border border-transparent rounded-full shadow-sm text-purple-500 bg-purple-100 hover:bg-purple-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" do  %>
           <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
               <path d="M13.36,17a1,1,0,0,1-.72-.31l-3.86-4a1,1,0,0,1,0-1.4l4-4a1,1,0,1,1,1.42,1.42L10.9,12l3.18,3.3a1,1,0,0,1,0,1.41A1,1,0,0,1,13.36,17Z"></path>
             </svg>
         <% end %>
-        <%= live_patch to: Routes.book_show_path(@socket, :show, @book.id, date: next_month(@selected_month)), class: "inline-flex items-center p-1 border border-transparent rounded-full shadow-sm text-purple-500 bg-purple-100 hover:bg-purple-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" do  %>
+        <%= live_patch to: "/?date=#{next_month(@selected_month)}", class: "inline-flex items-center p-1 border border-transparent rounded-full shadow-sm text-purple-500 bg-purple-100 hover:bg-purple-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" do  %>
           <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path class="cls-2" d="M10.5,17a1,1,0,0,1-.71-.29,1,1,0,0,1,0-1.42L13.1,12,9.92,8.69a1,1,0,0,1,0-1.41,1,1,0,0,1,1.42,0l3.86,4a1,1,0,0,1,0,1.4l-4,4A1,1,0,0,1,10.5,17Z"></path>
           </svg>
         <% end %>
-        <%= live_patch to: Routes.book_show_path(@socket, :show, @book.id, date: current_month()), class: "inline-flex px-1 items-center border border-transparent rounded-sm text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" do  %>
+        <%= live_patch to: "/?date=#{current_month()}", class: "inline-flex px-1 items-center border border-transparent rounded-sm text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" do  %>
           <span>Today</span>
         <% end %>
       </div>
