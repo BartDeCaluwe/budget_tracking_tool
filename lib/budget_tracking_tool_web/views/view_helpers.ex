@@ -42,11 +42,11 @@ defmodule BudgetTrackingToolWeb.ViewHelpers do
     path == current_path
   end
 
-  defp get_route_classes(true), do: "border-indigo-500 text-gray-900 #{@default_route_classes}"
+  defp get_route_classes(true), do: "border-green-500 text-gray-900 #{@default_route_classes}"
   defp get_route_classes(false), do: "border-transparent text-gray-500 #{@default_route_classes}"
 
   defp get_mobile_route_classes(true),
-    do: "bg-indigo-50 border-indigo-500 text-indigo-700 #{@default_mobile_route_classes}"
+    do: "bg-green-50 border-green-500 text-green-700 #{@default_mobile_route_classes}"
 
   defp get_mobile_route_classes(false),
     do:

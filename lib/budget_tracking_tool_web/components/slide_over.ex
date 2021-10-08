@@ -45,8 +45,8 @@ defmodule BudgetTrackingToolWeb.Components.SlideOverComponent do
                         <%= @opts[:title] %>
                       </h2>
                       <div class="ml-3 h-7 flex items-center">
-                        <button type="button" class="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                          <%= live_patch  to: @return_to, class: "phx-modal-close bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" do %>
+                        <button type="button" class="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500">
+                          <%= live_patch  to: @return_to, class: "phx-modal-close bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" do %>
                             <span class="sr-only">Close</span>
                             <!-- Heroicon name: outline/x -->
                             <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
@@ -66,10 +66,10 @@ defmodule BudgetTrackingToolWeb.Components.SlideOverComponent do
                   </div>
                 </div>
                 <div class="flex-shrink-0 px-4 py-4 flex justify-end">
-                  <button phx-click="close" phx-target={@myself} type="button" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                  <button phx-click="close" phx-target={@myself} type="button" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
                     Cancel
                   </button>
-                  <button form="slide-over-form" type="submit" class="ml-4 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                  <button form="slide-over-form" type="submit" class="ml-4 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
                     Save
                   </button>
                 </div>

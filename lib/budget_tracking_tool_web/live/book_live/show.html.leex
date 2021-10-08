@@ -2,7 +2,7 @@
   <div class="px-4 md:px-6 py-2 w-full bg-white shadow rounded text-gray-500 block md:flex items-center justify-between md:space-x-4 space-y-4 md:space-y-0">
     <div class="w-full md:w-1/3" x-data="{open: false}">
       <div class="mt-1 relative">
-        <button @click="open = !open" @click.outside="open = false" type="button" class="relative w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label">
+        <button @click="open = !open" @click.outside="open = false" type="button" class="relative w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500 sm:text-sm" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label">
           <div class="flex items-center">
             <span class="block truncate">
               <%= @book.name %>
@@ -28,7 +28,7 @@
             <li phx-click="select-book"
                 phx-value-book_id="<%= book.id %>"
                 @click="open = false"
-                class="hover:text-white hover:bg-indigo-600 text-gray-900 cursor-default select-none relative py-2 pl-3 pr-9"
+                class="hover:text-white hover:bg-green-600 text-gray-900 cursor-default select-none relative py-2 pl-3 pr-9"
                 id="<%= "listbox-option-#{index}" %>"
                 role="option">
               <div class="flex items-center">
@@ -37,7 +37,7 @@
                   <%= book.name %>
                 </span>
               </div>
-              <span class="text-indigo-600 absolute inset-y-0 right-0 flex items-center pr-4">
+              <span class="text-green-600 absolute inset-y-0 right-0 flex items-center pr-4">
                 <%= if @book.id == book.id do %>
                   <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
@@ -47,7 +47,7 @@
             </li>
           <% end %>
             <%= live_redirect to: Routes.book_index_path(@socket, :new) do %>
-              <li class="hover:cursor-pointer hover:text-white hover:bg-indigo-600 text-purple-900 cursor-default select-none relative py-2 pl-3 pr-9">
+              <li class="hover:cursor-pointer hover:text-white hover:bg-green-600 text-green-900 cursor-default select-none relative py-2 pl-3 pr-9">
                 <div class="flex items-center">
                   New book
                 </div>
@@ -61,17 +61,17 @@
         <h1 class="text-lg"><%= format_date(@selected_month) %></h1>
       </div>
       <div class="space-x-4 flex items-center">
-        <%= live_patch to: "/?date=#{previous_month(@selected_month)}", class: "inline-flex items-center p-1 border border-transparent rounded-full shadow-sm text-purple-500 bg-purple-100 hover:bg-purple-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" do  %>
+        <%= live_patch to: "/?date=#{previous_month(@selected_month)}", class: "inline-flex items-center p-1 border border-transparent rounded-full shadow-sm text-green-600 bg-green-100 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" do  %>
           <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
               <path d="M13.36,17a1,1,0,0,1-.72-.31l-3.86-4a1,1,0,0,1,0-1.4l4-4a1,1,0,1,1,1.42,1.42L10.9,12l3.18,3.3a1,1,0,0,1,0,1.41A1,1,0,0,1,13.36,17Z"></path>
             </svg>
         <% end %>
-        <%= live_patch to: "/?date=#{next_month(@selected_month)}", class: "inline-flex items-center p-1 border border-transparent rounded-full shadow-sm text-purple-500 bg-purple-100 hover:bg-purple-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" do  %>
+        <%= live_patch to: "/?date=#{next_month(@selected_month)}", class: "inline-flex items-center p-1 border border-transparent rounded-full shadow-sm text-green-600 bg-green-100 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" do  %>
           <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path class="cls-2" d="M10.5,17a1,1,0,0,1-.71-.29,1,1,0,0,1,0-1.42L13.1,12,9.92,8.69a1,1,0,0,1,0-1.41,1,1,0,0,1,1.42,0l3.86,4a1,1,0,0,1,0,1.4l-4,4A1,1,0,0,1,10.5,17Z"></path>
           </svg>
         <% end %>
-        <%= live_patch to: "/?date=#{current_month()}", class: "inline-flex px-1 items-center border border-transparent rounded-sm text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" do  %>
+        <%= live_patch to: "/?date=#{current_month()}", class: "inline-flex px-1 items-center border border-transparent rounded-sm text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" do  %>
           <span>Today</span>
         <% end %>
       </div>
@@ -120,7 +120,7 @@
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right">
                 <%= Money.new(total_spent(@transactions)) %>
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right">
+              <td class="px-6 py-4 whitespace-nowrap text-sm <%= get_balance_text_color(@balance) %> text-right">
                 <%= Money.new(@balance) %>
               </td>
             </tr>

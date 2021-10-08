@@ -39,7 +39,7 @@ defmodule BudgetTrackingToolWeb.ModalComponent do
         -->
         <div class="phx-modal-content inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
           <div class="hidden sm:block absolute top-0 right-0 pt-4 pr-4">
-            <%= live_patch  to: @return_to, class: "phx-modal-close bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" do %>
+            <%= live_patch  to: @return_to, class: "phx-modal-close bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" do %>
               <span class="sr-only">Close</span>
               <!-- Heroicon name: outline/x -->
               <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">

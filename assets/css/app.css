@@ -9,7 +9,7 @@
 @import "flatpickr.css";
 
 .flatpickr-day.selected {
-  @apply bg-purple-400 border-purple-400
+  @apply bg-green-400 border-green-400
 }
 
 .phx-no-feedback .invalid-feedback, .phx-no-feedback .valid-feedback {
@@ -46,7 +46,7 @@ form label {
 [type="email"],
 select
  {
-  @apply shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md
+  @apply shadow-sm focus:ring-green-500 focus:border-green-500 block w-full sm:text-sm border-gray-300 rounded-md
 }
 
 .invalid-feedback {

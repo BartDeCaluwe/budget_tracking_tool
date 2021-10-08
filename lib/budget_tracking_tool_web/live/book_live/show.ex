@@ -197,4 +197,12 @@ defmodule BudgetTrackingToolWeb.BookLive.Show do
         |> push_redirect(to: Routes.category_index_path(socket, :new))
     end
   end
+
+  def get_balance_text_color(balance) do
+    if balance < 0 do
+      "text-red-500"
+    else
+      "text-gray-500"
+    end
+  end
 end
