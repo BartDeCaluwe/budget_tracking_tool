@@ -23,14 +23,68 @@
           <table class="min-w-full bg-transparent divide-y divide-gray-200">
             <thead>
               <tr>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Description
+                <th phx-click="order_by" phx-value-property="description" scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:cursor-pointer hover:text-gray-700">
+                  <div class="flex items-center">
+                    <span>Description</span>
+                    <%= if @order_by === "description" do %>
+                      <%= case @order_direction do %>
+                        <% :asc -> %>
+                          <svg class="h-3 w-3 ml-1" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                            <path class="cls-2" d="M18.77,13.36a1,1,0,0,0-1.41-.13L13,16.86V5a1,1,0,0,0-2,0V16.86L6.64,13.23a1,1,0,1,0-1.28,1.54l6,5,.15.09.13.07a1,1,0,0,0,.72,0l.13-.07.15-.09,6-5A1,1,0,0,0,18.77,13.36Z"></path>
+                          </svg>
+                        <% :desc -> %>
+                          <svg class="h-3 w-3 ml-1" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                            <path  d="M5.23,10.64a1,1,0,0,0,1.41.13L11,7.14V19a1,1,0,0,0,2,0V7.14l4.36,3.63a1,1,0,1,0,1.28-1.54l-6-5-.15-.09-.13-.07a1,1,0,0,0-.72,0l-.13.07-.15.09-6,5A1,1,0,0,0,5.23,10.64Z"></path>
+                          </svg>
+                        <% _ -> %>
+                          <div class="ml-1 w-3"></div>
+                      <% end %>
+                    <% else %>
+                      <div class="ml-1 w-3"></div>
+                    <% end %>
+                  </div>
                 </th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-right">
-                  Amount
+                <th phx-click="order_by" phx-value-property="amount" scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-right hover:cursor-pointer hover:text-gray-700">
+                  <div class="flex items-center justify-end">
+                    <span>Amount</span>
+                    <%= if @order_by === "amount" do %>
+                      <%= case @order_direction do %>
+                        <% :asc -> %>
+                          <svg class="h-3 w-3 ml-1" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                            <path class="cls-2" d="M18.77,13.36a1,1,0,0,0-1.41-.13L13,16.86V5a1,1,0,0,0-2,0V16.86L6.64,13.23a1,1,0,1,0-1.28,1.54l6,5,.15.09.13.07a1,1,0,0,0,.72,0l.13-.07.15-.09,6-5A1,1,0,0,0,18.77,13.36Z"></path>
+                          </svg>
+                        <% :desc -> %>
+                          <svg class="h-3 w-3 ml-1" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                            <path  d="M5.23,10.64a1,1,0,0,0,1.41.13L11,7.14V19a1,1,0,0,0,2,0V7.14l4.36,3.63a1,1,0,1,0,1.28-1.54l-6-5-.15-.09-.13-.07a1,1,0,0,0-.72,0l-.13.07-.15.09-6,5A1,1,0,0,0,5.23,10.64Z"></path>
+                          </svg>
+                        <% _ -> %>
+                          <div class="ml-1 w-3"></div>
+                      <% end %>
+                    <% else %>
+                      <div class="ml-1 w-3"></div>
+                    <% end %>
+                  </div>
                 </th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Date
+                <th phx-click="order_by" phx-value-property="date" scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hover:cursor-pointer hover:text-gray-700">
+                  <div class="flex items-center">
+                    <span>Date</span>
+                    <%= if @order_by === "date" do %>
+                      <%= case @order_direction do %>
+                        <% :asc -> %>
+                          <svg class="h-3 w-3 ml-1" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                            <path class="cls-2" d="M18.77,13.36a1,1,0,0,0-1.41-.13L13,16.86V5a1,1,0,0,0-2,0V16.86L6.64,13.23a1,1,0,1,0-1.28,1.54l6,5,.15.09.13.07a1,1,0,0,0,.72,0l.13-.07.15-.09,6-5A1,1,0,0,0,18.77,13.36Z"></path>
+                          </svg>
+                        <% :desc -> %>
+                          <svg class="h-3 w-3 ml-1" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                            <path  d="M5.23,10.64a1,1,0,0,0,1.41.13L11,7.14V19a1,1,0,0,0,2,0V7.14l4.36,3.63a1,1,0,1,0,1.28-1.54l-6-5-.15-.09-.13-.07a1,1,0,0,0-.72,0l-.13.07-.15.09-6,5A1,1,0,0,0,5.23,10.64Z"></path>
+                          </svg>
+                        <% _ -> %>
+                          <div class="ml-1 w-3"></div>
+                      <% end %>
+                    <% else %>
+                        <div class="ml-1 w-3"></div>
+                    <% end %>
+                  </div>
                 </th>
                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Category

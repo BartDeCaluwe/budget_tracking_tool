@@ -28,6 +28,22 @@ defmodule BudgetTrackingTool.Transactions do
     |> Repo.preload([:category, :book])
   end
 
+  def list_transactions(:asc, order_by) do
+    Repo.all(
+      from t in Transaction,
+        order_by: [asc: field(t, ^order_by)]
+    )
+    |> Repo.preload([:category, :book])
+  end
+
+  def list_transactions(:desc, order_by) do
+    Repo.all(
+      from t in Transaction,
+        order_by: [desc: field(t, ^order_by)]
+    )
+    |> Repo.preload([:category, :book])
+  end
+
   def list_transactions(month, year, book_id) do
     beginning_of_month = Dates.beginning_of_month(month, year)
     end_of_month = Dates.end_of_month(month, year)

@@ -12,7 +12,9 @@ defmodule BudgetTrackingToolWeb.TransactionLive.Index do
     {:ok,
      socket
      |> assign(:transactions, list_transactions())
-     |> assign(:categories, list_categories())}
+     |> assign(:categories, list_categories())
+     |> assign(:order_by, nil)
+     |> assign(:order_direction, nil)}
   end
 
   @impl true
@@ -48,11 +50,35 @@ defmodule BudgetTrackingToolWeb.TransactionLive.Index do
     {:noreply, assign(socket, :transactions, list_transactions())}
   end
 
+  def handle_event("order_by", %{"property" => property}, socket) do
+    order_direction = get_order_direction(socket.assigns.order_direction, socket.assigns.order_by, property)
+
+    {:noreply,
+     socket
+     |> assign(:transactions, list_transactions(property, order_direction))
+     |> assign(:order_by, property)
+     |> assign(:order_direction, order_direction)}
+  end
+
   defp list_transactions do
     Transactions.list_transactions()
   end
 
+  defp list_transactions(order_by, order_direction) do
+    Transactions.list_transactions(order_direction, String.to_atom(order_by))
+  end
+
   defp list_categories do
     Categories.list_categories()
+  end
+
+  defp get_order_direction(nil, nil, _property), do: :asc
+
+  defp get_order_direction(:asc, order_by, property) do
+    if order_by === property, do: :desc, else: :asc
+  end
+
+  defp get_order_direction(:desc, order_by, property) do
+    if order_by === property, do: :asc, else: :desc
   end
 end
