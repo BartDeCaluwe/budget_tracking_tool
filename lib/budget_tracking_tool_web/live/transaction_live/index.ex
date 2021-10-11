@@ -63,12 +63,33 @@ defmodule BudgetTrackingToolWeb.TransactionLive.Index do
      |> assign(:order_direction, order_direction)}
   end
 
+  @impl true
+  def handle_info({:filter_transactions, filters}, socket) do
+    {:noreply,
+     socket
+     |> assign(
+       :transactions,
+       list_transactions(
+         socket.assigns.order_by,
+         socket.assigns.order_direction,
+         filters
+       )
+     )}
+  end
+
   defp list_transactions do
     Transactions.list_transactions()
   end
 
   defp list_transactions(order_by, order_direction) do
-    Transactions.list_transactions(order_direction, String.to_atom(order_by))
+    Transactions.list_transactions(%{order_direction: order_direction, order_by: String.to_atom(order_by)})
+  end
+
+  defp list_transactions(order_by, order_direction, filters) do
+    Transactions.list_transactions(
+      %{order_direction: order_direction, order_by: String.to_atom(order_by)},
+      filters
+    )
   end
 
   defp list_categories do

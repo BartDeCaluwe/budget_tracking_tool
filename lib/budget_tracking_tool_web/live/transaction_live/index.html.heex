@@ -16,6 +16,8 @@
     redirect_to="/"
     button_text="New Transaction" />
 <% else %>
+  <div>
+  <%= live_component BudgetTrackingToolWeb.TransactionLive.FilterComponent, id: "filter-transaction" %>
   <div class="hidden md:flex md:flex-col">
     <div class="-my-2 sm:-mx-6 lg:-mx-8">
       <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
@@ -190,4 +192,5 @@
       </div>
     <% end %>
   </div>
+</div>
 <% end %>

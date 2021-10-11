@@ -28,19 +28,54 @@ defmodule BudgetTrackingTool.Transactions do
     |> Repo.preload([:category, :book])
   end
 
-  def list_transactions(:asc, order_by) do
-    Repo.all(
-      from t in Transaction,
-        order_by: [asc: field(t, ^order_by)]
-    )
+  def list_transactions(order_params) do
+    query = from(t in Transaction)
+
+    query =
+      query
+      |> add_order_by(order_params)
+
+    Repo.all(query)
     |> Repo.preload([:category, :book])
   end
 
-  def list_transactions(:desc, order_by) do
-    Repo.all(
-      from t in Transaction,
-        order_by: [desc: field(t, ^order_by)]
-    )
+  defp add_order_by(query, %{order_direction: :asc, order_by: order_by}) do
+    from t in query,
+      order_by: [asc: field(t, ^order_by)]
+  end
+
+  defp add_order_by(query, %{order_direction: :desc, order_by: order_by}) do
+    from t in query,
+      order_by: [desc: field(t, ^order_by)]
+  end
+
+  def list_transactions(order_params, criteria) when is_list(criteria) do
+    query =
+      from(t in Transaction)
+      |> add_order_by(order_params)
+
+    IO.inspect(criteria)
+
+    Enum.reduce(criteria, query, fn
+      {:min_amount, ""}, query ->
+        query
+
+      {:min_amount, min_amount}, query ->
+        from q in query, where: q.amount >= ^min_amount
+
+      {:max_amount, ""}, query ->
+        query
+
+      {:max_amount, max_amount}, query ->
+        from q in query, where: q.amount <= ^max_amount
+
+      {:description, ""}, query ->
+        query
+
+      {:description, description}, query ->
+        from q in query, where: ilike(q.description, ^"%#{String.replace(description, "%", "\\%")}%")
+    end)
+    |> Repo.all()
     |> Repo.preload([:category, :book])
   end
 
