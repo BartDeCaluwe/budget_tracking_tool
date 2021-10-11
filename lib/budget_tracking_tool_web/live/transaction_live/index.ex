@@ -5,16 +5,19 @@ defmodule BudgetTrackingToolWeb.TransactionLive.Index do
   alias BudgetTrackingTool.Transactions.Transaction
   alias BudgetTrackingTool.Categories
 
+  @default_order_by "date"
+  @default_order_direction :asc
+
   @impl true
   def mount(_params, session, socket) do
     put_org_id_from_session(session)
 
     {:ok,
      socket
-     |> assign(:transactions, list_transactions())
+     |> assign(:transactions, list_transactions(@default_order_by, @default_order_direction))
      |> assign(:categories, list_categories())
-     |> assign(:order_by, nil)
-     |> assign(:order_direction, nil)}
+     |> assign(:order_by, @default_order_by)
+     |> assign(:order_direction, @default_order_direction)}
   end
 
   @impl true
