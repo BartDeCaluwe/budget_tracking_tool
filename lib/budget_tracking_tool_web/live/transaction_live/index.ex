@@ -14,6 +14,7 @@ defmodule BudgetTrackingToolWeb.TransactionLive.Index do
 
     {:ok,
      socket
+     |> assign(:filter, false)
      |> assign(:transactions, list_transactions(@default_order_by, @default_order_direction))
      |> assign(:categories, list_categories())
      |> assign(:order_by, @default_order_by)
@@ -67,6 +68,7 @@ defmodule BudgetTrackingToolWeb.TransactionLive.Index do
   def handle_info({:filter_transactions, filters}, socket) do
     {:noreply,
      socket
+     |> assign(:filter, true)
      |> assign(
        :transactions,
        list_transactions(

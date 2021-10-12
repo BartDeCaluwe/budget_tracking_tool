@@ -74,6 +74,15 @@ defmodule BudgetTrackingTool.Transactions do
 
       {:description, description}, query ->
         from q in query, where: ilike(q.description, ^"%#{String.replace(description, "%", "\\%")}%")
+
+      {:category, %{id: 0}}, query ->
+        query
+
+      {:category, category}, query ->
+        from q in query,
+          join: c in Category,
+          on: c.id == q.category_id,
+          where: q.id == ^category.id
     end)
     |> Repo.all()
     |> Repo.preload([:category, :book])
