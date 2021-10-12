@@ -54,8 +54,6 @@ defmodule BudgetTrackingTool.Transactions do
       from(t in Transaction)
       |> add_order_by(order_params)
 
-    IO.inspect(criteria)
-
     Enum.reduce(criteria, query, fn
       {:min_amount, ""}, query ->
         query
