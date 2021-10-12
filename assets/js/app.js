@@ -68,6 +68,15 @@ let liveSocket = new LiveSocket('/live', Socket, {
         })
 
         fp.setDate(to.children[0].value, false)
+
+        const flatpickrCalendars = document.querySelectorAll(
+          '.flatpickr-calendar'
+        )
+        if (flatpickrCalendars.length > 1) {
+          flatpickrCalendars.forEach(
+            (calendar, i) => i !== 0 && calendar.remove()
+          )
+        }
       }
     },
   },
