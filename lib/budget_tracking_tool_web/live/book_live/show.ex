@@ -99,11 +99,18 @@ defmodule BudgetTrackingToolWeb.BookLive.Show do
   end
 
   def to_be_budgetted(date, book_id) do
-    Transactions.calculate_income_for_month(
-      date.month(),
-      date.year(),
-      book_id
-    )
+    to_be_budgetted =
+      Transactions.calculate_income_for_month(
+        date.month(),
+        date.year(),
+        book_id
+      )
+
+    if to_be_budgetted > 0 do
+      to_be_budgetted
+    else
+      0
+    end
   end
 
   def total_budgetted(budgets) do
