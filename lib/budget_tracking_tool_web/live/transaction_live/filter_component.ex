@@ -19,12 +19,17 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FilterComponent do
      socket
      |> assign(assigns)
      |> assign(:categories, categories)
+     |> assign(:max_amount, nil)
+     |> assign(:min_amount, nil)
+     |> assign(:description, nil)
      |> assign(:selected_category, Enum.at(categories, 0))}
   end
 
   def render(assigns) do
     ~H"""
-    <form phx-submit="save" phx-target={@myself} class="flex justify-between mb-3">
+    <form phx-submit="save" phx-change="validate"
+                  phx-blur="validate"
+    phx-target={@myself} class="flex justify-between mb-3">
       <div class="grid grid-cols-4 gap-2">
         <div>
           <label for="description" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
@@ -35,6 +40,7 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FilterComponent do
                   name="description"
                   id="description"
                   placeholder="shopping"
+                  value={@description}
                   class="max-w-lg block w-full shadow-sm focus:ring-green-500 focus:border-green-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md">
           </div>
         </div>
@@ -46,6 +52,8 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FilterComponent do
             <input type="text"
                   name="min-amount"
                   id="min-amount"
+                  value={@min_amount}
+                  phx-debounce="blur"
                   placeholder={to_string(Money.new(0))}
                   class="max-w-lg block w-full shadow-sm focus:ring-green-500 focus:border-green-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md">
           </div>
@@ -58,6 +66,8 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FilterComponent do
             <input type="text"
                   name="max-amount"
                   id="max-amount"
+                  value={@max_amount}
+                  phx-debounce="blur"
                   placeholder={to_string(Money.new(0))}
                   class="max-w-lg block w-full shadow-sm focus:ring-green-500 focus:border-green-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md">
           </div>
@@ -158,6 +168,18 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FilterComponent do
   end
 
   def handle_event(
+        "validate",
+        %{"min-amount" => min_amount, "max-amount" => max_amount, "description" => description},
+        socket
+      ) do
+    {:noreply,
+     socket
+     |> validate_amount(:min_amount, min_amount)
+     |> validate_amount(:max_amount, max_amount)
+     |> assign(:description, description)}
+  end
+
+  def handle_event(
         "save",
         %{"min-amount" => min_amount, "max-amount" => max_amount, "description" => description},
         socket
@@ -179,5 +201,15 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FilterComponent do
   defp find_category_by_id(categories, category_id) do
     {id, _} = Integer.parse(category_id)
     Enum.find(categories, @select_category, fn c -> c.id == id end)
+  end
+
+  defp validate_amount(socket, key, amount) do
+    case Money.parse(amount) do
+      :error ->
+        assign(socket, key, nil)
+
+      {:ok, parsed} ->
+        assign(socket, key, parsed)
+    end
   end
 end
