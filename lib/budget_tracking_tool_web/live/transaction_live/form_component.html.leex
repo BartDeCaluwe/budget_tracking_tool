@@ -119,7 +119,7 @@
 
     <div class="col-span-12 <%= if assigns[:slide_over], do: "invisible" %> <%= if @stacked, do: "lg:col-span-12", else: "lg:col-span-1" %>">
       <div class="mt-1 sm:flex sm:flex-row-reverse <%= if assigns[:slide_over], do: "invisible" %>">
-        <%= submit "Save", phx_disable_with: "Saving...", type: "submit", id: "transaction-form-submit-button", class: "ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" %>
+        <%= submit "Save", phx_disable_with: "Saving...", type: "submit", id: "transaction-form-submit-button", class: "sm:ml-3 w-full sm:w-min inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" %>
       </div>
     </div>
   </div>
