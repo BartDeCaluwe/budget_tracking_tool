@@ -16,8 +16,8 @@ defmodule BudgetTrackingToolWeb.BudgetLive.FormComponent do
   @impl true
   def handle_event("validate", %{"budget" => budget_params}, socket) do
     socket.assigns.budget
-      |> Budgets.change_budget(budget_params)
-      |> Map.put(:action, :validate)
+    |> Budgets.change_budget(budget_params)
+    |> Map.put(:action, :validate)
 
     case Budgets.change_budget(socket.assigns.budget, budget_params) do
       {:error, changeset} ->
