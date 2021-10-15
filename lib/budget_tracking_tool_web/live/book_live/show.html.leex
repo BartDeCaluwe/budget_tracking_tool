@@ -1,7 +1,7 @@
 <%= if @live_action in [:transactions] do %>
    <%= live_slide_over BudgetTrackingToolWeb.BudgetLive.TransactionListComponent,
     id: :transaction_list,
-    title: @selected_category.label <> " transactions",
+    title: @selected_category.label <> " transactions for " <> format_date(@selected_month),
     action: @live_action,
     transactions: @transactions_for_budget,
     form: false,
@@ -111,7 +111,7 @@
                 Unbudgetted <span class="font-bold font-mono"><%= Money.new(to_be_budgetted(@selected_month, @book.id)) %></span>
               </th>
               <th scope="col" class="w-1/4 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-right">
-                Budgetted
+                <span class="ml-[2px]">Budgetted</span>
               </th>
               <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-right">
                 Spent
@@ -125,7 +125,7 @@
             <tr>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"></td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right font-mono">
-                <%= Money.new(total_budgetted(@budgets)) %>
+                <span class="mr-[2px]"><%= Money.new(total_budgetted(@budgets)) %></span>
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right font-mono">
                 <%= Money.new(total_spent(@transactions)) %>

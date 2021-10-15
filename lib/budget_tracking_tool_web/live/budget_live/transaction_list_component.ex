@@ -1,8 +1,6 @@
 defmodule BudgetTrackingToolWeb.BudgetLive.TransactionListComponent do
   use BudgetTrackingToolWeb, :live_component
 
-  alias BudgetTrackingTool.Budgets
-
   @impl true
   def update(assigns, socket) do
     {:ok,
@@ -14,6 +12,15 @@ defmodule BudgetTrackingToolWeb.BudgetLive.TransactionListComponent do
   def render(assigns) do
     ~H"""
     <div class="flow-root">
+      <%= if Enum.empty?(@transactions) do %>
+      <div class="mt-4">
+        <BudgetTrackingToolWeb.Components.EmptyState.render
+          title="No transactions"
+          description="Get started by creating a new transaction."
+          redirect_to={@return_to}
+          button_text="New Transaction" />
+      </div>
+      <% else %>
       <ul role="list" class="-mb-8">
         <%= for {transaction, index} <- Enum.with_index(@transactions, 1) do %>
           <li>
@@ -44,7 +51,20 @@ defmodule BudgetTrackingToolWeb.BudgetLive.TransactionListComponent do
           </li>
         <% end %>
       </ul>
+      <% end %>
     </div>
+    """
+  end
+
+  # def footer([transactions: []] = _assigns), do: nil
+
+  def footer(assigns) do
+    ~H"""
+      <div class="flex justify-end">
+        <div class="text-gray-500">Total: <span class="font-medium text-gray-900">
+          <%= Enum.reduce(assigns[:transactions], 0,fn (transaction, acc) -> transaction.amount.amount + acc end) |> Money.new() %>
+          </span></div>
+      </div>
     """
   end
 end

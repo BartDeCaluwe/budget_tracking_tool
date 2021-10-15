@@ -75,6 +75,9 @@ defmodule BudgetTrackingToolWeb.Components.SlideOverComponent do
                     Save
                   </button>
                   <% end %>
+                  <%= if Keyword.has_key?(@component.__info__(:functions), :footer) do %>
+                      <%= @component.footer(@opts) %>
+                  <% end %>
                 </div>
               </div>
             </div>

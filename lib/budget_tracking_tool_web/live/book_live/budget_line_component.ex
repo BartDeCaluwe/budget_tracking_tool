@@ -18,7 +18,7 @@ defmodule BudgetLineComponent do
     ~H"""
       <tr id={"category#{category.id}"} x-data="{ open: false }">
         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-          <span><%= live_patch category.label, to: Routes.book_show_path(@socket, :transactions, @category.id, date: date), class: "hover:cursor-pointer" %></span>
+          <span><%= live_patch category.label, to: Routes.book_show_path(@socket, :transactions, @category.id, date: date), class: "hover:cursor-pointer hover:text-gray-900" %></span>
         </td>
         <td
             @click={"open = true; $nextTick(() => { setTimeout(() => { document.getElementById('category-#{category.id}-budget-input').select(); }, 10);});"}
@@ -33,7 +33,7 @@ defmodule BudgetLineComponent do
               budget: budget,
               return_to: @return_to %>
           </div>
-          <div x-show="!open" class="px-6 py-4 font-mono"><%= budget.amount %></div>
+          <div x-show="!open" class="px-6 py-2 my-2 font-mono rounded-md border-2 border-transparent hover:cursor-pointer hover:border-green-500"><%= budget.amount %></div>
         </td>
         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right font-mono">
           <%= Money.new(spent_in_category(transactions)) %>
