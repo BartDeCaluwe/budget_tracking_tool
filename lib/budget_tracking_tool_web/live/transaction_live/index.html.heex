@@ -144,19 +144,19 @@
       </div>
     </div>
   </div>
-  <div class="md:hidden px-4 space-y-6">
+  <div class="md:hidden space-y-6">
     <%= for transaction <- @transactions do %>
       <div class="bg-white shadow rounded-lg overflow-x-auto">
       <div class="bg-white px-4 py-5 border-b border-gray-200 sm:px-6">
-        <div class="-ml-4 -mt-4 flex justify-between items-center flex-wrap sm:flex-nowrap">
-          <div class="ml-4 mt-4">
+        <div class="flex justify-between items-center flex-wrap sm:flex-nowrap">
+          <div class="">
             <div class="flex items-center">
               <h3 class="text-lg leading-6 font-medium text-gray-900">
                 <%= transaction.description %>
               </h3>
             </div>
           </div>
-          <div class="ml-4 mt-4 flex-shrink-0 flex">
+          <div class="flex-shrink-0 flex">
             <%= live_patch to: Routes.transaction_index_path(@socket, :edit, transaction),
               class: "relative inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500",
               role: "menuitem",
