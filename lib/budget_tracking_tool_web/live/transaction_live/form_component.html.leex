@@ -9,7 +9,7 @@
     <div class="col-span-12 md:col-span-6 <%= if @stacked, do: "lg:col-span-12", else: "lg:col-span-2" %>" phx-feedback-for="transaction[amount]">
       <%= label f, :amount, class: "sr-only" %>
       <div class="mt-1">
-        <%= text_input f, :amount, type: "text", placeholder: to_string(Money.new(0)) %>
+        <%= text_input f, :amount, type: "text", placeholder: to_string(Money.new(0)), class: "font-mono" %>
         <%= error_tag f, :amount %>
       </div>
     </div>
@@ -67,16 +67,11 @@
               >
               <%= for {category, index} <- Enum.with_index(@categories) do %>
                 <li
-                  x-data="{highlight: false}"
                   @click="open = false"
-                  @mouseover="highlight = true"
-                  @mouseover.away="highlight = false"
-                  @focus="highlight = true"
-                  @blur="highlight = false"
                   phx-click="select-category"
                   phx-value-category_id="<%= category.id %>"
                   phx-target="<%= @myself %>"
-                  class="hover:text-white hover:bg-green-600 focus:text-white focus:bg-green-600 focus:outline-none text-gray-900 cursor-default select-none relative py-2 pl-3 pr-9"
+                  class="group hover:text-white hover:bg-green-600 focus:text-white focus:bg-green-600 focus:outline-none text-gray-900 cursor-default select-none relative py-2 pl-3 pr-9"
                   id="<%= "listbox-option-#{index}" %>"
                   tabindex="<%= if index > 0, do: -1, else: 0 %>"
                   role="tab">
@@ -87,7 +82,7 @@
                     %>
                   </div>
 
-                  <span class="absolute inset-y-0 right-0 flex items-center pr-4" :class="highlight ? 'text-white' : 'text-green-600 '">
+                  <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-green-600 group-hover:text-white">
                     <!-- Heroicon name: solid/check -->
                     <%= if @selected_category.id == category.id do %>
                       <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">

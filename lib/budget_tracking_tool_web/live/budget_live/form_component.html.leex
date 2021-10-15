@@ -5,7 +5,7 @@
   phx_submit: "save" %>
 
   <%= label f, :amount, class: "sr-only" %>
-  <%= number_input f, :amount, id: @id, class: "text-right", phx_debounce: 1000 %>
+  <%= number_input f, :amount, id: @id, class: "text-right font-mono", phx_debounce: 1000, placeholder: to_string(Money.new(0)) %>
   <%= error_tag f, :amount %>
 
   <div class="hidden">

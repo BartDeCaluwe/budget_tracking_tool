@@ -32,12 +32,12 @@ defmodule BudgetLineComponent do
               budget: budget,
               return_to: @return_to %>
           </div>
-          <div x-show="!open" class="px-6 py-4"><%= budget.amount %></div>
+          <div x-show="!open" class="px-6 py-4 font-mono"><%= budget.amount %></div>
         </td>
-        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right">
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right font-mono">
           <%= Money.new(spent_in_category(transactions)) %>
         </td>
-        <td class={"px-6 py-4 whitespace-nowrap text-right text-sm font-medium #{get_available_text_color(available_in_category)}"}>
+        <td class={"px-6 py-4 whitespace-nowrap text-right text-sm font-medium font-mono #{get_available_text_color(available_in_category)}"}>
           <%= Money.new(available_in_category) %>
         </td>
       </tr>

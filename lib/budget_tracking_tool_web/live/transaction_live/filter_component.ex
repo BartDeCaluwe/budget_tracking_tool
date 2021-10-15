@@ -55,7 +55,7 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FilterComponent do
                   value={@min_amount}
                   phx-debounce="blur"
                   placeholder={to_string(Money.new(0))}
-                  class="max-w-lg block w-full shadow-sm focus:ring-green-500 focus:border-green-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md">
+                  class="font-mono max-w-lg block w-full shadow-sm focus:ring-green-500 focus:border-green-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md">
           </div>
         </div>
         <div>
@@ -69,7 +69,7 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FilterComponent do
                   value={@max_amount}
                   phx-debounce="blur"
                   placeholder={to_string(Money.new(0))}
-                  class="max-w-lg block w-full shadow-sm focus:ring-green-500 focus:border-green-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md">
+                  class="font-mono max-w-lg block w-full shadow-sm focus:ring-green-500 focus:border-green-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md">
           </div>
         </div>
         <div>

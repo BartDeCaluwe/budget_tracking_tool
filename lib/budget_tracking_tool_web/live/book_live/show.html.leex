@@ -98,7 +98,7 @@
           <thead>
             <tr>
               <th scope="col" class="px-6 py-3 text-left text-xs font-light text-gray-500 uppercase tracking-wider">
-                Unbudgetted <span class="font-bold"><%= Money.new(to_be_budgetted(@selected_month, @book.id)) %></span>
+                Unbudgetted <span class="font-bold font-mono"><%= Money.new(to_be_budgetted(@selected_month, @book.id)) %></span>
               </th>
               <th scope="col" class="w-1/4 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-right">
                 Budgetted
@@ -114,13 +114,13 @@
           <tbody class="divide-y divide-gray-200">
             <tr>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"></td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right">
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right font-mono">
                 <%= Money.new(total_budgetted(@budgets)) %>
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right">
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right font-mono">
                 <%= Money.new(total_spent(@transactions)) %>
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm <%= get_balance_text_color(@balance) %> text-right">
+              <td class="px-6 py-4 whitespace-nowrap text-sm <%= get_balance_text_color(@balance) %> text-right font-mono">
                 <%= Money.new(@balance) %>
               </td>
             </tr>
