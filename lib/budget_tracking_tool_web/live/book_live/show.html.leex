@@ -1,3 +1,13 @@
+<%= if @live_action in [:transactions] do %>
+   <%= live_slide_over BudgetTrackingToolWeb.BudgetLive.TransactionListComponent,
+    id: :transaction_list,
+    title: @selected_category.label <> " transactions",
+    action: @live_action,
+    transactions: @transactions_for_budget,
+    form: false,
+    return_to: Routes.book_show_path(@socket, :show, date: format_date_param(@selected_month)) %>
+<% end %>
+
 <div class="flex mb-4">
   <div class="px-4 md:px-6 py-2 w-full bg-white shadow rounded text-gray-500 block md:flex items-center justify-between md:space-x-4 space-y-4 md:space-y-0">
     <div class="w-full md:w-1/3" x-data="{open: false}">
@@ -130,6 +140,7 @@
                 category: category,
                 transactions: transactions_for_category(category, @transactions),
                 book_id: @book.id,
+                date: format_date_param(@selected_month),
                 budget: budget_for_category(category.id, @budgets, @book.id, @selected_month),
                 return_to: Routes.book_show_path(@socket, :show, date: format_date_param(@selected_month)) %>
             <% end %>

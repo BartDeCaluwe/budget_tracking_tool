@@ -10,7 +10,8 @@ defmodule BudgetTrackingToolWeb.Components.SlideOverComponent do
         assigns.opts ++
           [
             slide_over: true,
-            form_id: "slide-over-form"
+            form_id: "slide-over-form",
+            form: true
           ]
       )
 
@@ -59,19 +60,21 @@ defmodule BudgetTrackingToolWeb.Components.SlideOverComponent do
                   </div>
                   <div class="mt-6 relative flex-1 px-4 sm:px-6">
                     <!-- Replace with your content -->
-                    <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                    <div class="mt-3 text-center sm:mt-0 sm:text-left">
                       <%= live_component @socket, @component, @opts %>
                     </div>
                     <!-- /End replace -->
                   </div>
                 </div>
                 <div class="flex-shrink-0 px-4 py-4 flex justify-end">
+                  <%= if @opts[:form] do %>
                   <button phx-click="close" phx-target={@myself} type="button" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
                     Cancel
                   </button>
                   <button form="slide-over-form" type="submit" class="ml-4 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
                     Save
                   </button>
+                  <% end %>
                 </div>
               </div>
             </div>

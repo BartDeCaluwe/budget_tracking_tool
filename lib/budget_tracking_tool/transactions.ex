@@ -101,6 +101,22 @@ defmodule BudgetTrackingTool.Transactions do
     |> Repo.preload([:category, :book])
   end
 
+  def list_transactions(month, year, book_id, category_id) do
+    beginning_of_month = Dates.beginning_of_month(month, year)
+    end_of_month = Dates.end_of_month(month, year)
+
+    Repo.all(
+      from t in Transaction,
+        where:
+          t.book_id == ^book_id and
+            t.category_id == ^category_id and
+            t.date >= ^beginning_of_month and
+            t.date <= ^end_of_month,
+        select: t
+    )
+    |> Repo.preload([:category, :book])
+  end
+
   @doc """
   Gets a single transaction.
 

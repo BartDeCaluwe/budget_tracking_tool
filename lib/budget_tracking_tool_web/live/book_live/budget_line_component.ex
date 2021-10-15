@@ -9,7 +9,8 @@ defmodule BudgetLineComponent do
           category: category,
           transactions: transactions,
           budget: budget,
-          book_id: book_id
+          book_id: book_id,
+          date: date
         } = assigns
       ) do
     available_in_category = available_in_category(category, budget, transactions, book_id)
@@ -17,7 +18,7 @@ defmodule BudgetLineComponent do
     ~H"""
       <tr id={"category#{category.id}"} x-data="{ open: false }">
         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-          <%= category.label %>
+          <span><%= live_patch category.label, to: Routes.book_show_path(@socket, :transactions, @category.id, date: date), class: "hover:cursor-pointer" %></span>
         </td>
         <td
             @click={"open = true; $nextTick(() => { setTimeout(() => { document.getElementById('category-#{category.id}-budget-input').select(); }, 10);});"}

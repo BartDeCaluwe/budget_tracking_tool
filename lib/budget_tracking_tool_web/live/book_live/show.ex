@@ -42,7 +42,8 @@ defmodule BudgetTrackingToolWeb.BookLive.Show do
      |> assign(:balance, balance)
      |> assign(:budgets, list_budgets(date, id))
      |> assign(:transactions, transactions)
-     |> put_default_transaction_assigns(date, id)}
+     |> put_default_transaction_assigns(date, id)
+     |> put_budget_transactions_assigns(params, id, date)}
   end
 
   @impl true
@@ -168,8 +169,16 @@ defmodule BudgetTrackingToolWeb.BookLive.Show do
     Transactions.list_transactions(date.month(), date.year(), book_id)
   end
 
+  defp list_transactions(date, book_id, category_id) do
+    Transactions.list_transactions(date.month(), date.year(), book_id, category_id)
+  end
+
   defp list_budgets(date, book_id) do
     Budgets.list_budgets(date.month(), date.year(), book_id)
+  end
+
+  defp get_category(category_id) do
+    Categories.get_category!(category_id)
   end
 
   defp put_session_assigns(socket, session) do
@@ -203,6 +212,16 @@ defmodule BudgetTrackingToolWeb.BookLive.Show do
         |> put_flash(:info, "You need to create at least one category before you can start.")
         |> push_redirect(to: Routes.category_index_path(socket, :new))
     end
+  end
+
+  defp put_budget_transactions_assigns(socket, %{"category_id" => category_id}, book_id, date) do
+    socket
+    |> assign(:selected_category, get_category(category_id))
+    |> assign(:transactions_for_budget, list_transactions(date, book_id, category_id))
+  end
+
+  defp put_budget_transactions_assigns(socket, _params, _book_id, _date) do
+    socket
   end
 
   def get_balance_text_color(balance) do

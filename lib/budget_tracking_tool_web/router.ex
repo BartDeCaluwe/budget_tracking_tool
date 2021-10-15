@@ -21,6 +21,7 @@ defmodule BudgetTrackingToolWeb.Router do
     pipe_through [:browser, :require_authenticated_user]
 
     live "/", BookLive.Show, :show
+    live "/:category_id/transactions", BookLive.Show, :transactions
     get "/up", PageController, :up
 
     live "/budgets", BudgetLive.Index, :index
