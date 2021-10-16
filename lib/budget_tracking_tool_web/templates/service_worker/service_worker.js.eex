@@ -1,0 +1,13 @@
+self.addEventListener('install', function(e) {
+ e.waitUntil(
+   caches.open("pre-cache:v1").then(cache => cache.addAll([
+    "<%= Routes.static_path(@conn, "/assets/app.css") %>",
+    "<%= Routes.static_path(@conn, Routes.static_path(@conn, "/favicon.ico")) %>",
+    "<%= Routes.static_path(@conn, Routes.static_path(@conn, "/images/favicon.svg")) %>",
+    "/502.html",
+  ])));
+});
+
+self.addEventListener('fetch', function(event) {
+ console.log(event.request.url);
+});

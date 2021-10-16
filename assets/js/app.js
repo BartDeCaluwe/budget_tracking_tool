@@ -29,6 +29,12 @@ import topbar from '../vendor/topbar'
 import Alpine from 'alpinejs'
 import flatpickr from 'flatpickr'
 
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/service-worker.js').then(function () {
+    console.log('Service Worker Registered')
+  })
+}
+
 window.Alpine = Alpine
 Alpine.start()
 

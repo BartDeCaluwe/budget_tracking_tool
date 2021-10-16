@@ -53,6 +53,10 @@ defmodule BudgetTrackingToolWeb.Router do
     live "/transactions/:id/show/edit", TransactionLive.Show, :edit
   end
 
+  scope "/", BudgetTrackingToolWeb do
+    get "/service-worker.js", ServiceWorkerController, :service_worker
+  end
+
   # Enables LiveDashboard only for development.
   #
   # If you want to use the LiveDashboard in production, you should put
