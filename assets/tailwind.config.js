@@ -1,14 +1,18 @@
+const defaultTheme = require('tailwindcss/defaultTheme')
+
 module.exports = {
-  mode: "jit",
-  purge: ["./js/**/*.js", "../lib/*_web/**/*.*ex"],
+  mode: 'jit',
+  purge: ['./js/**/*.js', '../lib/*_web/**/*.*ex'],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ["'Inter'", ...defaultTheme.fontFamily.sans],
+        mono: ["'Jetbrains Mono'", ...defaultTheme.fontFamily.mono],
+      },
+    },
   },
   variants: {
     extend: {},
   },
-  plugins: [
-    require('@tailwindcss/forms'),
-    require('@tailwindcss/typography'),
-  ],
-};
+  plugins: [require('@tailwindcss/forms'), require('@tailwindcss/typography')],
+}
