@@ -55,19 +55,19 @@ defmodule BudgetTrackingTool.Transactions do
       |> add_order_by(order_params)
 
     Enum.reduce(criteria, query, fn
-      {:min_amount, ""}, query ->
+      {:min_amount, nil}, query ->
         query
 
       {:min_amount, min_amount}, query ->
         from q in query, where: q.amount >= ^min_amount
 
-      {:max_amount, ""}, query ->
+      {:max_amount, nil}, query ->
         query
 
       {:max_amount, max_amount}, query ->
         from q in query, where: q.amount <= ^max_amount
 
-      {:description, ""}, query ->
+      {:description, nil}, query ->
         query
 
       {:description, description}, query ->
@@ -78,9 +78,13 @@ defmodule BudgetTrackingTool.Transactions do
 
       {:category, category}, query ->
         from q in query,
-          join: c in Category,
-          on: c.id == q.category_id,
-          where: q.id == ^category.id
+          where: q.category_id == ^category.id
+
+      {:show_claimable, nil}, query ->
+        query
+
+      {:show_claimable, show_claimable}, query ->
+        from q in query, where: q.is_claimable == ^show_claimable
     end)
     |> Repo.all()
     |> Repo.preload([:category, :book])
@@ -112,6 +116,22 @@ defmodule BudgetTrackingTool.Transactions do
             t.category_id == ^category_id and
             t.date >= ^beginning_of_month and
             t.date <= ^end_of_month,
+        select: t
+    )
+    |> Repo.preload([:category, :book])
+  end
+
+  def list_claimable_transactions(month, year, book_id, category_id) do
+    end_of_month = Dates.end_of_month(month, year)
+
+    Repo.all(
+      from t in Transaction,
+        where:
+          t.book_id == ^book_id and
+            t.category_id == ^category_id and
+            t.date <= ^end_of_month and
+            t.is_claimable == true and
+            is_nil(t.claimed_at),
         select: t
     )
     |> Repo.preload([:category, :book])
@@ -167,6 +187,18 @@ defmodule BudgetTrackingTool.Transactions do
   def update_transaction(%Transaction{} = transaction, attrs) do
     transaction
     |> Transaction.changeset(attrs)
+    |> Repo.update()
+  end
+
+  def claim_transaction(%Transaction{} = transaction) do
+    now = NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
+    # set claimed date
+    # set claimed amount?
+    # add claimed amount to category balance
+    transaction
+    |> Transaction.changeset(%{
+      claimed_at: now
+    })
     |> Repo.update()
   end
 
@@ -252,19 +284,41 @@ defmodule BudgetTrackingTool.Transactions do
 
   def calculate_balance_for_month(month, year, book_id) do
     end_of_month = Dates.end_of_month(month, year)
+
+    total_income = total_income_up_to(end_of_month, book_id)
+    total_expenses = total_expenses_for_month(month, year, book_id)
+
     book = Books.get_book!(book_id)
+
+    book.starting_balance.amount + total_income - total_expenses
+  end
+
+  defp total_expenses_for_month(month, year, book_id) do
+    get_expense_transactions(month, year, book_id)
+    |> calculate_total_transaction_amount()
+  end
+
+  defp get_expense_transactions(month, year, book_id) do
+    end_of_month = Dates.end_of_month(month, year)
+    naive_end_of_month = Dates.naive_end_of_month(month, year)
 
     Repo.all(
       from t in Transaction,
+        left_join: c in Category,
+        on: c.id == t.category_id,
         where:
-          t.book_id == ^book.id and
-            t.date <= ^end_of_month,
+          t.book_id == ^book_id and
+            c.is_income == false and
+            t.date <= ^end_of_month and
+            (is_nil(t.claimed_at) or t.claimed_at > ^naive_end_of_month),
         select: t
     )
-    |> Repo.preload([:category])
-    |> Enum.reduce(book.starting_balance.amount, fn t, acc ->
-      if t.category.is_income, do: acc + t.amount.amount, else: acc - t.amount.amount
-    end)
+  end
+
+  defp calculate_total_transaction_amount([]), do: 0
+
+  defp calculate_total_transaction_amount(transactions) do
+    Enum.reduce(transactions, 0, fn transaction, acc -> transaction.amount.amount + acc end)
   end
 
   def calculate_expenses_for_month(month, year, book_id, category_id) do
@@ -278,7 +332,10 @@ defmodule BudgetTrackingTool.Transactions do
           t.book_id == ^book_id and
             c.is_income == false and
             t.category_id == ^category_id and
-            t.date <= ^end_of_month,
+            t.date <= ^end_of_month and
+            (is_nil(t.claimed_at) or
+               (^month < fragment("date_part('month', ?)", t.claimed_at) and
+                  ^year <= fragment("date_part('year', ?)", t.claimed_at))),
         select: t
     )
     |> Enum.reduce(0, fn t, acc -> acc + t.amount.amount end)

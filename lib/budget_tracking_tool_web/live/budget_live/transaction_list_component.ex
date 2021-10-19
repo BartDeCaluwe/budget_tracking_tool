@@ -1,6 +1,8 @@
 defmodule BudgetTrackingToolWeb.BudgetLive.TransactionListComponent do
   use BudgetTrackingToolWeb, :live_component
 
+  alias BudgetTrackingTool.Transactions
+
   @impl true
   def update(assigns, socket) do
     {:ok,
@@ -44,7 +46,12 @@ defmodule BudgetTrackingToolWeb.BudgetLive.TransactionListComponent do
                     </div>
                     <p class="text-sm text-gray-500"><%= transaction.description %></p>
                   </div>
-                  <a href="#" class="font-medium text-gray-900"><%= transaction.amount %></a>
+                  <div class="flex items-center space-x-2">
+                    <span class="font-medium text-gray-900"><%= transaction.amount %></span>
+                    <button phx-click="claim" phx-value-transaction_id={"#{transaction.id}"} phx-target={@myself} type="button" class={"inline-flex items-center px-2.5 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 " <> if transaction.is_claimable, do: "visible", else: "invisible"}>
+                      claim
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -56,7 +63,15 @@ defmodule BudgetTrackingToolWeb.BudgetLive.TransactionListComponent do
     """
   end
 
-  # def footer([transactions: []] = _assigns), do: nil
+  @impl true
+  def handle_event("claim", %{"transaction_id" => transaction_id}, socket) do
+    {id, _} = Integer.parse(transaction_id)
+
+    Enum.find(socket.assigns.transactions, fn transaction -> transaction.id === id end)
+    |> Transactions.claim_transaction()
+
+    {:noreply, redirect(socket, to: socket.assigns.return_to)}
+  end
 
   def footer(assigns) do
     ~H"""

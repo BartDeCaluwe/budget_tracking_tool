@@ -22,6 +22,7 @@ defmodule BudgetTrackingToolWeb.Router do
 
     live "/", BookLive.Show, :show
     live "/:category_id/transactions", BookLive.Show, :transactions
+    live "/:category_id/claimable", BookLive.Show, :claimable
     get "/up", PageController, :up
 
     live "/budgets", BudgetLive.Index, :index

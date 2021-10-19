@@ -99,10 +99,21 @@
       </div>
     </div>
 
-    <div class="col-span-12 md:col-span-6 <%= if @stacked, do: "lg:col-span-12", else: "lg:col-span-4" %>">
+    <div class="col-span-12 md:col-span-6 <%= if @stacked, do: "lg:col-span-12", else: "lg:col-span-2" %>">
       <%= label f, :date, class: "sr-only" %>
       <%= FormHelpers.datepicker f, :date %>
       <%= error_tag f, :date %>
+    </div>
+
+    <div class="col-span-12 md:col-span-6 relative flex items-center <%= if @stacked, do: "lg:col-span-12", else: "lg:col-span-2" %>">
+      <div class="flex items-center h-5">
+        <%= checkbox f, :is_claimable, class: "focus:ring-green-500 h-4 w-4 text-green-600 border-gray-300 rounded" %>
+      </div>
+      <div class="ml-3 text-sm">
+        <%= label f, :is_claimable, class: "font-medium text-gray-700" %>
+        <%# <p id="is-claimable-description" class="text-gray-500">You will be able to get this money back.</p> %>
+        <%= error_tag f, :is_claimable %>
+      </div>
     </div>
 
     <div class="hidden">

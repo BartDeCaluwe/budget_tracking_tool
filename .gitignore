@@ -29,3 +29,4 @@ budget_tracking_tool-*.tar
 npm-debug.log
 /assets/node_modules/
 
+*.conf

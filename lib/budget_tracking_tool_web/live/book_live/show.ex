@@ -43,7 +43,8 @@ defmodule BudgetTrackingToolWeb.BookLive.Show do
      |> assign(:budgets, list_budgets(date, id))
      |> assign(:transactions, transactions)
      |> put_default_transaction_assigns(date, id)
-     |> put_budget_transactions_assigns(params, id, date)}
+     |> put_budget_transactions_assigns(params, id, date)
+     |> put_budget_claimable_transactions_assigns(params, id, date)}
   end
 
   @impl true
@@ -69,7 +70,10 @@ defmodule BudgetTrackingToolWeb.BookLive.Show do
   end
 
   def calculate_balance_for_month(date, book_id) do
-    Transactions.calculate_balance_for_month(date.month(), date.year(), book_id)
+    balance = Transactions.calculate_balance_for_month(date.month(), date.year(), book_id)
+    to_be_budgetted_amount = to_be_budgetted(date, book_id)
+
+    balance - to_be_budgetted_amount
   end
 
   def previous_month(date) do
@@ -173,6 +177,10 @@ defmodule BudgetTrackingToolWeb.BookLive.Show do
     Transactions.list_transactions(date.month(), date.year(), book_id, category_id)
   end
 
+  defp list_claimable_transactions(date, book_id, category_id) do
+    Transactions.list_claimable_transactions(date.month(), date.year(), book_id, category_id)
+  end
+
   defp list_budgets(date, book_id) do
     Budgets.list_budgets(date.month(), date.year(), book_id)
   end
@@ -221,6 +229,16 @@ defmodule BudgetTrackingToolWeb.BookLive.Show do
   end
 
   defp put_budget_transactions_assigns(socket, _params, _book_id, _date) do
+    socket
+  end
+
+  defp put_budget_claimable_transactions_assigns(socket, %{"category_id" => category_id}, book_id, date) do
+    socket
+    |> assign(:selected_category, get_category(category_id))
+    |> assign(:claimable_transactions_for_budget, list_claimable_transactions(date, book_id, category_id))
+  end
+
+  defp put_budget_claimable_transactions_assigns(socket, _params, _book_id, _date) do
     socket
   end
 

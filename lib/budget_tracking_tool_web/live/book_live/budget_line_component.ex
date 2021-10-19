@@ -2,6 +2,7 @@ defmodule BudgetLineComponent do
   use BudgetTrackingToolWeb, :live_component
 
   alias BudgetTrackingTool.Budgets
+  alias BudgetTrackingTool.Transactions
   alias BudgetTrackingTool.Categories.Category
 
   def render(
@@ -38,6 +39,15 @@ defmodule BudgetLineComponent do
         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right font-mono">
           <%= Money.new(spent_in_category(transactions)) %>
         </td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-mono">
+          <%= if claimable_in_category(category.id, budget, book_id) !== 0 do %>
+            <%= live_patch to: Routes.book_show_path(@socket, :claimable, @category.id, date: date), class: "hover:cursor-pointer hover:text-gray-900" do %>
+              <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-indigo-100 text-indigo-800">
+              <%= Money.new(claimable_in_category(category.id, budget, book_id)) %>
+              </span>
+            <% end %>
+          <% end %>
+        </td>
         <td class={"px-6 py-4 whitespace-nowrap text-right text-sm font-medium font-mono #{get_available_text_color(available_in_category)}"}>
           <%= Money.new(available_in_category) %>
         </td>
@@ -70,6 +80,16 @@ defmodule BudgetLineComponent do
 
   def spent_in_category(transactions) do
     transactions
+    |> total_amount()
+  end
+
+  def claimable_in_category(category_id, budget, book_id) do
+    Transactions.list_claimable_transactions(
+      budget.date.month(),
+      budget.date.year(),
+      book_id,
+      category_id
+    )
     |> total_amount()
   end
 

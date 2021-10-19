@@ -8,6 +8,10 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FilterComponent do
     label: "Select category",
     is_income: nil
   }
+  @default_min_amount nil
+  @default_max_amount nil
+  @default_description nil
+  @default_show_claimable nil
 
   def update(assigns, socket) do
     categories = [
@@ -18,11 +22,7 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FilterComponent do
     {:ok,
      socket
      |> assign(assigns)
-     |> assign(:categories, categories)
-     |> assign(:max_amount, nil)
-     |> assign(:min_amount, nil)
-     |> assign(:description, nil)
-     |> assign(:selected_category, Enum.at(categories, 0))}
+     |> add_default_filters()}
   end
 
   def render(assigns) do
@@ -30,7 +30,7 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FilterComponent do
     <form phx-submit="save" phx-change="validate"
                   phx-blur="validate"
     phx-target={@myself} class="sm:flex justify-between mb-3 space-y-4">
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 w-full">
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-2 w-full">
         <div>
           <label for="description" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
             Description
@@ -148,23 +148,69 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FilterComponent do
           </div>
         </div>
         </div>
-      </div>
-      <div class="flex items-end">
-        <button type="submit" class="w-full max-w-lg inline-flex justify-center py-2 px-4 sm:ml-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-          <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M13.9,22a1,1,0,0,1-.6-.2l-4-3.05a1,1,0,0,1-.39-.8V14.68L4.11,5.46A1,1,0,0,1,5,4H19a1,1,0,0,1,.86.49,1,1,0,0,1,0,1l-5,9.21V21a1,1,0,0,1-.55.9A1,1,0,0,1,13.9,22Zm-3-4.54,2,1.53V14.44A1,1,0,0,1,13,14l4.3-8H6.64l4.13,8a1,1,0,0,1,.11.46Z"></path>
-          </svg>
-          Filter
-        </button>
+        <div class="grid">
+          <label for="claimable" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+            Claimable
+          </label>
+          <div>
+            <div class="flex items-center">
+              <button phx-click="toggle-claimable" phx-target={@myself} type="button" class={"relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 #{if @show_claimable, do: "bg-green-600", else: "bg-gray-200"}"} role="switch" aria-checked="false" aria-labelledby="annual-billing-label">
+                <!-- Enabled: "translate-x-5", Not Enabled: "translate-x-0" -->
+                <span aria-hidden="true" class={"pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200 #{if @show_claimable, do: "translate-x-5", else: "translate-x-0"}"}></span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-end space-x-4">
+          <button type="submit" class="w-full max-w-lg inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+            <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M13.9,22a1,1,0,0,1-.6-.2l-4-3.05a1,1,0,0,1-.39-.8V14.68L4.11,5.46A1,1,0,0,1,5,4H19a1,1,0,0,1,.86.49,1,1,0,0,1,0,1l-5,9.21V21a1,1,0,0,1-.55.9A1,1,0,0,1,13.9,22Zm-3-4.54,2,1.53V14.44A1,1,0,0,1,13,14l4.3-8H6.64l4.13,8a1,1,0,0,1,.11.46Z"></path>
+            </svg>
+            Filter
+          </button>
+          <button type="button" phx-click="reset-filters" phx-target={@myself} class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+            Reset
+          </button>
+        </div>
       </div>
     </form>
     """
   end
 
+  def add_default_filters(socket) do
+    categories = add_select_category_option(socket.assigns.categories)
+
+    socket
+    |> assign(:categories, categories)
+    |> assign(:max_amount, @default_max_amount)
+    |> assign(:min_amount, @default_min_amount)
+    |> assign(:description, @default_description)
+    |> assign(:show_claimable, @default_show_claimable)
+    |> assign(:selected_category, Enum.at(categories, 0))
+  end
+
   def handle_event("select-category", %{"category_id" => category_id}, socket) do
+    IO.inspect(category_id)
+
     {:noreply,
      socket
      |> assign(:selected_category, find_category_by_id(socket.assigns.categories, category_id))}
+  end
+
+  def handle_event("reset-filters", _params, socket) do
+    socket =
+      socket
+      |> add_default_filters()
+
+    send_filter_event(%{}, socket)
+
+    {:noreply, socket}
+  end
+
+  def handle_event("toggle-claimable", _params, socket) do
+    {:noreply,
+     socket
+     |> assign(:show_claimable, toggle_claimable(socket.assigns.show_claimable))}
   end
 
   def handle_event(
@@ -181,21 +227,28 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FilterComponent do
 
   def handle_event(
         "save",
-        %{"min-amount" => min_amount, "max-amount" => max_amount, "description" => description},
+        params,
         socket
       ) do
+    send_filter_event(params, socket)
+    {:noreply, socket}
+  end
+
+  defp send_filter_event(
+         params,
+         socket
+       ) do
     send(
       self(),
       {:filter_transactions,
        [
-         min_amount: min_amount,
-         max_amount: max_amount,
-         description: description,
-         category: socket.assigns.selected_category
+         min_amount: Map.get(params, "min-amount", @default_min_amount),
+         max_amount: Map.get(params, "max-amount", @default_max_amount),
+         description: Map.get(params, "description", @default_description),
+         category: socket.assigns.selected_category,
+         show_claimable: socket.assigns.show_claimable
        ]}
     )
-
-    {:noreply, socket}
   end
 
   defp find_category_by_id(categories, category_id) do
@@ -212,4 +265,11 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FilterComponent do
         assign(socket, key, parsed)
     end
   end
+
+  defp add_select_category_option([@select_category | _rest] = categories), do: categories
+  defp add_select_category_option(categories), do: [@select_category | categories]
+
+  defp toggle_claimable(nil), do: true
+  defp toggle_claimable(true), do: false
+  defp toggle_claimable(false), do: true
 end

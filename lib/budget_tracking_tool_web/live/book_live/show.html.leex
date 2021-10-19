@@ -8,6 +8,16 @@
     return_to: Routes.book_show_path(@socket, :show, date: format_date_param(@selected_month)) %>
 <% end %>
 
+<%= if @live_action in [:claimable] do %>
+   <%= live_slide_over BudgetTrackingToolWeb.BudgetLive.TransactionListComponent,
+    id: :claimable_transaction_list,
+    title: @selected_category.label <> " claimable transactions for " <> format_date(@selected_month),
+    action: @live_action,
+    transactions: @claimable_transactions_for_budget,
+    form: false,
+    return_to: Routes.book_show_path(@socket, :show, date: format_date_param(@selected_month)) %>
+<% end %>
+
 <div class="flex mb-4">
   <div class="px-4 md:px-6 py-2 w-full bg-white shadow rounded text-gray-500 block md:flex items-center justify-between md:space-x-4 space-y-4 md:space-y-0">
     <div class="w-full md:w-1/3" x-data="{open: false}">
@@ -116,6 +126,9 @@
               <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-right">
                 Spent
               </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+               Claimable
+              </th>
               <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-right">
                 Available
               </th>
@@ -130,6 +143,7 @@
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right font-mono">
                 <%= Money.new(total_spent(@transactions)) %>
               </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"></td>
               <td class="px-6 py-4 whitespace-nowrap text-sm <%= get_balance_text_color(@balance) %> text-right font-mono">
                 <%= Money.new(@balance) %>
               </td>
