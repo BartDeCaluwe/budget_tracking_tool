@@ -34,7 +34,7 @@
         <div class="flex">
           <div class="hidden sm:-my-px sm:flex sm:space-x-8">
             <%= if @current_user do %>
-              <%= ViewHelpers.route(@conn, "/", "Dashboard") %>
+              <%= ViewHelpers.route(@conn, "/app", "Dashboard") %>
               <%= ViewHelpers.route(@conn, Routes.transaction_index_path(@conn, :index), "Transactions") %>
               <%= ViewHelpers.route(@conn, Routes.category_index_path(@conn, :index), "Categories") %>
               <%= ViewHelpers.route(@conn, Routes.book_index_path(@conn, :index), "Books") %>
@@ -99,7 +99,7 @@
     <div x-cloak x-show="mobileMenuOpen" class="sm:hidden" id="mobile-menu">
       <div class="pt-2 pb-3 space-y-1">
         <%= if @current_user do %>
-          <%= ViewHelpers.mobile_route(@conn, "/", "Dashboard") %>
+          <%= ViewHelpers.mobile_route(@conn, "/app", "Dashboard") %>
           <%= ViewHelpers.mobile_route(@conn, Routes.transaction_index_path(@conn, :index), "Transactions") %>
           <%= ViewHelpers.mobile_route(@conn, Routes.category_index_path(@conn, :index), "Categories") %>
           <%= ViewHelpers.mobile_route(@conn, Routes.book_index_path(@conn, :index), "Books") %>

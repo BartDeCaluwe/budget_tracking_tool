@@ -17,41 +17,42 @@ defmodule BudgetTrackingToolWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/", BudgetTrackingToolWeb do
+  scope "/app", BudgetTrackingToolWeb do
     pipe_through [:browser, :require_authenticated_user]
 
-    live "/", BookLive.Show, :show
-    live "/:category_id/transactions", BookLive.Show, :transactions
-    live "/:category_id/claimable", BookLive.Show, :claimable
-    get "/up", PageController, :up
+    live_session :default, on_mount: BudgetTrackingToolWeb.PutOrgId do
+      live "/", BookLive.Show, :show
+      live "/:category_id/transactions", BookLive.Show, :transactions
+      live "/:category_id/claimable", BookLive.Show, :claimable
 
-    live "/budgets", BudgetLive.Index, :index
-    live "/budgets/new", BudgetLive.Index, :new
-    live "/budgets/:id/edit", BudgetLive.Index, :edit
+      live "/budgets", BudgetLive.Index, :index
+      live "/budgets/new", BudgetLive.Index, :new
+      live "/budgets/:id/edit", BudgetLive.Index, :edit
 
-    live "/budgets/:id", BudgetLive.Show, :show
-    live "/budgets/:id/show/edit", BudgetLive.Show, :edit
+      live "/budgets/:id", BudgetLive.Show, :show
+      live "/budgets/:id/show/edit", BudgetLive.Show, :edit
 
-    live "/books", BookLive.Index, :index
-    live "/books/new", BookLive.Index, :new
-    live "/books/:id/edit", BookLive.Index, :edit
+      live "/books", BookLive.Index, :index
+      live "/books/new", BookLive.Index, :new
+      live "/books/:id/edit", BookLive.Index, :edit
 
-    live "/books/:id", BookLive.Show, :show
-    live "/books/:id/show/edit", BookLive.Show, :edit
+      live "/books/:id", BookLive.Show, :show
+      live "/books/:id/show/edit", BookLive.Show, :edit
 
-    live "/categories", CategoryLive.Index, :index
-    live "/categories/new", CategoryLive.Index, :new
-    live "/categories/:id/edit", CategoryLive.Index, :edit
+      live "/categories", CategoryLive.Index, :index
+      live "/categories/new", CategoryLive.Index, :new
+      live "/categories/:id/edit", CategoryLive.Index, :edit
 
-    live "/categories/:id", CategoryLive.Show, :show
-    live "/categories/:id/show/edit", CategoryLive.Show, :edit
+      live "/categories/:id", CategoryLive.Show, :show
+      live "/categories/:id/show/edit", CategoryLive.Show, :edit
 
-    live "/transactions", TransactionLive.Index, :index
-    live "/transactions/new", TransactionLive.Index, :new
-    live "/transactions/:id/edit", TransactionLive.Index, :edit
+      live "/transactions", TransactionLive.Index, :index
+      live "/transactions/new", TransactionLive.Index, :new
+      live "/transactions/:id/edit", TransactionLive.Index, :edit
 
-    live "/transactions/:id", TransactionLive.Show, :show
-    live "/transactions/:id/show/edit", TransactionLive.Show, :edit
+      live "/transactions/:id", TransactionLive.Show, :show
+      live "/transactions/:id/show/edit", TransactionLive.Show, :edit
+    end
   end
 
   scope "/", BudgetTrackingToolWeb do
@@ -94,7 +95,7 @@ defmodule BudgetTrackingToolWeb.Router do
     put "/users/reset_password/:token", UserResetPasswordController, :update
   end
 
-  scope "/", BudgetTrackingToolWeb do
+  scope "/app", BudgetTrackingToolWeb do
     pipe_through [:browser, :require_authenticated_user]
 
     get "/users/settings", UserSettingsController, :edit

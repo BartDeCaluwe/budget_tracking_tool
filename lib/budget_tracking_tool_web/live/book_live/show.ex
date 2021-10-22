@@ -12,8 +12,6 @@ defmodule BudgetTrackingToolWeb.BookLive.Show do
 
   @impl true
   def mount(_params, session, socket) do
-    put_org_id_from_session(session)
-
     {:ok,
      socket
      |> PhoenixLiveSession.maybe_subscribe(session)
