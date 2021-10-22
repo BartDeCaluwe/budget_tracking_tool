@@ -47,7 +47,8 @@ defmodule BudgetTrackingToolWeb do
   def live_view do
     quote do
       use Phoenix.LiveView,
-        layout: {BudgetTrackingToolWeb.LayoutView, "live.html"}
+        layout: {BudgetTrackingToolWeb.LayoutView, "live.html"},
+        container: {:div, class: "h-full"}
 
       unquote(view_helpers())
     end

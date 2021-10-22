@@ -9,6 +9,9 @@ module.exports = {
         sans: ["'Inter'", ...defaultTheme.fontFamily.sans],
         mono: ["'Jetbrains Mono'", ...defaultTheme.fontFamily.mono],
       },
+      gridTemplateRows: {
+        layout: 'min-content 1fr',
+      },
     },
   },
   variants: {

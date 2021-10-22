@@ -27,7 +27,7 @@
     <script defer phx-track-static type="text/javascript" src="<%= Routes.static_path(@conn, "/assets/app.js") %>"></script>
   </head>
   <body phx-hook="focus_by_id" class="flex flex-col min-h-screen h-full justify-between">
-  <div class="min-h-screen bg-gray-50">
+  <div class="min-h-screen bg-gray-50 grid grid-rows-layout">
   <nav x-data="{ mobileMenuOpen: false, userMenuOpen: false }" class="bg-white shadow-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between h-16">

@@ -14,11 +14,6 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FilterComponent do
   @default_show_claimable nil
 
   def update(assigns, socket) do
-    categories = [
-      @select_category
-      | assigns.categories
-    ]
-
     {:ok,
      socket
      |> assign(assigns)
@@ -27,10 +22,22 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FilterComponent do
 
   def render(assigns) do
     ~H"""
-    <form phx-submit="save" phx-change="validate"
-                  phx-blur="validate"
-    phx-target={@myself} class="sm:flex justify-between mb-3 space-y-4">
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-2 w-full">
+    <form phx-submit="save"
+          phx-change="validate"
+          phx-blur="validate"
+          phx-target={@myself}
+          class="sm:flex flex-col mb-3 justify-between">
+      <div class="flex items-end space-x-4">
+        <button type="button" phx-click="reset-filters" phx-target={@myself} class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+          Reset
+        </button>
+        <button type="submit" class="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+          <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M13.9,22a1,1,0,0,1-.6-.2l-4-3.05a1,1,0,0,1-.39-.8V14.68L4.11,5.46A1,1,0,0,1,5,4H19a1,1,0,0,1,.86.49,1,1,0,0,1,0,1l-5,9.21V21a1,1,0,0,1-.55.9A1,1,0,0,1,13.9,22Zm-3-4.54,2,1.53V14.44A1,1,0,0,1,13,14l4.3-8H6.64l4.13,8a1,1,0,0,1,.11.46Z"></path>
+          </svg>
+          Filter
+        </button>
+      </div>
         <div>
           <label for="description" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
             Description
@@ -41,7 +48,7 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FilterComponent do
                   id="description"
                   placeholder="shopping"
                   value={@description}
-                  class="max-w-lg block w-full shadow-sm focus:ring-green-500 focus:border-green-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md">
+                  class="block w-full shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm border-gray-300 rounded-md">
           </div>
         </div>
         <div>
@@ -55,7 +62,7 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FilterComponent do
                   value={@min_amount}
                   phx-debounce="blur"
                   placeholder={to_string(Money.new(0))}
-                  class="font-mono max-w-lg block w-full shadow-sm focus:ring-green-500 focus:border-green-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md">
+                  class="font-mono block w-full shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm border-gray-300 rounded-md">
           </div>
         </div>
         <div>
@@ -69,7 +76,7 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FilterComponent do
                   value={@max_amount}
                   phx-debounce="blur"
                   placeholder={to_string(Money.new(0))}
-                  class="font-mono max-w-lg block w-full shadow-sm focus:ring-green-500 focus:border-green-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md">
+                  class="font-mono block w-full shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm border-gray-300 rounded-md">
           </div>
         </div>
         <div>
@@ -88,7 +95,7 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FilterComponent do
                 <button
                   @click="open = true"
                   @focus="open = true"
-                  type="button" class="relative whitespace-nowrap w-full max-w-lg bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500 sm:text-sm" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label">
+                  type="button" class="relative whitespace-nowrap w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500 sm:text-sm" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label">
                   <div class="flex items-center">
                     <%= live_component BudgetTrackingToolWeb.CategoryLive.LabelComponent,
                       category: @selected_category
@@ -161,18 +168,6 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FilterComponent do
             </div>
           </div>
         </div>
-        <div class="flex items-end space-x-4">
-          <button type="submit" class="w-full max-w-lg inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-            <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M13.9,22a1,1,0,0,1-.6-.2l-4-3.05a1,1,0,0,1-.39-.8V14.68L4.11,5.46A1,1,0,0,1,5,4H19a1,1,0,0,1,.86.49,1,1,0,0,1,0,1l-5,9.21V21a1,1,0,0,1-.55.9A1,1,0,0,1,13.9,22Zm-3-4.54,2,1.53V14.44A1,1,0,0,1,13,14l4.3-8H6.64l4.13,8a1,1,0,0,1,.11.46Z"></path>
-            </svg>
-            Filter
-          </button>
-          <button type="button" phx-click="reset-filters" phx-target={@myself} class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-            Reset
-          </button>
-        </div>
-      </div>
     </form>
     """
   end
