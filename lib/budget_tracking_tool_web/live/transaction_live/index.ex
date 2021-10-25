@@ -9,7 +9,7 @@ defmodule BudgetTrackingToolWeb.TransactionLive.Index do
   @default_order_direction :asc
 
   @impl true
-  def mount(_params, session, socket) do
+  def mount(_params, _session, socket) do
     {:ok,
      socket
      |> assign(:filter, false)

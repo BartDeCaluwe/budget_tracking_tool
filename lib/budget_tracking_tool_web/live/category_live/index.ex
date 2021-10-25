@@ -5,7 +5,7 @@ defmodule BudgetTrackingToolWeb.CategoryLive.Index do
   alias BudgetTrackingTool.Categories.Category
 
   @impl true
-  def mount(_params, session, socket) do
+  def mount(_params, _session, socket) do
     {:ok, assign(socket, :categories, list_categories())}
   end
 
