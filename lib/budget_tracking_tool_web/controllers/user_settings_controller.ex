@@ -2,12 +2,50 @@ defmodule BudgetTrackingToolWeb.UserSettingsController do
   use BudgetTrackingToolWeb, :controller
 
   alias BudgetTrackingTool.Accounts
+  alias BudgetTrackingTool.Accounts.OrgInvite
   alias BudgetTrackingToolWeb.UserAuth
 
-  plug :assign_email_and_password_changesets
+  plug :assign_settings_changesets
 
   def edit(conn, _params) do
-    render(conn |> assign(:page_title, "Settings"), "edit.html")
+    orgs =
+      conn
+      |> get_session(:user_token)
+      |> Accounts.get_user_by_session_token()
+      |> Accounts.list_orgs()
+
+    session_org_id =
+      conn
+      |> get_session(:org_id)
+      |> String.to_integer()
+
+    render(
+      conn
+      |> assign(:page_title, "Settings")
+      |> assign(:session_org_id, session_org_id)
+      |> assign(:orgs, orgs),
+      "edit.html"
+    )
+  end
+
+  def invite(conn, params) do
+    case Accounts.invite_user(params) do
+      {:ok, org_invite} ->
+        # TODO: we should probably create a token for this so you can't just send requests to accept invites
+        org_invite = Accounts.get_org_invite!(org_invite.id)
+
+        Accounts.deliver_invite(org_invite, Routes.org_invite_url(conn, :accept, org_invite.id))
+
+        conn
+        |> put_flash(
+          :info,
+          "An invite email has been sent."
+        )
+        |> redirect(to: Routes.user_settings_path(conn, :edit))
+
+      {:error, changeset} ->
+        render(conn, "edit.html", user_invite_changeset: changeset)
+    end
   end
 
   def update(conn, %{"action" => "update_email"} = params) do
@@ -64,11 +102,22 @@ defmodule BudgetTrackingToolWeb.UserSettingsController do
     end
   end
 
-  defp assign_email_and_password_changesets(conn, _opts) do
+  def select_org(conn, %{"org_id" => org_id}) do
+    org = Accounts.get_org!(org_id)
+    BudgetTrackingTool.Repo.put_org_id(org_id)
+
+    conn
+    |> put_session(:org_id, org_id)
+    |> put_flash(:info, "Changed active org to #{org.name}")
+    |> redirect(to: Routes.book_show_path(conn, :show))
+  end
+
+  defp assign_settings_changesets(conn, _opts) do
     user = conn.assigns.current_user
 
     conn
     |> assign(:email_changeset, Accounts.change_user_email(user))
     |> assign(:password_changeset, Accounts.change_user_password(user))
+    |> assign(:user_invite_changeset, OrgInvite.changeset(%OrgInvite{}, %{user_id: user.id}))
   end
 end

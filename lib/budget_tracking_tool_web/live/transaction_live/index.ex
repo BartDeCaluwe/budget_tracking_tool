@@ -4,6 +4,7 @@ defmodule BudgetTrackingToolWeb.TransactionLive.Index do
   alias BudgetTrackingTool.Transactions
   alias BudgetTrackingTool.Transactions.Transaction
   alias BudgetTrackingTool.Categories
+  alias BudgetTrackingTool.Payees.Payee
 
   @default_order_by "date"
   @default_order_direction :asc
@@ -76,6 +77,9 @@ defmodule BudgetTrackingToolWeb.TransactionLive.Index do
        )
      )}
   end
+
+  def payee(nil), do: ""
+  def payee(%Payee{name: name}), do: name
 
   defp list_transactions do
     Transactions.list_transactions()

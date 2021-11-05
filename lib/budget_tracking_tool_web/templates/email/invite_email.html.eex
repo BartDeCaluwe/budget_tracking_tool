@@ -1,0 +1,10 @@
+<div>
+<%= render "_salutation.html", addressee: @invite.email %>
+<p>
+    <%= @invite.user.email %> has invited you to: <%= @invite.org.name %>
+
+    You can accept by visiting the URL below: <%= @accept_url %>
+
+    If this invitation was not meant for you, please ignore this.
+</p>
+</div>

@@ -1,0 +1,35 @@
+<h1>Listing Payees</h1>
+
+<%= if @live_action in [:new, :edit] do %>
+  <%= live_slide_over BudgetTrackingToolWeb.PayeeLive.FormComponent,
+    id: @payee.id || :new,
+    title: @page_title,
+    action: @live_action,
+    payee: @payee,
+    return_to: Routes.payee_index_path(@socket, :index) %>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="payees">
+    <%= for payee <- @payees do %>
+      <tr id={"payee-#{payee.id}"}>
+        <td><%= payee.name %></td>
+
+        <td>
+          <span><%= live_redirect "Show", to: Routes.payee_show_path(@socket, :show, payee) %></span>
+          <span><%= live_patch "Edit", to: Routes.payee_index_path(@socket, :edit, payee) %></span>
+          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: payee.id, data: [confirm: "Are you sure?"] %></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<span><%= live_patch "New Payee", to: Routes.payee_index_path(@socket, :new) %></span>

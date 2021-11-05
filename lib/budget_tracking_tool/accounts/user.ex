@@ -41,6 +41,12 @@ defmodule BudgetTrackingTool.Accounts.User do
     |> validate_password(opts)
   end
 
+  def invitation_changeset(user, attrs) do
+    user
+    |> cast(attrs, [:email])
+    |> validate_email()
+  end
+
   defp validate_email(changeset) do
     changeset
     |> validate_required([:email])

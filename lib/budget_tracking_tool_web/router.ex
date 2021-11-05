@@ -52,6 +52,25 @@ defmodule BudgetTrackingToolWeb.Router do
 
       live "/transactions/:id", TransactionLive.Show, :show
       live "/transactions/:id/show/edit", TransactionLive.Show, :edit
+
+      live "/payees", PayeeLive.Index, :index
+      live "/payees/new", PayeeLive.Index, :new
+      live "/payees/:id/edit", PayeeLive.Index, :edit
+
+      live "/payees/:id", PayeeLive.Show, :show
+      live "/payees/:id/show/edit", PayeeLive.Show, :edit
+
+      get "/users/settings", UserSettingsController, :edit
+      put "/users/settings", UserSettingsController, :update
+      post "/users/settings", UserSettingsController, :invite
+      post "/users/settings/select_org/:org_id", UserSettingsController, :select_org
+
+      get "/org_invite/:id/accept", OrgInviteController, :accept
+      get "/org_invite/:id/reject", OrgInviteController, :reject
+
+      get "/users/settings/confirm_email/:token",
+          UserSettingsController,
+          :confirm_email
     end
   end
 
@@ -85,6 +104,7 @@ defmodule BudgetTrackingToolWeb.Router do
   scope "/", BudgetTrackingToolWeb do
     pipe_through [:browser, :redirect_if_user_is_authenticated]
 
+    get "/", PageController, :home
     get "/users/register", UserRegistrationController, :new
     post "/users/register", UserRegistrationController, :create
     get "/users/log_in", UserSessionController, :new
@@ -93,17 +113,6 @@ defmodule BudgetTrackingToolWeb.Router do
     post "/users/reset_password", UserResetPasswordController, :create
     get "/users/reset_password/:token", UserResetPasswordController, :edit
     put "/users/reset_password/:token", UserResetPasswordController, :update
-  end
-
-  scope "/app", BudgetTrackingToolWeb do
-    pipe_through [:browser, :require_authenticated_user]
-
-    get "/users/settings", UserSettingsController, :edit
-    put "/users/settings", UserSettingsController, :update
-
-    get "/users/settings/confirm_email/:token",
-        UserSettingsController,
-        :confirm_email
   end
 
   scope "/", BudgetTrackingToolWeb do

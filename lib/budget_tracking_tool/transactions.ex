@@ -25,7 +25,7 @@ defmodule BudgetTrackingTool.Transactions do
   """
   def list_transactions do
     Repo.all(Transaction)
-    |> Repo.preload([:category, :book])
+    |> Repo.preload([:category, :book, :payee])
   end
 
   def list_transactions(order_params) do
@@ -36,7 +36,7 @@ defmodule BudgetTrackingTool.Transactions do
       |> add_order_by(order_params)
 
     Repo.all(query)
-    |> Repo.preload([:category, :book])
+    |> Repo.preload([:category, :book, :payee])
   end
 
   defp add_order_by(query, %{order_direction: :asc, order_by: order_by}) do
@@ -87,7 +87,7 @@ defmodule BudgetTrackingTool.Transactions do
         from q in query, where: q.is_claimable == ^show_claimable
     end)
     |> Repo.all()
-    |> Repo.preload([:category, :book])
+    |> Repo.preload([:category, :book, :payee])
   end
 
   def list_transactions(month, year, book_id) do
@@ -102,7 +102,7 @@ defmodule BudgetTrackingTool.Transactions do
             t.date <= ^end_of_month,
         select: t
     )
-    |> Repo.preload([:category, :book])
+    |> Repo.preload([:category, :book, :payee])
   end
 
   def list_transactions(month, year, book_id, category_id) do
@@ -118,7 +118,7 @@ defmodule BudgetTrackingTool.Transactions do
             t.date <= ^end_of_month,
         select: t
     )
-    |> Repo.preload([:category, :book])
+    |> Repo.preload([:category, :book, :payee])
   end
 
   def list_claimable_transactions(month, year, book_id, category_id) do
@@ -134,7 +134,7 @@ defmodule BudgetTrackingTool.Transactions do
             is_nil(t.claimed_at),
         select: t
     )
-    |> Repo.preload([:category, :book])
+    |> Repo.preload([:category, :book, :payee])
   end
 
   @doc """
@@ -152,7 +152,7 @@ defmodule BudgetTrackingTool.Transactions do
 
   """
   def get_transaction!(id),
-    do: Repo.get!(Transaction, id) |> Repo.preload([:category, :book])
+    do: Repo.get!(Transaction, id) |> Repo.preload([:category, :book, :payee])
 
   @doc """
   Creates a transaction.

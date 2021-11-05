@@ -38,4 +38,16 @@ defmodule BudgetTrackingTool.Accounts.UserNotifier do
     |> render_body("update_email.html", %{user: user, url: url})
     |> Mailer.deliver!()
   end
+
+  def deliver_invite(invite, url) do
+    new()
+    |> to(invite.email)
+    |> from(Mailer.get_default_sender())
+    |> subject("Invite")
+    |> render_body("invite_email.html", %{
+      invite: invite,
+      accept_url: url
+    })
+    |> Mailer.deliver!()
+  end
 end

@@ -7,6 +7,7 @@ defmodule BudgetTrackingToolWeb.BookLive.Show do
   alias BudgetTrackingTool.Transactions.Transaction
   alias BudgetTrackingTool.Books.Book
   alias BudgetTrackingTool.Categories.Category
+  alias BudgetTrackingTool.Payees
 
   @default_params %{"date" => Date.utc_today() |> Date.to_string()}
 
@@ -36,6 +37,7 @@ defmodule BudgetTrackingToolWeb.BookLive.Show do
      |> assign(:books, Books.list_books())
      |> assign(:selected_month, date)
      |> assign(:categories, list_categories())
+     |> assign(:payees, list_payees())
      |> assign(:expense_categories, list_expense_categories())
      |> assign(:balance, balance)
      |> assign(:budgets, list_budgets(date, id))
@@ -163,6 +165,10 @@ defmodule BudgetTrackingToolWeb.BookLive.Show do
     Categories.list_categories()
   end
 
+  defp list_payees do
+    [%{name: "Select payee", id: 0}] ++ Payees.list_payees()
+  end
+
   defp list_expense_categories do
     Categories.list_expense_categories()
   end
@@ -210,6 +216,8 @@ defmodule BudgetTrackingToolWeb.BookLive.Show do
           book_id: id,
           org_id: BudgetTrackingTool.Repo.get_org_id(),
           category_id: category.id,
+          payee_id: nil,
+          payee: nil,
           category: category
         })
 

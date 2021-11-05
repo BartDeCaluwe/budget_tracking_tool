@@ -19,6 +19,7 @@ defmodule BudgetTrackingToolWeb.Components.Nav do
                 <%= route(@conn, Routes.transaction_index_path(@conn, :index), "Transactions") %>
                 <%= route(@conn, Routes.category_index_path(@conn, :index), "Categories") %>
                 <%= route(@conn, Routes.book_index_path(@conn, :index), "Books") %>
+                <%= route(@conn, Routes.payee_index_path(@conn, :index), "Payees") %>
               <% end %>
             </div>
           </div>
@@ -49,7 +50,7 @@ defmodule BudgetTrackingToolWeb.Components.Nav do
                   x-transition:leave-end="transform opacity-0 scale-95"
                   x-show="userMenuOpen"
                   x-cloak
-                  class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+                  class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
                     <%= link "Settings", to: Routes.user_settings_path(@conn, :edit),  class: "hover:bg-gray-100 block px-4 py-2 text-sm text-gray-700", role: "menuitem", tabindex: "-1" %>
                     <%= link "Sign out", to: Routes.user_session_path(@conn, :delete), method: :delete,  class: "hover:bg-gray-100 block px-4 py-2 text-sm text-gray-700", role: "menuitem", tabindex: "-1" %>
                 </div>
@@ -84,6 +85,7 @@ defmodule BudgetTrackingToolWeb.Components.Nav do
             <%= mobile_route(@conn, Routes.transaction_index_path(@conn, :index), "Transactions") %>
             <%= mobile_route(@conn, Routes.category_index_path(@conn, :index), "Categories") %>
             <%= mobile_route(@conn, Routes.book_index_path(@conn, :index), "Books") %>
+            <%= mobile_route(@conn, Routes.payee_index_path(@conn, :index), "Payees") %>
           <% end %>
         </div>
         <div class="pt-4 pb-3 border-t border-gray-200">

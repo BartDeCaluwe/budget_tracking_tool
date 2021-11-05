@@ -1,19 +1,19 @@
-<%= f = form_for @changeset, "#",
-  id: assigns[:form_id] || "transaction-form",
-  phx_target: @myself,
-  phx_change: "validate",
-  phx_submit: "save" %>
-
+<div>
+<.form let={f}
+       for={@changeset}
+       id={assigns[:form_id] || "transaction-form"}
+       phx-target={@myself}
+       phx-change={"validate"}
+       phx-submit={"save"}>
   <div class="grid grid-cols-12 gap-y-6 gap-x-4">
-
-    <div class="col-span-12 md:col-span-6 <%= if @stacked, do: "lg:col-span-12", else: "lg:col-span-2" %>" phx-feedback-for="transaction[amount]">
+    <div class={"col-span-12 md:col-span-6 #{if @stacked, do: "lg:col-span-12", else: "lg:col-span-2"}"} phx-feedback-for="transaction[amount]">
       <%= label f, :amount, class: "sr-only" %>
       <div class="mt-1">
         <%= text_input f, :amount, type: "text", placeholder: to_string(Money.new(0)), class: "font-mono" %>
         <%= error_tag f, :amount %>
       </div>
     </div>
-    <div class="col-span-12 md:col-span-6 <%= if @stacked, do: "lg:col-span-12", else: "lg:col-span-3" %>" phx-feedback-for="transaction[description]" >
+    <div class={"col-span-12 md:col-span-6 #{if @stacked, do: "lg:col-span-12", else: "lg:col-span-2"}"} phx-feedback-for="transaction[description]" >
       <%= label f, :description, class: "sr-only" %>
       <div class="mt-1">
         <%= text_input f, :description, type: "text", placeholder: "description" %>
@@ -21,7 +21,22 @@
       </div>
     </div>
 
-    <div class="col-span-12 md:col-span-6 <%= if @stacked, do: "lg:col-span-12", else: "lg:col-span-2" %>" phx-feedback-for="transaction[category_id]">
+    <div class="col-span-12 md:col-span-6 lg:col-span-2">
+      <%= label f, :payee_id, class: "sr-only" %>
+      <div class="hidden">
+        <%= number_input f, :payee_id %>
+      </div>
+      <.live_component module={BudgetTrackingToolWeb.Components.Select}
+                       id="payees-select"
+                       options={@payees}
+                       selected_option={@selected_payee}
+                       handle_select="select-payee"
+                       target={@myself}
+                       />
+      <%= error_tag f, :payee_id %>
+    </div>
+
+    <div class={"col-span-12 md:col-span-6 #{if @stacked, do: "lg:col-span-12", else: "lg:col-span-2"}"} phx-feedback-for="transaction[category_id]">
       <%= label f, :category_id, class: "sr-only" %>
       <div class="hidden">
         <%= number_input f, :category_id %>
@@ -69,11 +84,11 @@
                 <li
                   @click="open = false"
                   phx-click="select-category"
-                  phx-value-category_id="<%= category.id %>"
-                  phx-target="<%= @myself %>"
+                  phx-value-category_id={category.id}
+                  phx-target={@myself}
                   class="group hover:text-white hover:bg-green-600 focus:text-white focus:bg-green-600 focus:outline-none text-gray-900 cursor-default select-none relative py-2 pl-3 pr-9"
-                  id="<%= "listbox-option-#{index}" %>"
-                  tabindex="<%= if index > 0, do: -1, else: 0 %>"
+                  id={"listbox-option-#{index}"}
+                  tabindex={if index > 0, do: -1, else: 0}
                   role="tab">
                   <div class="flex items-center">
                     <%= live_component BudgetTrackingToolWeb.CategoryLive.LabelComponent,
@@ -99,19 +114,20 @@
       </div>
     </div>
 
-    <div class="col-span-12 md:col-span-6 <%= if @stacked, do: "lg:col-span-12", else: "lg:col-span-2" %>">
+    <div class={"col-span-12 md:col-span-6 #{if @stacked, do: "lg:col-span-12", else: "lg:col-span-2"}"}>
       <%= label f, :date, class: "sr-only" %>
       <%= FormHelpers.datepicker f, :date %>
       <%= error_tag f, :date %>
     </div>
 
-    <div class="col-span-12 md:col-span-6 relative flex items-center <%= if @stacked, do: "lg:col-span-12", else: "lg:col-span-2" %>">
+    <div class={"col-span-12 md:col-span-6 relative flex items-center #{if @stacked, do: "lg:col-span-12", else: "lg:col-span-1"}"}>
       <div class="flex items-center h-5">
         <%= checkbox f, :is_claimable, class: "focus:ring-green-500 h-4 w-4 text-green-600 border-gray-300 rounded" %>
       </div>
       <div class="ml-3 text-sm">
-        <%= label f, :is_claimable, class: "font-medium text-gray-700" %>
-        <%# <p id="is-claimable-description" class="text-gray-500">You will be able to get this money back.</p> %>
+        <%= label f, :is_claimable, class: "font-medium text-gray-700" do %>
+          claimable
+        <% end %>
         <%= error_tag f, :is_claimable %>
       </div>
     </div>
@@ -128,10 +144,11 @@
       <%= error_tag f, :org_id %>
     </div>
 
-    <div class="col-span-12 <%= if assigns[:slide_over], do: "invisible" %> <%= if @stacked, do: "lg:col-span-12", else: "lg:col-span-1" %>">
-      <div class="mt-1 sm:flex sm:flex-row-reverse <%= if assigns[:slide_over], do: "invisible" %>">
+    <div class={"col-span-12 #{if assigns[:slide_over], do: "invisible"} #{if @stacked, do: "lg:col-span-12", else: "lg:col-span-1"}"}>
+      <div class={"mt-1 sm:flex sm:flex-row-reverse #{if assigns[:slide_over], do: "invisible"}"}>
         <%= submit "Save", phx_disable_with: "Saving...", type: "submit", id: "transaction-form-submit-button", class: "sm:ml-3 w-full sm:w-min inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" %>
       </div>
     </div>
   </div>
-</form>
+</.form>
+</div>

@@ -11,7 +11,8 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FormComponent do
      socket
      |> assign(assigns)
      |> assign(:changeset, changeset)
-     |> assign(:selected_category, transaction.category || Enum.at(assigns.categories, 0))}
+     |> assign(:selected_category, transaction.category || Enum.at(assigns.categories, 0))
+     |> assign(:selected_payee, transaction.payee || Enum.at(assigns.payees, 0))}
   end
 
   @impl true
@@ -28,6 +29,36 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FormComponent do
 
   def handle_event("save", %{"transaction" => transaction_params}, socket) do
     save_transaction(socket, socket.assigns.action, transaction_params)
+  end
+
+  def handle_event("select-payee", %{"option_id" => payee_id}, socket) do
+    case find_payee_by_id(socket.assigns.payees, payee_id) do
+      nil ->
+        changeset =
+          Transactions.put_change(
+            socket.assigns.changeset,
+            :payee_id,
+            nil
+          )
+
+        {:noreply,
+         socket
+         |> assign(:changeset, changeset)
+         |> assign(:selected_payee, Enum.at(socket.assigns.payees, 0))}
+
+      payee ->
+        changeset =
+          Transactions.put_change(
+            socket.assigns.changeset,
+            :payee_id,
+            payee.id
+          )
+
+        {:noreply,
+         socket
+         |> assign(:changeset, changeset)
+         |> assign(:selected_payee, payee)}
+    end
   end
 
   def handle_event("select-category", %{"category_id" => category_id}, socket) do
@@ -78,5 +109,12 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FormComponent do
   defp find_category_by_id(categories, category_id) do
     {id, _} = Integer.parse(category_id)
     Enum.find(categories, fn c -> c.id == id end)
+  end
+
+  defp find_payee_by_id(payees, "0"), do: nil
+
+  defp find_payee_by_id(payees, payee_id) do
+    {id, _} = Integer.parse(payee_id)
+    Enum.find(payees, fn p -> p.id == id end)
   end
 end

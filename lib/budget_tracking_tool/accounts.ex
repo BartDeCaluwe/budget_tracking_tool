@@ -5,7 +5,12 @@ defmodule BudgetTrackingTool.Accounts do
 
   import Ecto.Query, warn: false
   alias BudgetTrackingTool.Repo
-  alias BudgetTrackingTool.Accounts.{User, UserToken, UserNotifier, UserOrg}
+  alias BudgetTrackingTool.Accounts.User
+  alias BudgetTrackingTool.Accounts.UserToken
+  alias BudgetTrackingTool.Accounts.UserNotifier
+  alias BudgetTrackingTool.Accounts.UserOrg
+  alias BudgetTrackingTool.Accounts.Org
+  alias BudgetTrackingTool.Accounts.OrgInvite
 
   ## Database getters
 
@@ -62,6 +67,8 @@ defmodule BudgetTrackingTool.Accounts do
   """
   def get_user!(id), do: Repo.get!(User, id)
 
+  def get_org!(id), do: Repo.get!(Org, id, skip_org_id: true)
+
   ## User registration
 
   @doc """
@@ -110,6 +117,53 @@ defmodule BudgetTrackingTool.Accounts do
     User.email_changeset(user, attrs)
   end
 
+  def invite_user(attrs) do
+    %OrgInvite{}
+    |> OrgInvite.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def get_org_invite!(id) do
+    Repo.get!(OrgInvite, id, skip_org_id: true)
+    |> Repo.preload([:user, :org], skip_org_id: true)
+  end
+
+  def get_org_invite_for_email!(id, email) do
+    Repo.get_by!(OrgInvite, [id: id, email: email], skip_org_id: true)
+    |> Repo.preload([:user, :org], skip_org_id: true)
+  end
+
+  def accept_org_invite(id, user) do
+    org_invite = get_org_invite_for_email!(id, user.email)
+    user_orgs = list_orgs(user)
+    orgs = [org_invite.org | user_orgs]
+
+    org_invite_changeset =
+      org_invite
+      |> Ecto.Changeset.change(%{
+        status: OrgInvite.status_accepted()
+      })
+
+    user_changeset =
+      user
+      |> Repo.preload(:orgs, skip_org_id: true)
+      |> Ecto.Changeset.change()
+      |> Ecto.Changeset.put_assoc(:orgs, orgs)
+
+    Ecto.Multi.new()
+    |> Ecto.Multi.update(:org_invite, org_invite_changeset)
+    |> Ecto.Multi.update(:user, user_changeset)
+    |> Repo.transaction()
+  end
+
+  def reject_org_invite(id, user) do
+    get_org_invite_for_email!(id, user.email)
+    |> Ecto.Changeset.change(%{
+      status: OrgInvite.status_rejected()
+    })
+    |> Repo.update!()
+  end
+
   @doc """
   Emulates that the email will change without actually changing
   it in the database.
@@ -127,6 +181,12 @@ defmodule BudgetTrackingTool.Accounts do
     user
     |> User.email_changeset(attrs)
     |> User.validate_current_password(password)
+    |> Ecto.Changeset.apply_action(:update)
+  end
+
+  def apply_user_email(user, attrs) when is_map(attrs) do
+    user
+    |> User.email_changeset(attrs)
     |> Ecto.Changeset.apply_action(:update)
   end
 
@@ -183,6 +243,10 @@ defmodule BudgetTrackingTool.Accounts do
       user,
       update_email_url_fun.(encoded_token)
     )
+  end
+
+  def deliver_invite(%OrgInvite{} = invite, url) do
+    UserNotifier.deliver_invite(invite, url)
   end
 
   @doc """
@@ -296,7 +360,7 @@ defmodule BudgetTrackingTool.Accounts do
   """
   def confirm_user(token) do
     with {:ok, query} <- UserToken.verify_email_token_query(token, "confirm"),
-         %User{} = user <- Repo.one(query),
+         %User{} = user <- Repo.one(query, skip_org_id: true),
          {:ok, %{user: user}} <- Repo.transaction(confirm_user_multi(user)) do
       {:ok, user}
     else
@@ -306,10 +370,11 @@ defmodule BudgetTrackingTool.Accounts do
 
   defp confirm_user_multi(user) do
     Ecto.Multi.new()
-    |> Ecto.Multi.update(:user, User.confirm_changeset(user))
+    |> Ecto.Multi.update(:user, User.confirm_changeset(user), skip_org_id: true)
     |> Ecto.Multi.delete_all(
       :tokens,
-      UserToken.user_and_contexts_query(user, ["confirm"])
+      UserToken.user_and_contexts_query(user, ["confirm"]),
+      skip_org_id: true
     )
   end
 
@@ -395,5 +460,12 @@ defmodule BudgetTrackingTool.Accounts do
         select: u.org_id
 
     Repo.all(query, skip_org_id: true)
+  end
+
+  def list_orgs(user) do
+    Org
+    |> join(:inner, [o], u in assoc(o, :users), on: u.id == ^user.id)
+    |> from(preload: :users)
+    |> Repo.all(skip_org_id: true)
   end
 end

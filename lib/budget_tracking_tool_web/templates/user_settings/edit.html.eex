@@ -83,4 +83,84 @@
       </div>
     </div>
   </div>
+  <div class="space-y-8 divide-y divide-gray-200 sm:space-y-5">
+    <div>
+      <div class="mt-6">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">
+          Organizations
+        </h3>
+        <p class="mt-1 max-w-2xl text-sm text-gray-500">
+          Manage your organizations.
+        </p>
+      </div>
+
+      <div class="mt-6 sm:mt-5 space-y-6 sm:space-y-5">
+        <div class="grid grid-cols-3 gap-4">
+        <%= for org <- @orgs do %>
+          <div></div>
+          <div class="bg-white rounded-lg p-4 shadow max-w-lg col-span-2">
+            <div class="space-y-4">
+              <div class="flex justify-between">
+              <div><%= org.name %></div>
+              <div>
+                <%= if @session_org_id !== org.id do %>
+                  <%= button to: Routes.user_settings_path(@conn, :select_org, org.id), class: "text-gray-500 flex items-center" do %>
+                    <span class="text-sm mr-1">select</span>
+                    <svg class="h-5 w-5" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                      <path class="cls-2" d="M19,4H17a1,1,0,0,0,0,2h1V18H17a1,1,0,0,0,0,2h2a1,1,0,0,0,1-1V5A1,1,0,0,0,19,4Z"></path>
+                      <path class="cls-2" d="M11.8,7.4a1,1,0,0,0-1.6,1.2L12,11H4a1,1,0,0,0,0,2h8l.09,0-1.72,2.44a1,1,0,0,0,.24,1.4,1,1,0,0,0,.58.18,1,1,0,0,0,.81-.42l2.82-4a1,1,0,0,0,0-1.18Z"></path>
+                    </svg>
+                  <% end %>
+                <% end %>
+              </div>
+              </div>
+              <div class="space-y-1">
+                <label for="add-team-members" class="block text-sm font-medium text-gray-700">
+                  Add Team Members
+                </label>
+                <p id="add-team-members-helper" class="sr-only">Search by email address</p>
+                <%= form_for @user_invite_changeset, Routes.user_settings_path(@conn, :invite), [class: "flex"], fn f -> %>
+                  <%= hidden_input f, :org_id, name: "org_id", value: org.id %>
+                  <%= hidden_input f, :user_id, name: "user_id", value: @current_user.id %>
+                  <%= hidden_input f, :status, name: "status", value: "pending" %>
+                  <div class="flex-grow">
+                    <%= email_input f, :email, name: "email", placeholder: "info@example.com", class: "block w-full shadow-sm focus:ring-sky-500 focus:border-sky-500 sm:text-sm border-gray-300 rounded-md" %>
+                  </div>
+                  <span class="ml-3">
+                    <%= submit phx_disable_with: "Saving...", class: "bg-white inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500" do %>
+                      <svg class="-ml-2 mr-1 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                      </svg>
+                      <span>Add</span>
+                    <% end %>
+                  </span>
+                <% end %>
+              </div>
+
+              <div class="border-b border-gray-200">
+                <ul role="list" class="divide-y divide-gray-200">
+                  <%= for user <- org.users do %>
+                  <li class="py-4 flex">
+                    <div class="h-10 w-10 rounded-full bg-gray-500 text-white flex items-center justify-center">
+                      <svg class="h-5 w-5" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M12,11A4,4,0,1,0,8,7,4,4,0,0,0,12,11Zm0-6a2,2,0,1,1-2,2A2,2,0,0,1,12,5Z"></path>
+                        <path d="M12,13a7,7,0,0,0-7,7,1,1,0,0,0,2,0,5,5,0,0,1,10,0,1,1,0,0,0,2,0A7,7,0,0,0,12,13Z"></path>
+                      </svg>
+                    </div>
+                    <div class="ml-3 flex flex-col">
+                      <span class="text-sm text-gray-500">
+                        <%= user.email %>
+                      </span>
+                    </div>
+                  </li>
+                  <% end %>
+                </ul>
+              </div>
+            </div>
+          </div>
+        <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

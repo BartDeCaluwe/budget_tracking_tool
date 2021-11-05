@@ -11,6 +11,7 @@ defmodule BudgetTrackingTool.Transactions.Transaction do
 
     belongs_to :org, BudgetTrackingTool.Accounts.Org
     belongs_to :category, BudgetTrackingTool.Categories.Category
+    belongs_to :payee, BudgetTrackingTool.Payees.Payee
     belongs_to :book, BudgetTrackingTool.Books.Book
 
     timestamps()
@@ -19,7 +20,17 @@ defmodule BudgetTrackingTool.Transactions.Transaction do
   @doc false
   def changeset(transaction, attrs) do
     transaction
-    |> cast(attrs, [:description, :amount, :date, :is_claimable, :claimed_at, :category_id, :book_id, :org_id])
+    |> cast(attrs, [
+      :description,
+      :amount,
+      :date,
+      :is_claimable,
+      :claimed_at,
+      :category_id,
+      :payee_id,
+      :book_id,
+      :org_id
+    ])
     |> validate_required([:description, :amount, :date, :is_claimable, :category_id, :book_id, :org_id])
   end
 

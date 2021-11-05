@@ -1,0 +1,22 @@
+<h1>Show Payee</h1>
+
+<%= if @live_action in [:edit] do %>
+  <%= live_modal BudgetTrackingToolWeb.PayeeLive.FormComponent,
+    id: @payee.id,
+    title: @page_title,
+    action: @live_action,
+    payee: @payee,
+    return_to: Routes.payee_show_path(@socket, :show, @payee) %>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @payee.name %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.payee_show_path(@socket, :edit, @payee), class: "button" %></span> |
+<span><%= live_redirect "Back", to: Routes.payee_index_path(@socket, :index) %></span>
