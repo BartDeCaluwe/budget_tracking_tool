@@ -4,7 +4,7 @@ defmodule BudgetTrackingToolWeb.PageLiveTest do
   import Phoenix.LiveViewTest
 
   test "disconnected and connected render", %{conn: conn} do
-    conn = get(conn, "/")
+    conn = get(conn, "/app")
     html_response(conn, 302)
   end
 end

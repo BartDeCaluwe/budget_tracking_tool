@@ -3,18 +3,24 @@ defmodule BudgetTrackingToolWeb.PayeeLiveTest do
 
   import Phoenix.LiveViewTest
   import BudgetTrackingTool.PayeesFixtures
+  import BudgetTrackingTool.AccountsFixtures
 
   @create_attrs %{name: "some name"}
   @update_attrs %{name: "some updated name"}
   @invalid_attrs %{name: nil}
 
-  defp create_payee(_) do
-    payee = payee_fixture()
+  defp create_payee(attrs) do
+    payee = payee_fixture(attrs)
     %{payee: payee}
   end
 
   describe "Index" do
-    setup [:create_payee]
+    setup do
+      %{conn: conn, org_id: org_id} = register_and_log_in_user(%{conn: build_conn()})
+      %{payee: payee} = create_payee(%{org_id: org_id})
+
+      %{conn: conn, payee: payee}
+    end
 
     test "lists all payees", %{conn: conn, payee: payee} do
       {:ok, _index_live, html} = live(conn, Routes.payee_index_path(conn, :index))
@@ -32,12 +38,12 @@ defmodule BudgetTrackingToolWeb.PayeeLiveTest do
       assert_patch(index_live, Routes.payee_index_path(conn, :new))
 
       assert index_live
-             |> form("#payee-form", payee: @invalid_attrs)
+             |> form("#slide-over-form", payee: @invalid_attrs)
              |> render_change() =~ "can&#39;t be blank"
 
       {:ok, _, html} =
         index_live
-        |> form("#payee-form", payee: @create_attrs)
+        |> form("#slide-over-form", payee: @create_attrs)
         |> render_submit()
         |> follow_redirect(conn, Routes.payee_index_path(conn, :index))
 
@@ -54,12 +60,12 @@ defmodule BudgetTrackingToolWeb.PayeeLiveTest do
       assert_patch(index_live, Routes.payee_index_path(conn, :edit, payee))
 
       assert index_live
-             |> form("#payee-form", payee: @invalid_attrs)
+             |> form("#slide-over-form", payee: @invalid_attrs)
              |> render_change() =~ "can&#39;t be blank"
 
       {:ok, _, html} =
         index_live
-        |> form("#payee-form", payee: @update_attrs)
+        |> form("#slide-over-form", payee: @update_attrs)
         |> render_submit()
         |> follow_redirect(conn, Routes.payee_index_path(conn, :index))
 
@@ -76,7 +82,12 @@ defmodule BudgetTrackingToolWeb.PayeeLiveTest do
   end
 
   describe "Show" do
-    setup [:create_payee]
+    setup do
+      %{conn: conn, org_id: org_id} = register_and_log_in_user(%{conn: build_conn()})
+      %{payee: payee} = create_payee(%{org_id: org_id})
+
+      %{conn: conn, payee: payee}
+    end
 
     test "displays payee", %{conn: conn, payee: payee} do
       {:ok, _show_live, html} = live(conn, Routes.payee_show_path(conn, :show, payee))
@@ -94,12 +105,12 @@ defmodule BudgetTrackingToolWeb.PayeeLiveTest do
       assert_patch(show_live, Routes.payee_show_path(conn, :edit, payee))
 
       assert show_live
-             |> form("#payee-form", payee: @invalid_attrs)
+             |> form("#slide-over-form", payee: @invalid_attrs)
              |> render_change() =~ "can&#39;t be blank"
 
       {:ok, _, html} =
         show_live
-        |> form("#payee-form", payee: @update_attrs)
+        |> form("#slide-over-form", payee: @update_attrs)
         |> render_submit()
         |> follow_redirect(conn, Routes.payee_show_path(conn, :show, payee))
 

@@ -453,6 +453,24 @@ defmodule BudgetTrackingTool.Accounts do
     end
   end
 
+  @doc """
+  Creates an org.
+
+  ## Examples
+
+      iex> create_org(%{field: value})
+      {:ok, %Orgj{}}
+
+      iex> create_payee(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_org(attrs \\ %{}) do
+    %Org{}
+    |> Org.changeset(attrs)
+    |> Repo.insert()
+  end
+
   def list_user_orgs(user) do
     query =
       from u in UserOrg,

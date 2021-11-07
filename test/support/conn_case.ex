@@ -36,4 +36,44 @@ defmodule BudgetTrackingToolWeb.ConnCase do
     on_exit(fn -> Ecto.Adapters.SQL.Sandbox.stop_owner(pid) end)
     {:ok, conn: Phoenix.ConnTest.build_conn()}
   end
+
+  @doc """
+  Setup helper that registers and logs in users.
+
+      setup :register_and_log_in_user
+
+  It stores an updated connection and a registered user in the
+  test context.
+  """
+  def register_and_log_in_user(%{conn: conn}) do
+    user = BudgetTrackingTool.AccountsFixtures.user_fixture()
+    %{conn: conn, org_id: org_id} = log_in_user(conn, user)
+
+    %{conn: conn, user: user, org_id: org_id}
+  end
+
+  @doc """
+  Logs the given `user` into the `conn`.
+
+  It returns an updated `conn`.
+  """
+  def log_in_user(conn, user) do
+    token = BudgetTrackingTool.Accounts.generate_user_session_token(user)
+    %{org_id: org_id} = create_and_set_org()
+
+    conn =
+      conn
+      |> Phoenix.ConnTest.init_test_session(%{})
+      |> Plug.Conn.put_session(:user_token, token)
+      |> Plug.Conn.put_session(:org_id, org_id)
+
+    %{conn: conn, org_id: org_id}
+  end
+
+  def create_and_set_org() do
+    org = BudgetTrackingTool.OrgsFixtures.org_fixture()
+    BudgetTrackingTool.Repo.put_org_id(org.id)
+
+    %{org_id: org.id}
+  end
 end
