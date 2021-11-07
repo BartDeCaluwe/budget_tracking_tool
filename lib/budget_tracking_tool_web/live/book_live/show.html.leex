@@ -100,7 +100,7 @@
 </div>
 
 <div class="mb-4 px-4 md:px-0">
-  <%= live_component @socket, BudgetTrackingToolWeb.TransactionLive.FormComponent,
+  <%= live_component BudgetTrackingToolWeb.TransactionLive.FormComponent,
     id: @transaction.id || :new,
     title: @page_title,
     action: :new,
