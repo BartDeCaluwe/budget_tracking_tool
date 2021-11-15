@@ -12,6 +12,9 @@ module.exports = {
       gridTemplateRows: {
         layout: 'min-content 1fr',
       },
+      gridTemplateColumns: {
+        layout: 'minmax(100px, 100vw)'
+      },
     },
   },
   variants: {
