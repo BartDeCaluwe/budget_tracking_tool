@@ -2,6 +2,7 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FormComponent do
   use BudgetTrackingToolWeb, :live_component
 
   alias BudgetTrackingTool.Transactions
+  alias BudgetTrackingTool.Payees
 
   @impl true
   def update(%{transaction: transaction} = assigns, socket) do
@@ -12,7 +13,7 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FormComponent do
      |> assign(assigns)
      |> assign(:changeset, changeset)
      |> assign(:selected_category, transaction.category || Enum.at(assigns.categories, 0))
-     |> assign(:selected_payee, transaction.payee || Enum.at(assigns.payees, 0))}
+     |> assign(:selected_payee, transaction.payee)}
   end
 
   @impl true
@@ -31,7 +32,7 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FormComponent do
     save_transaction(socket, socket.assigns.action, transaction_params)
   end
 
-  def handle_event("select-payee", %{"option_id" => payee_id}, socket) do
+  def handle_event("select-option", %{"option_id" => payee_id}, socket) do
     case find_payee_by_id(socket.assigns.payees, payee_id) do
       nil ->
         changeset =
@@ -59,6 +60,28 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FormComponent do
          |> assign(:changeset, changeset)
          |> assign(:selected_payee, payee)}
     end
+  end
+
+  def handle_event("add-option", %{"label" => name}, socket) do
+    new_payee = %{
+      name: name,
+      org_id: BudgetTrackingTool.Repo.get_org_id()
+    }
+
+    {:ok, payee} = Payees.create_payee(new_payee)
+
+    changeset =
+      Transactions.put_change(
+        socket.assigns.changeset,
+        :payee_id,
+        payee.id
+      )
+
+    {:noreply,
+     socket
+     |> assign(:payees, socket.assigns.payees ++ [payee])
+     |> assign(:changeset, changeset)
+     |> assign(:selected_payee, payee)}
   end
 
   def handle_event("select-category", %{"category_id" => category_id}, socket) do
@@ -111,7 +134,7 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FormComponent do
     Enum.find(categories, fn c -> c.id == id end)
   end
 
-  defp find_payee_by_id(payees, "0"), do: nil
+  defp find_payee_by_id(_payees, "0"), do: nil
 
   defp find_payee_by_id(payees, payee_id) do
     {id, _} = Integer.parse(payee_id)

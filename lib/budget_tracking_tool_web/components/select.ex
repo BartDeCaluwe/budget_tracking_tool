@@ -6,35 +6,28 @@ defmodule BudgetTrackingToolWeb.Components.Select do
     {:ok,
      socket
      |> assign(assigns)
+     |> assign_changeset(assigns.selected_option)
      |> assign(:options, normalize_options(assigns.options))
+     |> assign(:filtered_options, normalize_options(assigns.options))
      |> assign(:selected_option, normalize_option(assigns.selected_option))}
   end
 
   @impl true
   def render(assigns) do
     ~H"""
-    <div
-          x-data="{open: false}"
-          @click.outside="open = false"
-        >
+    <div>
+      <.form let={f}
+             as="select-form"
+             for={@changeset}
+             id="select-form"
+             phx-target={@myself}
+             phx-change="validate">
           <div
             class="mt-1 relative"
-            >
-            <button
-              @click="open = true"
-              @focus="open = true"
-              type="button" class="relative w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500 sm:text-sm" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label">
-              <div class="flex items-center">
-                <.select_label option={@selected_option} />
-              </div>
-              <span class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                <!-- Heroicon name: solid/selector -->
-                <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                  <path fill-rule="evenodd" d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
-                </svg>
-              </span>
-            </button>
-
+            x-data="{open: false}"
+            @click.outside="open = false"
+            @click.inside="open = true">
+            <%= text_input f, :query, type: "text", placeholder: "payee" %>
             <ul
               x-cloak
               x-show="open"
@@ -49,10 +42,11 @@ defmodule BudgetTrackingToolWeb.Components.Select do
               aria-labelledby="listbox-label"
               aria-activedescendant="listbox-option-3"
               >
-              <%= for {option, index} <- Enum.with_index(@options) do %>
+              <%= for {option, index} <- Enum.with_index(@filtered_options) do %>
                 <li
                   @click="open = false"
-                  phx-click={@handle_select}
+                  phx-click="select-option"
+                  phx-value-option_label={option.label}
                   phx-value-option_id={option.id}
                   phx-target={@target}
                   class="group hover:text-white hover:bg-green-600 focus:text-white focus:bg-green-600 focus:outline-none text-gray-900 cursor-default select-none relative py-2 pl-3 pr-9"
@@ -72,10 +66,57 @@ defmodule BudgetTrackingToolWeb.Components.Select do
                   </span>
                 </li>
               <% end %>
+              <%= if Map.get(@changeset.changes, :query) do %>
+                <li
+                  class="group hover:text-white hover:bg-green-600 focus:text-white focus:bg-green-600 focus:outline-none text-gray-900 cursor-default select-none relative py-2 pl-3 pr-9"
+                  phx-click="add-option"
+                  phx-value-label={@changeset.changes.query}
+                  phx-target={@target}
+                >
+                  <div class="flex items-center">
+                    <span class="font-semibold block truncate">
+                      Add <%= @changeset.changes.query %>
+                    </span>
+                  </div>
+                </li>
+              <% end %>
             </ul>
           </div>
-        </div>
+        </.form>
+      </div>
     """
+  end
+
+  @impl true
+  def handle_event("validate", %{"select-form" => %{"query" => query} = params}, socket) do
+    data = %{}
+    types = %{query: :string}
+
+    changeset =
+      {data, types}
+      |> Ecto.Changeset.cast(params, Map.keys(types))
+      |> Map.put(:action, :validate)
+
+    filtered_options = filter_options(socket.assigns.options, query)
+
+    {:noreply,
+     socket
+     |> assign(:changeset, changeset)
+     |> assign(:filtered_options, filtered_options)}
+  end
+
+  def assign_changeset(socket, selected_option) do
+    selected_option = normalize_option(selected_option)
+    data = %{query: selected_option.label}
+    types = %{query: :string}
+    params = %{query: selected_option.label}
+
+    changeset =
+      {data, types}
+      |> Ecto.Changeset.cast(params, Map.keys(types))
+
+    socket
+    |> assign(:changeset, changeset)
   end
 
   def select_label(%{option: option, selected: _selected} = assigns) do
@@ -100,6 +141,7 @@ defmodule BudgetTrackingToolWeb.Components.Select do
     Enum.map(options, &normalize_option/1)
   end
 
+  defp normalize_option(nil), do: %{label: "", id: nil}
   defp normalize_option(%{label: _label, id: _id} = option), do: option
 
   defp normalize_option(%{name: name, id: id}) do
@@ -107,4 +149,8 @@ defmodule BudgetTrackingToolWeb.Components.Select do
   end
 
   defp normalize_option(_option), do: raise("Cannot normalize option")
+
+  defp filter_options(options, query) do
+    Enum.filter(options, fn option -> String.contains?(option.label, query) end)
+  end
 end

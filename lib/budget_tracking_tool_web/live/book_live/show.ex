@@ -166,7 +166,7 @@ defmodule BudgetTrackingToolWeb.BookLive.Show do
   end
 
   defp list_payees do
-    [%{name: "Select payee", id: 0}] ++ Payees.list_payees()
+    Payees.list_payees()
   end
 
   defp list_expense_categories do
