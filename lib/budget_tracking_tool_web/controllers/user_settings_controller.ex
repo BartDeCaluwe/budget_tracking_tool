@@ -14,18 +14,27 @@ defmodule BudgetTrackingToolWeb.UserSettingsController do
       |> Accounts.get_user_by_session_token()
       |> Accounts.list_orgs()
 
-    session_org_id =
-      conn
-      |> get_session(:org_id)
-      |> String.to_integer()
+    case conn |> get_session(:org_id) do
+      nil ->
+        BudgetTrackingTool.Repo.put_org_id(Enum.at(orgs, 0).id)
 
-    render(
-      conn
-      |> assign(:page_title, "Settings")
-      |> assign(:session_org_id, session_org_id)
-      |> assign(:orgs, orgs),
-      "edit.html"
-    )
+        render(
+          conn
+          |> assign(:page_title, "Settings")
+          |> assign(:session_org_id, BudgetTrackingTool.Repo.get_org_id())
+          |> assign(:orgs, orgs),
+          "edit.html"
+        )
+
+      id ->
+        render(
+          conn
+          |> assign(:page_title, "Settings")
+          |> assign(:session_org_id, id)
+          |> assign(:orgs, orgs),
+          "edit.html"
+        )
+    end
   end
 
   def invite(conn, params) do
