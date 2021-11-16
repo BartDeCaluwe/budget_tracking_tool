@@ -32,7 +32,7 @@
         <%= text_input f, :org_id %>
         <%= error_tag f, :org_id %>
       </div>
-      <div class={"sm:col-span-6 #{if Phoenix.HTML.Form.input_value(f, :is_income), do: "hidden"}"} phx-feedback-for="category[overspent_behavior]" >
+      <div class={"sm:col-span-6 #{if Phoenix.HTML.Form.input_value(f, :is_income) === true, do: "hidden", else: "block"}"} phx-feedback-for="category[overspent_behavior]" >
         <%= label f, :overspent_behavior %>
         <div class="mt-1">
           <%= select f, :overspent_behavior, @overspent_behavior_options %>
