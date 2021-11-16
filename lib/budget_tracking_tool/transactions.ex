@@ -73,6 +73,13 @@ defmodule BudgetTrackingTool.Transactions do
       {:description, description}, query ->
         from q in query, where: ilike(q.description, ^"%#{String.replace(description, "%", "\\%")}%")
 
+      {:payee, %{id: 0}}, query ->
+        query
+
+      {:payee, payee}, query ->
+        from q in query,
+          where: q.payee_id == ^payee.id
+
       {:category, %{id: 0}}, query ->
         query
 

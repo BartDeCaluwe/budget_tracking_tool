@@ -29,5 +29,5 @@ defmodule BudgetTrackingToolWeb.CategoryLive.LabelComponent do
 
   def indicator_badge_color(true), do: "bg-green-400"
   def indicator_badge_color(false), do: "bg-red-400"
-  def indicator_badge_color(nil), do: "bg-transparent"
+  def indicator_badge_color(nil), do: "bg-gray-400"
 end

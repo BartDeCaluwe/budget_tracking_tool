@@ -19,7 +19,7 @@
 <% else %>
   <div class="grid grid-cols-12 gap-6 h-full">
     <div class="col-span-12 md:col-span-4 lg:col-span-2 pr-6">
-      <%= live_component BudgetTrackingToolWeb.TransactionLive.FilterComponent, id: "filter-transaction", categories: @categories %>
+      <%= live_component BudgetTrackingToolWeb.TransactionLive.FilterComponent, id: "filter-transaction", categories: @categories, payees: @payees %>
     </div>
     <div class="col-span-12 md:col-span-8 lg:col-span-10">
     <div class="">

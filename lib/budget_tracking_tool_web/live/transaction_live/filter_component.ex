@@ -2,11 +2,16 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FilterComponent do
   use BudgetTrackingToolWeb, :live_component
 
   alias BudgetTrackingTool.Categories.Category
+  alias BudgetTrackingTool.Payees.Payee
 
   @select_category %Category{
     id: 0,
     label: "Select category",
     is_income: nil
+  }
+  @select_payee %Payee{
+    id: 0,
+    name: "Select payee"
   }
   @default_min_amount nil
   @default_max_amount nil
@@ -77,6 +82,75 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FilterComponent do
                   phx-debounce="blur"
                   placeholder={to_string(Money.new(0))}
                   class="font-mono block w-full shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm border-gray-300 rounded-md">
+          </div>
+        </div>
+        <div class="">
+          <label for="payee" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+            Payee
+          </label>
+          <div class="">
+            <div
+              x-data="{open: false}"
+              @click.outside="open = false"
+            >
+              <div
+                class="sm:mt-0 mt-1 relative"
+                >
+                <button
+                  @click="open = true"
+                  @focus="open = true"
+                  type="button" class="relative whitespace-nowrap w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500 sm:text-sm" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label">
+                  <div class="flex items-center">
+                    <%= @selected_payee.name %>
+                  </div>
+                  <span class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                    <!-- Heroicon name: solid/selector -->
+                    <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                      <path fill-rule="evenodd" d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                  </span>
+                </button>
+
+                <ul
+                  x-cloak
+                  x-show="open"
+                  x-transition:enter=""
+                  x-transition:enter-start=""
+                  x-transition:enter-end=""
+                  x-transition:leave="transition ease-in duration-100"
+                  x-transition:leave-start="opacity-100"
+                  x-transition:leave-end="opacity-0"
+                  class="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm"
+                  role="tablist"
+                  aria-labelledby="listbox-label"
+                  aria-activedescendant="listbox-option-3"
+                  >
+                  <%= for {payee, index} <- Enum.with_index(@payees) do %>
+                    <li
+                      @click="open = false"
+                      phx-click="select-payee"
+                      phx-value-payee_id={"#{payee.id}"}
+                      phx-target={@myself}
+                      class="group hover:text-white hover:bg-green-600 focus:text-white focus:bg-green-600 focus:outline-none text-gray-900 cursor-default select-none relative py-2 pl-3 pr-9"
+                      id={"payee-list-#{index}"}
+                      tabindex={if index > 0, do: -1, else: 0}
+                      role="tab">
+                      <div class="flex items-center">
+                        <%= payee.name %>
+                      </div>
+
+                      <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-green-600 group-hover:text-white">
+                        <%= if @selected_payee.id == payee.id do %>
+                          <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                          </svg>
+                        <% end %>
+                      </span>
+                    </li>
+                  <% end %>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
         <div class="">
@@ -172,6 +246,7 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FilterComponent do
 
   def add_default_filters(socket) do
     categories = add_select_category_option(socket.assigns.categories)
+    payees = add_select_payee_option(socket.assigns.payees)
 
     socket
     |> assign(:categories, categories)
@@ -180,12 +255,19 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FilterComponent do
     |> assign(:description, @default_description)
     |> assign(:show_claimable, @default_show_claimable)
     |> assign(:selected_category, Enum.at(categories, 0))
+    |> assign(:selected_payee, Enum.at(payees, 0))
   end
 
   def handle_event("select-category", %{"category_id" => category_id}, socket) do
     {:noreply,
      socket
-     |> assign(:selected_category, find_category_by_id(socket.assigns.categories, category_id))}
+     |> assign(:selected_category, find_by_id(socket.assigns.categories, category_id, @select_category))}
+  end
+
+  def handle_event("select-payee", %{"payee_id" => payee_id}, socket) do
+    {:noreply,
+     socket
+     |> assign(:selected_payee, find_by_id(socket.assigns.payees, payee_id, @select_payee))}
   end
 
   def handle_event("reset-filters", _params, socket) do
@@ -237,6 +319,7 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FilterComponent do
          max_amount: nillify_empty_string(params, "max-amount", @default_max_amount),
          description: nillify_empty_string(params, "description", @default_description),
          category: socket.assigns.selected_category,
+         payee: socket.assigns.selected_payee,
          show_claimable: socket.assigns.show_claimable
        ]}
     )
@@ -250,9 +333,9 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FilterComponent do
     end
   end
 
-  defp find_category_by_id(categories, category_id) do
-    {id, _} = Integer.parse(category_id)
-    Enum.find(categories, @select_category, fn c -> c.id == id end)
+  defp find_by_id(items, item_id, default) do
+    {id, _} = Integer.parse(item_id)
+    Enum.find(items, default, fn i -> i.id == id end)
   end
 
   defp validate_amount(socket, key, amount) do
@@ -267,6 +350,9 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FilterComponent do
 
   defp add_select_category_option([@select_category | _rest] = categories), do: categories
   defp add_select_category_option(categories), do: [@select_category | categories]
+
+  defp add_select_payee_option([@select_payee | _rest] = payees), do: payees
+  defp add_select_payee_option(payees), do: [@select_payee | payees]
 
   defp toggle_claimable(nil), do: true
   defp toggle_claimable(true), do: false
