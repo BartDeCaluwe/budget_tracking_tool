@@ -83,7 +83,7 @@
                           <% end %>
                         </div>
                         <div class="py-1" role="none">
-                          <%= link to: "#", phx_click: "delete", phx_value_id: category.id, data: [confirm: "Are you sure?"],
+                          <%= link to: "#", phx_click: "delete", phx_value_id: category.id, data: [confirm: "Are you sure? Deleting a category will also delete all related transactions and/or budgets related to it."],
                             class: "text-gray-700 group flex items-center px-4 py-2 text-sm",
                             role: "menuitem",
                             tabindex: "-1",
