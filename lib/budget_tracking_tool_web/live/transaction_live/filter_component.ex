@@ -79,7 +79,6 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FilterComponent do
                   class="font-mono block w-full shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm border-gray-300 rounded-md">
           </div>
         </div>
-        <div>
         <div class="">
           <label for="category" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
             Category
@@ -153,7 +152,6 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FilterComponent do
               </div>
             </div>
           </div>
-        </div>
         </div>
         <div class="grid">
           <label for="claimable" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
@@ -235,13 +233,21 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FilterComponent do
       self(),
       {:filter_transactions,
        [
-         min_amount: Map.get(params, "min-amount", @default_min_amount),
-         max_amount: Map.get(params, "max-amount", @default_max_amount),
-         description: Map.get(params, "description", @default_description),
+         min_amount: nillify_empty_string(params, "min-amount", @default_min_amount),
+         max_amount: nillify_empty_string(params, "max-amount", @default_max_amount),
+         description: nillify_empty_string(params, "description", @default_description),
          category: socket.assigns.selected_category,
          show_claimable: socket.assigns.show_claimable
        ]}
     )
+  end
+
+  defp nillify_empty_string(params, key, default) do
+    case Map.get(params, key) do
+      "" -> default
+      nil -> default
+      value -> value
+    end
   end
 
   defp find_category_by_id(categories, category_id) do
