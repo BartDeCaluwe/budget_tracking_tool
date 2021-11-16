@@ -27,7 +27,6 @@ import { Socket } from 'phoenix'
 import { LiveSocket } from 'phoenix_live_view'
 import topbar from '../vendor/topbar'
 import Alpine from 'alpinejs'
-import flatpickr from 'flatpickr'
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/service-worker.js').then(function () {
@@ -40,16 +39,6 @@ Alpine.start()
 
 let Hooks = {}
 
-Hooks.Flatpickr = {
-  mounted() {
-    flatpickr(this.el, {
-      altInput: true,
-      altFormat: 'd M Y',
-      wrap: true,
-    })
-  },
-}
-
 let csrfToken = document
   .querySelector("meta[name='csrf-token']")
   .getAttribute('content')
@@ -60,29 +49,6 @@ let liveSocket = new LiveSocket('/live', Socket, {
     onBeforeElUpdated(from, to) {
       if (from._x_dataStack) {
         window.Alpine.clone(from, to)
-      }
-      if (
-        from.classList.contains('flatpickr') &&
-        from._flatpickr !== undefined
-      ) {
-        from._flatpickr.setDate(to.children[0].value, false)
-
-        const fp = flatpickr(to, {
-          altInput: true,
-          altFormat: 'd M Y',
-          wrap: true,
-        })
-
-        fp.setDate(to.children[0].value, false)
-
-        const flatpickrCalendars = document.querySelectorAll(
-          '.flatpickr-calendar'
-        )
-        if (flatpickrCalendars.length > 1) {
-          flatpickrCalendars.forEach(
-            (calendar, i) => i !== 0 && calendar.remove()
-          )
-        }
       }
     },
   },
