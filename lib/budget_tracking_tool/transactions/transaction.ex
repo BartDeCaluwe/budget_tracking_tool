@@ -31,7 +31,7 @@ defmodule BudgetTrackingTool.Transactions.Transaction do
       :book_id,
       :org_id
     ])
-    |> validate_required([:description, :amount, :date, :is_claimable, :category_id, :book_id, :org_id])
+    |> validate_required([:amount, :date, :is_claimable, :category_id, :book_id, :org_id])
   end
 
   def change(changeset, field, value) do
