@@ -21,7 +21,7 @@
       </div>
     </div>
 
-    <div class="col-span-12 md:col-span-6 lg:col-span-2">
+    <div class={"col-span-12 md:col-span-6 #{if @stacked, do: "lg:col-span-12", else: "lg:col-span-2"}"}>
       <%= label f, :payee_id, class: "sr-only" %>
       <div class="hidden">
         <%= number_input f, :payee_id %>
