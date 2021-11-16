@@ -28,7 +28,10 @@ defmodule BudgetTrackingTool.Categories do
   end
 
   def list_expense_categories do
-    Repo.all(from c in Category, where: c.is_income == false)
+    Category
+    |> where(is_income: false)
+    |> order_by(:label)
+    |> Repo.all()
   end
 
   @doc """
