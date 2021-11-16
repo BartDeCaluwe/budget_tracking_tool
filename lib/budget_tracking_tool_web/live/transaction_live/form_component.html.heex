@@ -115,8 +115,10 @@
 
     <div class={"col-span-12 md:col-span-6 #{if @stacked, do: "lg:col-span-12", else: "lg:col-span-2"}"}>
       <%= label f, :date, class: "sr-only" %>
-      <%= date_input f, :date %>
-      <%= error_tag f, :date %>
+      <div class="mt-1">
+        <%= date_input f, :date %>
+        <%= error_tag f, :date %>
+      </div>
     </div>
 
     <div class={"col-span-12 md:col-span-6 relative flex items-center #{if @stacked, do: "lg:col-span-12", else: "lg:col-span-1"}"}>
