@@ -151,6 +151,9 @@ defmodule BudgetTrackingToolWeb.Components.Select do
   defp normalize_option(_option), do: raise("Cannot normalize option")
 
   defp filter_options(options, query) do
-    Enum.filter(options, fn option -> String.contains?(option.label, query) end)
+    query = String.downcase(query)
+
+    options
+    |> Enum.filter(fn option -> String.downcase(option.label) |> String.contains?(query) end)
   end
 end
