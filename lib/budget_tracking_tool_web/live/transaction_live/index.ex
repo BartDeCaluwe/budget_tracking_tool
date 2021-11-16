@@ -5,6 +5,7 @@ defmodule BudgetTrackingToolWeb.TransactionLive.Index do
   alias BudgetTrackingTool.Transactions.Transaction
   alias BudgetTrackingTool.Categories
   alias BudgetTrackingTool.Payees.Payee
+  alias BudgetTrackingTool.Payees
 
   @default_order_by "date"
   @default_order_direction :asc
@@ -16,6 +17,7 @@ defmodule BudgetTrackingToolWeb.TransactionLive.Index do
      |> assign(:filter, false)
      |> assign(:transactions, list_transactions(@default_order_by, @default_order_direction))
      |> assign(:categories, list_categories())
+     |> assign(:payees, list_payees())
      |> assign(:order_by, @default_order_by)
      |> assign(:order_direction, @default_order_direction)}
   end
@@ -98,6 +100,10 @@ defmodule BudgetTrackingToolWeb.TransactionLive.Index do
 
   defp list_categories do
     Categories.list_categories()
+  end
+
+  defp list_payees do
+    Payees.list_payees()
   end
 
   defp get_order_direction(nil, nil, _property), do: :asc
