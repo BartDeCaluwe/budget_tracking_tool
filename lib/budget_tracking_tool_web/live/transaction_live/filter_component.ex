@@ -185,8 +185,6 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FilterComponent do
   end
 
   def handle_event("select-category", %{"category_id" => category_id}, socket) do
-    IO.inspect(category_id)
-
     {:noreply,
      socket
      |> assign(:selected_category, find_category_by_id(socket.assigns.categories, category_id))}
