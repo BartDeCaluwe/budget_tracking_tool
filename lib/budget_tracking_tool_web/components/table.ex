@@ -1,6 +1,23 @@
 defmodule BudgetTrackingToolWeb.Components.Table do
   use Phoenix.Component
 
+  def sortable_header(
+        %{label: label, property: property, order_direction: order_direction, order_field: order_field} = assigns
+      ) do
+    ~H"""
+      <th phx-click="order_field" phx-value-property={property} scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-right hover:cursor-pointer hover:text-gray-700">
+        <div class="flex items-center justify-end">
+          <%= label %>
+          <%= if order_field === property do %>
+            <.sort order_direction={order_direction} />
+          <% else %>
+            <div class="ml-1 w-3"></div>
+          <% end %>
+        </div>
+      </th>
+    """
+  end
+
   def sort(%{order_direction: :asc} = assigns) do
     ~H"""
     <svg class="h-3 w-3 ml-1" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">

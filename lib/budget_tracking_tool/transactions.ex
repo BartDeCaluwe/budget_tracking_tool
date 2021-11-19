@@ -28,31 +28,15 @@ defmodule BudgetTrackingTool.Transactions do
     |> Repo.preload([:category, :book, :payee])
   end
 
-  def list_transactions(order_params) do
-    query = from(t in Transaction)
-
-    query =
-      query
-      |> add_order_by(order_params)
+  def list_transactions(%{order_direction: direction, order_field: order_field}) do
+    query = ordered_query(direction, order_field)
 
     Repo.all(query)
     |> Repo.preload([:category, :book, :payee])
   end
 
-  defp add_order_by(query, %{order_direction: :asc, order_by: order_by}) do
-    from t in query,
-      order_by: [asc: field(t, ^order_by)]
-  end
-
-  defp add_order_by(query, %{order_direction: :desc, order_by: order_by}) do
-    from t in query,
-      order_by: [desc: field(t, ^order_by)]
-  end
-
-  def list_transactions(order_params, criteria) when is_list(criteria) do
-    query =
-      from(t in Transaction)
-      |> add_order_by(order_params)
+  def list_transactions(%{order_direction: direction, order_field: order_field}, criteria) when is_list(criteria) do
+    query = ordered_query(direction, order_field)
 
     Enum.reduce(criteria, query, fn
       {:min_amount, nil}, query ->
@@ -142,6 +126,28 @@ defmodule BudgetTrackingTool.Transactions do
         select: t
     )
     |> Repo.preload([:category, :book, :payee])
+  end
+
+  defp ordered_query(direction, order_field) do
+    case String.split(order_field, ".") do
+      [association, field] ->
+        association = String.to_atom(association)
+        order_field = String.to_atom(field)
+
+        from(
+          t in Transaction,
+          left_join: a in assoc(t, ^association),
+          order_by: [{^direction, field(a, ^order_field)}]
+        )
+
+      [field] ->
+        order_field = String.to_atom(field)
+
+        from(
+          t in Transaction,
+          order_by: [{^direction, field(t, ^order_field)}]
+        )
+    end
   end
 
   @doc """

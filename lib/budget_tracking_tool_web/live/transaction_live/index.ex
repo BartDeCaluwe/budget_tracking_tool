@@ -7,18 +7,18 @@ defmodule BudgetTrackingToolWeb.TransactionLive.Index do
   alias BudgetTrackingTool.Payees.Payee
   alias BudgetTrackingTool.Payees
 
-  @default_order_by "date"
-  @default_order_direction :asc
+  @default_order_field "date"
+  @default_order_direction :desc
 
   @impl true
   def mount(_params, _session, socket) do
     {:ok,
      socket
      |> assign(:filter, false)
-     |> assign(:transactions, list_transactions(@default_order_by, @default_order_direction))
+     |> assign(:transactions, list_transactions(@default_order_field, @default_order_direction))
      |> assign(:categories, list_categories())
      |> assign(:payees, list_payees())
-     |> assign(:order_by, @default_order_by)
+     |> assign(:order_field, @default_order_field)
      |> assign(:order_direction, @default_order_direction)}
   end
 
@@ -55,13 +55,13 @@ defmodule BudgetTrackingToolWeb.TransactionLive.Index do
     {:noreply, assign(socket, :transactions, list_transactions())}
   end
 
-  def handle_event("order_by", %{"property" => property}, socket) do
-    order_direction = get_order_direction(socket.assigns.order_direction, socket.assigns.order_by, property)
+  def handle_event("order_field", %{"property" => property}, socket) do
+    order_direction = get_order_direction(socket.assigns.order_direction, socket.assigns.order_field, property)
 
     {:noreply,
      socket
      |> assign(:transactions, list_transactions(property, order_direction))
-     |> assign(:order_by, property)
+     |> assign(:order_field, property)
      |> assign(:order_direction, order_direction)}
   end
 
@@ -73,7 +73,7 @@ defmodule BudgetTrackingToolWeb.TransactionLive.Index do
      |> assign(
        :transactions,
        list_transactions(
-         socket.assigns.order_by,
+         socket.assigns.order_field,
          socket.assigns.order_direction,
          filters
        )
@@ -87,13 +87,13 @@ defmodule BudgetTrackingToolWeb.TransactionLive.Index do
     Transactions.list_transactions()
   end
 
-  defp list_transactions(order_by, order_direction) do
-    Transactions.list_transactions(%{order_direction: order_direction, order_by: String.to_atom(order_by)})
+  defp list_transactions(order_field, order_direction) do
+    Transactions.list_transactions(%{order_direction: order_direction, order_field: order_field})
   end
 
-  defp list_transactions(order_by, order_direction, filters) do
+  defp list_transactions(order_field, order_direction, filters) do
     Transactions.list_transactions(
-      %{order_direction: order_direction, order_by: String.to_atom(order_by)},
+      %{order_direction: order_direction, order_field: order_field},
       filters
     )
   end
@@ -108,11 +108,11 @@ defmodule BudgetTrackingToolWeb.TransactionLive.Index do
 
   defp get_order_direction(nil, nil, _property), do: :asc
 
-  defp get_order_direction(:asc, order_by, property) do
-    if order_by === property, do: :desc, else: :asc
+  defp get_order_direction(:asc, order_field, property) do
+    if order_field === property, do: :desc, else: :asc
   end
 
-  defp get_order_direction(:desc, order_by, property) do
-    if order_by === property, do: :asc, else: :desc
+  defp get_order_direction(:desc, order_field, property) do
+    if order_field === property, do: :asc, else: :desc
   end
 end
