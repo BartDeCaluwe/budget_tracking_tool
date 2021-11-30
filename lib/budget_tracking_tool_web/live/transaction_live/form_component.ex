@@ -79,7 +79,7 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FormComponent do
 
     {:noreply,
      socket
-     |> assign(:payees, socket.assigns.payees ++ [payee])
+     |> assign(:payees, [payee | socket.assigns.payees])
      |> assign(:changeset, changeset)
      |> assign(:selected_payee, payee)}
   end

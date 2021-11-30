@@ -37,6 +37,8 @@ if ('serviceWorker' in navigator) {
 window.Alpine = Alpine
 Alpine.start()
 
+window.addEventListener("focus", e => e.target.focus())
+
 let Hooks = {}
 
 let csrfToken = document

@@ -1,5 +1,6 @@
 defmodule BudgetTrackingToolWeb.Components.Select do
   use BudgetTrackingToolWeb, :live_component
+  alias Phoenix.LiveView.JS
 
   @impl true
   def update(assigns, socket) do
@@ -15,7 +16,7 @@ defmodule BudgetTrackingToolWeb.Components.Select do
   @impl true
   def render(assigns) do
     ~H"""
-    <div>
+    <div id="select-wrapper" phx-click-away={JS.hide(to: "#select-form-wrapper")}>
       <.form let={f}
              as="select-form"
              for={@changeset}
@@ -24,34 +25,44 @@ defmodule BudgetTrackingToolWeb.Components.Select do
              phx-change="validate">
           <div
             class="mt-1 relative"
-            x-data="{open: false}"
-            @click.outside="open = false"
-            @click.inside="open = true">
-            <%= text_input f, :query, type: "text", placeholder: "payee" %>
-            <ul
-              x-cloak
-              x-show="open"
-              x-transition:enter=""
-              x-transition:enter-start=""
-              x-transition:enter-end=""
-              x-transition:leave="transition ease-in duration-100"
-              x-transition:leave-start="opacity-100"
-              x-transition:leave-end="opacity-0"
-              class="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm"
-              role="tablist"
-              aria-labelledby="listbox-label"
-              aria-activedescendant="listbox-option-3"
-              >
-              <%= for {option, index} <- Enum.with_index(@filtered_options) do %>
+            >
+              <button
+                phx-click={JS.toggle(to: "#select-form-wrapper") |> JS.dispatch("focus", to: "#select-form_query")}
+                id="select-list-button"
+                type="button" class="relative w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500 sm:text-sm" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label">
+                <div class="flex items-center">
+                  <%= if @selected_option.id do %>
+                    <span class="block truncate">
+                      <%= @selected_option.label %>
+                    </span>
+                  <% else %>
+                    <span class="block truncate text-gray-500">
+                      <%= @placeholder %>
+                    </span>
+                  <% end %>
+                </div>
+                <span class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                  <!-- Heroicon name: solid/selector -->
+                  <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
+                  </svg>
+                </span>
+              </button>
+            <div id="select-form-wrapper" class="hidden absolute z-10 mt-1">
+              <%= text_input f, :query, type: "text", placeholder: "search or create" %>
+              <ul
+                class="mt-1 w-full bg-white shadow-lg max-h-60 rounded-md text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm"
+                role="tablist"
+                aria-labelledby="listbox-label"
+                id="select-list"
+                aria-activedescendant="listbox-option-3"
+                >
+                <%= for {option, index} <- Enum.with_index(@filtered_options) do %>
                 <li
-                  @click="open = false"
-                  phx-click="select-option"
-                  phx-value-option_label={option.label}
-                  phx-value-option_id={option.id}
-                  phx-target={@target}
+                  phx-click={handle_select(@target, option.label, option.id)}
                   class="group hover:text-white hover:bg-green-600 focus:text-white focus:bg-green-600 focus:outline-none text-gray-900 cursor-default select-none relative py-2 pl-3 pr-9"
                   id={"listbox-option-#{index}"}
-                  tabindex={if index > 0, do: -1, else: 0}
+                  tabindex={index}
                   role="tab">
                   <div class="flex items-center">
                     <.select_label option={option} />
@@ -65,26 +76,38 @@ defmodule BudgetTrackingToolWeb.Components.Select do
                     <% end %>
                   </span>
                 </li>
-              <% end %>
-              <%= if Map.get(@changeset.changes, :query) do %>
-                <li
-                  class="group hover:text-white hover:bg-green-600 focus:text-white focus:bg-green-600 focus:outline-none text-gray-900 cursor-default select-none relative py-2 pl-3 pr-9"
-                  phx-click="add-option"
-                  phx-value-label={@changeset.changes.query}
-                  phx-target={@target}
-                >
-                  <div class="flex items-center">
-                    <span class="font-semibold block truncate">
-                      Add <%= @changeset.changes.query %>
-                    </span>
-                  </div>
-                </li>
-              <% end %>
-            </ul>
+                <% end %>
+                <%= if Ecto.Changeset.get_change(@changeset, :query) do %>
+                  <li
+                    id="add-option-button"
+                    class="group hover:text-white hover:bg-green-600 focus:text-white focus:bg-green-600 focus:outline-none text-gray-900 cursor-default select-none relative py-2 pl-3 pr-9"
+                    phx-click={handle_add_option(@target, @changeset.changes.query)}
+                  >
+                    <div class="flex items-center">
+                      <span class="font-semibold block truncate">
+                        Add <%= @changeset.changes.query  %>
+                      </span>
+                    </div>
+                  </li>
+                <% end %>
+              </ul>
+            </div>
           </div>
         </.form>
       </div>
     """
+  end
+
+  def handle_add_option(target, label) do
+    %JS{}
+    |> JS.hide(to: "#select-form-wrapper")
+    |> JS.push("add-option", target: target, value: %{label: label})
+  end
+
+  def handle_select(target, label, id) do
+    %JS{}
+    |> JS.hide(to: "#select-form-wrapper")
+    |> JS.push("select-option", target: target, value: %{option_label: label, option_id: to_string(id)})
   end
 
   @impl true
