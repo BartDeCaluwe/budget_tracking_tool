@@ -16,7 +16,7 @@ defmodule BudgetTrackingToolWeb.Components.Select do
   @impl true
   def render(assigns) do
     ~H"""
-    <div id="select-wrapper" phx-click-away={JS.hide(to: "#select-form-wrapper")}>
+    <div id="select-wrapper" phx-click-away={JS.hide(to: get_wrapper_id_selector(@id))}>
       <.form let={f}
              as="select-form"
              for={@changeset}
@@ -27,7 +27,7 @@ defmodule BudgetTrackingToolWeb.Components.Select do
             class="mt-1 relative"
             >
               <button
-                phx-click={JS.toggle(to: "#select-form-wrapper") |> JS.dispatch("focus", to: "#select-form_query")}
+                phx-click={JS.toggle(to: get_wrapper_id_selector(@id)) |> JS.dispatch("focus", to: get_query_input_id_selector(@id))}
                 id="select-list-button"
                 type="button" class="relative w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500 sm:text-sm" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label">
                 <div class="flex items-center">
@@ -48,8 +48,8 @@ defmodule BudgetTrackingToolWeb.Components.Select do
                   </svg>
                 </span>
               </button>
-            <div id="select-form-wrapper" class="hidden absolute z-10 mt-1">
-              <%= text_input f, :query, type: "text", placeholder: "search or create" %>
+            <div id={get_wrapper_id(@id)} class="hidden absolute z-10 mt-1">
+              <%= text_input f, :query, id: get_query_input_id(@id), type: "text", placeholder: "search or create" %>
               <ul
                 class="mt-1 w-full bg-white shadow-lg max-h-60 rounded-md text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm"
                 role="tablist"
@@ -59,7 +59,7 @@ defmodule BudgetTrackingToolWeb.Components.Select do
                 >
                 <%= for {option, index} <- Enum.with_index(@filtered_options) do %>
                 <li
-                  phx-click={handle_select(@target, option.label, option.id)}
+                  phx-click={handle_select(@target, @id,option.label, option.id)}
                   class="group hover:text-white hover:bg-green-600 focus:text-white focus:bg-green-600 focus:outline-none text-gray-900 cursor-default select-none relative py-2 pl-3 pr-9"
                   id={"listbox-option-#{index}"}
                   tabindex={index}
@@ -81,7 +81,7 @@ defmodule BudgetTrackingToolWeb.Components.Select do
                   <li
                     id="add-option-button"
                     class="group hover:text-white hover:bg-green-600 focus:text-white focus:bg-green-600 focus:outline-none text-gray-900 cursor-default select-none relative py-2 pl-3 pr-9"
-                    phx-click={handle_add_option(@target, @changeset.changes.query)}
+                    phx-click={handle_add_option(@target, @id, @changeset.changes.query)}
                   >
                     <div class="flex items-center">
                       <span class="font-semibold block truncate">
@@ -98,16 +98,21 @@ defmodule BudgetTrackingToolWeb.Components.Select do
     """
   end
 
-  def handle_add_option(target, label) do
+  def get_wrapper_id(id), do: "#{id}-wrapper"
+  def get_wrapper_id_selector(id), do: "##{get_wrapper_id(id)}"
+  def get_query_input_id(id), do: "#{id}-query"
+  def get_query_input_id_selector(id), do: "##{get_query_input_id(id)}"
+
+  def handle_add_option(target, id, label) do
     %JS{}
-    |> JS.hide(to: "#select-form-wrapper")
+    |> JS.hide(to: get_wrapper_id_selector(id))
     |> JS.push("add-option", target: target, value: %{label: label})
   end
 
-  def handle_select(target, label, id) do
+  def handle_select(target, id, label, option_id) do
     %JS{}
-    |> JS.hide(to: "#select-form-wrapper")
-    |> JS.push("select-option", target: target, value: %{option_label: label, option_id: to_string(id)})
+    |> JS.hide(to: get_wrapper_id_selector(id))
+    |> JS.push("select-option", target: target, value: %{option_label: label, option_id: to_string(option_id)})
   end
 
   @impl true

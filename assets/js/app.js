@@ -37,7 +37,16 @@ if ('serviceWorker' in navigator) {
 window.Alpine = Alpine
 Alpine.start()
 
-window.addEventListener("focus", e => e.target.focus())
+window.addEventListener("focus", e => {
+  e.target.focus()
+
+  const inputLength = e.target.value?.length
+  if (!inputLength) {
+    return;
+  }
+
+  e.target.setSelectionRange(inputLength, inputLength)
+})
 
 let Hooks = {}
 
