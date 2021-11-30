@@ -32,7 +32,7 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FormComponent do
     save_transaction(socket, socket.assigns.action, transaction_params)
   end
 
-  def handle_event("select-option", %{"option_id" => payee_id}, socket) do
+  def handle_event("select-payee", %{"option_id" => payee_id}, socket) do
     case find_payee_by_id(socket.assigns.payees, payee_id) do
       nil ->
         changeset =
@@ -62,6 +62,22 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FormComponent do
     end
   end
 
+  def handle_event("select-category", %{"option_id" => category_id}, socket) do
+    selected_category = find_category_by_id(socket.assigns.categories, category_id)
+
+    changeset =
+      Transactions.put_change(
+        socket.assigns.changeset,
+        :category_id,
+        selected_category.id
+      )
+
+    {:noreply,
+     socket
+     |> assign(:changeset, changeset)
+     |> assign(:selected_category, selected_category)}
+  end
+
   def handle_event("add-option", %{"label" => name}, socket) do
     new_payee = %{
       name: name,
@@ -82,22 +98,6 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FormComponent do
      |> assign(:payees, [payee | socket.assigns.payees])
      |> assign(:changeset, changeset)
      |> assign(:selected_payee, payee)}
-  end
-
-  def handle_event("select-category", %{"category_id" => category_id}, socket) do
-    selected_category = find_category_by_id(socket.assigns.categories, category_id)
-
-    changeset =
-      Transactions.put_change(
-        socket.assigns.changeset,
-        :category_id,
-        selected_category.id
-      )
-
-    {:noreply,
-     socket
-     |> assign(:changeset, changeset)
-     |> assign(:selected_category, selected_category)}
   end
 
   defp save_transaction(socket, :edit, transaction_params) do

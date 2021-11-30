@@ -59,7 +59,7 @@ defmodule BudgetTrackingToolWeb.Components.Select do
                 >
                 <%= for {option, index} <- Enum.with_index(@filtered_options) do %>
                 <li
-                  phx-click={handle_select(@target, @id,option.label, option.id)}
+                  phx-click={handle_select(@target, @id, @handle_select, option.label, option.id)}
                   class="group hover:text-white hover:bg-green-600 focus:text-white focus:bg-green-600 focus:outline-none text-gray-900 cursor-default select-none relative py-2 pl-3 pr-9"
                   id={"listbox-option-#{index}"}
                   tabindex={index}
@@ -77,7 +77,7 @@ defmodule BudgetTrackingToolWeb.Components.Select do
                   </span>
                 </li>
                 <% end %>
-                <%= if Ecto.Changeset.get_change(@changeset, :query) do %>
+                <%= if @allow_add and Ecto.Changeset.get_change(@changeset, :query) do %>
                   <li
                     id="add-option-button"
                     class="group hover:text-white hover:bg-green-600 focus:text-white focus:bg-green-600 focus:outline-none text-gray-900 cursor-default select-none relative py-2 pl-3 pr-9"
@@ -109,10 +109,10 @@ defmodule BudgetTrackingToolWeb.Components.Select do
     |> JS.push("add-option", target: target, value: %{label: label})
   end
 
-  def handle_select(target, id, label, option_id) do
+  def handle_select(target, id, event, label, option_id) do
     %JS{}
     |> JS.hide(to: get_wrapper_id_selector(id))
-    |> JS.push("select-option", target: target, value: %{option_label: label, option_id: to_string(option_id)})
+    |> JS.push(event, target: target, value: %{option_label: label, option_id: to_string(option_id)})
   end
 
   @impl true
