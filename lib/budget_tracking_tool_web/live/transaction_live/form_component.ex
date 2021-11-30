@@ -7,14 +7,21 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FormComponent do
   @impl true
   def update(%{transaction: transaction} = assigns, socket) do
     changeset = Transactions.change_transaction(transaction)
+    selected_category = transaction.category || Enum.at(assigns.categories, 0)
 
     {:ok,
      socket
      |> assign(assigns)
      |> assign(:changeset, changeset)
-     |> assign(:selected_category, transaction.category || Enum.at(assigns.categories, 0))
+     |> assign(
+       :selected_category,
+       put_prefix_color(selected_category)
+     )
      |> assign(:selected_payee, transaction.payee)}
   end
+
+  defp prefix_color(true), do: "bg-green-400"
+  defp prefix_color(false), do: "bg-red-400"
 
   @impl true
   def handle_event("validate", %{"transaction" => transaction_params}, socket) do
@@ -75,7 +82,18 @@ defmodule BudgetTrackingToolWeb.TransactionLive.FormComponent do
     {:noreply,
      socket
      |> assign(:changeset, changeset)
-     |> assign(:selected_category, selected_category)}
+     |> assign(
+       :selected_category,
+       put_prefix_color(selected_category)
+     )}
+  end
+
+  defp put_prefix_color(category) do
+    Map.put(
+      category,
+      :prefix_color,
+      prefix_color(category.is_income)
+    )
   end
 
   def handle_event("add-option", %{"label" => name}, socket) do

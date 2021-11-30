@@ -162,8 +162,14 @@ defmodule BudgetTrackingToolWeb.BookLive.Show do
   end
 
   defp list_categories do
-    Categories.list_categories()
+    Enum.map(
+      Categories.list_categories(),
+      fn cat -> Map.put(cat, :prefix_color, prefix_color(cat.is_income)) end
+    )
   end
+
+  defp prefix_color(true), do: "bg-green-400"
+  defp prefix_color(false), do: "bg-red-400"
 
   defp list_payees do
     Payees.list_payees()

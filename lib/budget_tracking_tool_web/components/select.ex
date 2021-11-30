@@ -7,6 +7,7 @@ defmodule BudgetTrackingToolWeb.Components.Select do
     {:ok,
      socket
      |> assign(assigns)
+     |> assign(:has_prefix, assigns[:has_prefix] || false)
      |> assign_changeset(assigns.selected_option)
      |> assign(:options, normalize_options(assigns.options))
      |> assign(:filtered_options, normalize_options(assigns.options))
@@ -32,9 +33,7 @@ defmodule BudgetTrackingToolWeb.Components.Select do
                 type="button" class="relative w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500 sm:text-sm" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label">
                 <div class="flex items-center">
                   <%= if @selected_option.id do %>
-                    <span class="block truncate">
-                      <%= @selected_option.label %>
-                    </span>
+                    <.select_label option={@selected_option} has_prefix={@has_prefix} />
                   <% else %>
                     <span class="block truncate text-gray-500">
                       <%= @placeholder %>
@@ -65,7 +64,7 @@ defmodule BudgetTrackingToolWeb.Components.Select do
                   tabindex={index}
                   role="tab">
                   <div class="flex items-center">
-                    <.select_label option={option} />
+                    <.select_label option={option} has_prefix={@has_prefix}/>
                   </div>
 
                   <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-green-600 group-hover:text-white">
@@ -147,20 +146,13 @@ defmodule BudgetTrackingToolWeb.Components.Select do
     |> assign(:changeset, changeset)
   end
 
-  def select_label(%{option: option, selected: _selected} = assigns) do
+  def select_label(assigns) do
     ~H"""
       <div class="flex items-center">
-        <span class="font-semibold block truncate">
-          <%= option.label %>
+        <span class={"#{Map.get(@option, :prefix_color, "hidden")} mr-3 flex-shrink-0 inline-block h-2 w-2 rounded-full"} aria-hidden="true"></span>
+        <span>
+          <%= @option.label %>
         </span>
-      </div>
-    """
-  end
-
-  def select_label(%{option: option} = assigns) do
-    ~H"""
-      <div class="flex items-center">
-        <span class=""><%= option.label %></span>
       </div>
     """
   end
@@ -172,8 +164,8 @@ defmodule BudgetTrackingToolWeb.Components.Select do
   defp normalize_option(nil), do: %{label: "", id: nil}
   defp normalize_option(%{label: _label, id: _id} = option), do: option
 
-  defp normalize_option(%{name: name, id: id}) do
-    %{label: name, id: id}
+  defp normalize_option(%{name: name} = option) do
+    Map.put(option, :label, name)
   end
 
   defp normalize_option(_option), do: raise("Cannot normalize option")

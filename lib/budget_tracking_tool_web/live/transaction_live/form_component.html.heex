@@ -50,6 +50,7 @@
                        selected_option={@selected_category}
                        handle_select="select-category"
                        allow_add={:false}
+                       has_prefix={:true}
                        target={@myself}>
       </.live_component>
       <%= error_tag f, :category_id %>
