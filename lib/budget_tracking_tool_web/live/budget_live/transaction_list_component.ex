@@ -48,9 +48,16 @@ defmodule BudgetTrackingToolWeb.BudgetLive.TransactionListComponent do
                   </div>
                   <div class="flex items-center space-x-2">
                     <span class="font-medium text-gray-900"><%= transaction.amount %></span>
-                    <button phx-click="claim" phx-value-transaction_id={"#{transaction.id}"} phx-target={@myself} type="button" class={"inline-flex items-center px-2.5 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 " <> if transaction.is_claimable, do: "visible", else: "invisible"}>
-                      claim
-                    </button>
+
+                    <%= if transaction.claimed_at do %>
+                      <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
+                        claimed!
+                      </span>
+                    <% else %>
+                      <button phx-click="claim" phx-value-transaction_id={"#{transaction.id}"} phx-target={@myself} type="button" class={"inline-flex items-center px-2.5 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 " <> if transaction.is_claimable, do: "visible", else: "invisible"}>
+                        claim
+                      </button>
+                    <% end %>
                   </div>
                 </div>
               </div>
