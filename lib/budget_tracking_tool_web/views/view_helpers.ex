@@ -4,6 +4,10 @@ defmodule BudgetTrackingToolWeb.ViewHelpers do
   """
   use BudgetTrackingToolWeb, :view
 
+  def overspent_behaviour_label(behavior) do
+    BudgetTrackingTool.Categories.Category.humanize(behavior)
+  end
+
   def flash_class(type) do
     case type do
       "info" ->

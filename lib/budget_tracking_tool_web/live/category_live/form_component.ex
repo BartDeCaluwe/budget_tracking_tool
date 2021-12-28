@@ -11,7 +11,9 @@ defmodule BudgetTrackingToolWeb.CategoryLive.FormComponent do
         org_id: BudgetTrackingTool.Repo.get_org_id()
       })
 
-    overspent_behavior_options = Ecto.Enum.values(Category, :overspent_behavior)
+    overspent_behavior_options =
+      Ecto.Enum.values(Category, :overspent_behavior)
+      |> Enum.map(fn b -> [key: Category.humanize(b), value: b] end)
 
     {:ok,
      socket

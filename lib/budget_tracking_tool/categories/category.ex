@@ -29,4 +29,11 @@ defmodule BudgetTrackingTool.Categories.Category do
   def overspent_behaviors do
     @overspent_behaviors
   end
+
+  def humanize(behavior) do
+    behavior
+    |> Atom.to_string()
+    |> String.capitalize()
+    |> String.replace("_", " ")
+  end
 end

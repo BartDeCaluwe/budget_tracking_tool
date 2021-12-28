@@ -39,8 +39,6 @@ defmodule BudgetTrackingToolWeb do
 
       # Include shared imports and aliases for views
       unquote(view_helpers())
-
-      alias BudgetTrackingToolWeb.ViewHelpers
     end
   end
 
@@ -96,6 +94,8 @@ defmodule BudgetTrackingToolWeb do
       import BudgetTrackingToolWeb.ErrorHelpers
       import BudgetTrackingToolWeb.Gettext
       alias BudgetTrackingToolWeb.Router.Helpers, as: Routes
+
+      alias BudgetTrackingToolWeb.ViewHelpers
     end
   end
 
