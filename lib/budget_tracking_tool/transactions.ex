@@ -91,7 +91,8 @@ defmodule BudgetTrackingTool.Transactions do
           t.book_id == ^book_id and
             t.date >= ^beginning_of_month and
             t.date <= ^end_of_month,
-        select: t
+        select: t,
+        order_by: t.date
     )
     |> Repo.preload([:category, :book, :payee])
   end
@@ -107,7 +108,8 @@ defmodule BudgetTrackingTool.Transactions do
             t.category_id == ^category_id and
             t.date >= ^beginning_of_month and
             t.date <= ^end_of_month,
-        select: t
+        select: t,
+        order_by: t.date
     )
     |> Repo.preload([:category, :book, :payee])
   end
