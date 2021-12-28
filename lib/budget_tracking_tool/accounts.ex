@@ -128,6 +128,17 @@ defmodule BudgetTrackingTool.Accounts do
     |> Repo.preload([:user, :org], skip_org_id: true)
   end
 
+  def list_pending_org_invites_for_user(user) do
+    query =
+      from o in OrgInvite,
+        where:
+          o.email == ^user.email and
+            o.status == :pending
+
+    Repo.all(query, skip_org_id: true)
+    |> Repo.preload([:user, :org], skip_org_id: true)
+  end
+
   def get_org_invite_for_email!(id, email) do
     Repo.get_by!(OrgInvite, [id: id, email: email], skip_org_id: true)
     |> Repo.preload([:user, :org], skip_org_id: true)

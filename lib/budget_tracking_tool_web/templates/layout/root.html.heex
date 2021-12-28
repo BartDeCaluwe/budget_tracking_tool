@@ -29,7 +29,7 @@
   <body phx-hook="focus_by_id" class="flex flex-col min-h-screen h-full justify-between">
   <div class="min-h-screen bg-gray-50 grid grid-rows-layout grid-cols-layout">
 
-  <BudgetTrackingToolWeb.Components.Nav.render conn={@conn} current_user={@current_user} />
+  <BudgetTrackingToolWeb.Components.Nav.render conn={@conn} current_user={@current_user} notifications={@notifications} />
 
   <div class="pt-10">
     <%= @inner_content %>
