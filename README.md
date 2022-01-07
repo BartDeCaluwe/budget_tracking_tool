@@ -1,4 +1,4 @@
-# BudgetTrackingTool
+# BudgetTrackingTool WIP
 
 To start your Phoenix server:
 
@@ -8,7 +8,9 @@ To start your Phoenix server:
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+## About
+
+Phoenix application to track expenses and budget income. Inspired by [YNAB](https://www.youneedabudget.com/) and [everypocket](https://www.everypocket.com/).
 
 ## Learn more
 
